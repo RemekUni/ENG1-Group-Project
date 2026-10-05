@@ -6,10 +6,10 @@ of Assessment 1 and Assessment 2) per the ENG1 assessment paper, §3.3.1 and §4
 ## Build steps
 
 - [x] Create basic HTML skeleton (doctype, head, header) — `website/index.html`
-- [ ] Add CSS link, `<main>`, `<footer>`, `<script>` tags to `index.html`
-- [ ] Restructure `<main>` into deliverable-based sections: Code & Executable,
+- [x] Add CSS link, `<footer>`, `<script>` tags to `index.html`
+- [x] Restructure `<main>` into deliverable-based sections: Code & Executable,
       Assessment 1 Deliverables, Supplementary Material, Meeting Log
-- [ ] Write `website/css/style.css` (basic layout/typography)
+- [x] Write `website/css/style.css` (basic layout/typography)
 - [ ] Write `website/js/script.js` (only if the site actually needs any interactivity)
 - [ ] Test locally in browser — all sections render, links work, no console errors
 - [ ] Set up hosting (GitHub Pages) when ready to get a real URL for submission
