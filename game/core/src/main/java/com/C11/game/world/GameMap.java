@@ -3,9 +3,10 @@ package com.C11.game.world;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
-public class GameMap {
+public class GameMap implements Disposable {
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private float unitScale;
@@ -39,6 +40,7 @@ public class GameMap {
         mapRenderer.render();
     }
 
+    @Override 
     public void dispose() {
         map.dispose();
         mapRenderer.dispose();
