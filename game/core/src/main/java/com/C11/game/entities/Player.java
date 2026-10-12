@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.C11.game.world.GameMap;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Player implements Disposable{
     private final Vector2 position;
@@ -14,11 +16,33 @@ public class Player implements Disposable{
     private float speed = 4f;
     private Texture playerTexture;
 
-    public Player(float startX, float startY, float unitScale) {
+    private final GameMap gameMap;
+    private final Rectangle bounds;
+
+    private static final float HITBOX_WIDTH_SCALE = 1f / 1.5f;
+    private static final float HITBOX_HEIGHT_SCALE = 0.5f;
+
+    private final float hitboxWidth;
+    private final float hitboxHeight;
+    private final float hitboxOffsetX;
+
+    public Player(float startX, float startY, GameMap gameMap) {
+        this.gameMap = gameMap;
         position = new Vector2(startX, startY);
         direction = new Vector2(0f, 0f);
         playerTexture = new Texture("sprites/tile_0098.png");
-        size = playerTexture.getWidth() * unitScale;
+        size = playerTexture.getWidth() * gameMap.getUnitScale();
+
+        hitboxWidth = size * HITBOX_WIDTH_SCALE;
+        hitboxHeight = size * HITBOX_HEIGHT_SCALE;
+        hitboxOffsetX = (size - hitboxWidth) / 2f;
+
+        bounds = new Rectangle();
+    }
+
+    private boolean isColliding() {
+        bounds.set(position.x + hitboxOffsetX, position.y, hitboxWidth, hitboxHeight);
+        return gameMap.isBlocked(bounds);
     }
 
     public void update(float delta) {
@@ -38,7 +62,19 @@ public class Player implements Disposable{
         }
 
         direction.nor();
-        position.mulAdd(direction, speed * delta);
+        
+        float dx = direction.x * speed * delta;
+        float dy = direction.y * speed * delta;
+
+        position.x += dx;
+        if (isColliding()) {
+            position.x -=dx;
+        }
+
+        position.y += dy;
+        if (isColliding()) {
+            position.y -=dy;
+        }
 
     }
 

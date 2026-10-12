@@ -39,7 +39,7 @@ public class GameScreen extends ScreenAdapter {
 
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
-        player = new Player(worldWidth/2, worldHeight/2, gameMap.getUnitScale());
+        player = new Player(worldWidth/2, worldHeight/2, gameMap);
 
     }
 
