@@ -10,6 +10,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
+/**
+ * Loads a Tiled (.tmx) map and gets what the game needs from it: size, unit scale, rendering and collisions.
+ * Everything outside this class works in 'world units', where 1 unit = 1 tile.
+ * Other classes should not access the TiledMap or layer names directly
+ * 
+ * @author Dorian Kerzan (rvl546@york.ac.uk)
+ */
 public class GameMap implements Disposable {
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
@@ -17,10 +24,21 @@ public class GameMap implements Disposable {
     private float worldWidth;
     private float worldHeight;
 
+    /**
+     * Name of the Tiled object layer that contains all collision rectangles.
+     * Must match the object layer's name in Tiled
+     */
     private static final String COLLISION_LAYER = "collision";
 
     private final Array<Rectangle> collisionRects;
 
+    /** 
+     * Loads the map file using the mapFilePath param.
+     * Gets the collision rectangles, world width/height, and unit scale from the map file.
+     * Creates the map renderer and adds map boundaries.
+     * 
+     * @param mapFilePath path relative to the assets folder, e.g. "maps/campus.tmx"
+     */
     public GameMap(String mapFilePath) {
         map = new TmxMapLoader().load(mapFilePath);
         collisionRects = new Array<>();
@@ -35,7 +53,9 @@ public class GameMap implements Disposable {
         addMapBoundary();
     }
 
+    // Tiled stores rectangles in pixels; scale to world units. The y-axis flip is already done by TmxMapLoader
     private void loadCollisionRects() {
+        // TODO: add in a null check for layers
         MapLayer layer = map.getLayers().get(COLLISION_LAYER);
         for (RectangleMapObject object : layer.getObjects().getByType(RectangleMapObject.class)) {
             Rectangle r = object.getRectangle();
@@ -47,6 +67,7 @@ public class GameMap implements Disposable {
         }
     }
 
+    // Four 1 tile thick walls around the map, creating a boundary at the map edges so nothing can leave it
     private void addMapBoundary() {
         collisionRects.add(new Rectangle(-1, 0, 1, worldHeight));
         collisionRects.add(new Rectangle(worldWidth, 0, 1, worldHeight));
@@ -54,6 +75,12 @@ public class GameMap implements Disposable {
         collisionRects.add(new Rectangle(0, worldHeight, worldWidth, 1));
     }
 
+    /**
+     * Returns whether the given area overlaps with a collision rectangle or map boundary.
+     * 
+     * @param bounds area in world units.
+     * @return true if blocked
+     */
     public boolean isBlocked(Rectangle bounds) {
         for (Rectangle rect : collisionRects) {
             if (rect.overlaps(bounds)) {
@@ -63,18 +90,32 @@ public class GameMap implements Disposable {
         return false;
     }
 
+    /** 
+     * @return world width in tiles (e.g. 60 tiles wide)
+     */
     public float getWorldWidth() {
         return worldWidth;
     }
 
+    /**
+     * @return world height in tiles (e.g. 40 tiles high)
+     */
     public float getWorldHeight() {
         return worldHeight;
     }
 
+    /**
+     * @return world units per pixel (1 / tile width)
+     */
     public float getUnitScale() {
         return unitScale;
     }
 
+    /** 
+     * Draws the visible part of the map using the camera's view 
+     * 
+     * @param camera the camera whose view decides what part of the map is drawn
+     */
     public void render(OrthographicCamera camera) {
         mapRenderer.setView(camera);
         mapRenderer.render();

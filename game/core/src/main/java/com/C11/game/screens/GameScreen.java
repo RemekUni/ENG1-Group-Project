@@ -14,6 +14,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
 
+/**
+ * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
+ * Each frame runs update(delta), then draw(). These are separate to allow for game pausing to only skip updates but keep drawing the paused game screen.
+ * 
+ * @author Dorian Kerzan (rvl546@york.ac.uk)
+ */
 public class GameScreen extends ScreenAdapter {
     private final Main game;
     private final GameMap gameMap;
@@ -26,13 +32,26 @@ public class GameScreen extends ScreenAdapter {
     private final float worldWidth;
     private final float worldHeight;
 
+    /**
+     * Minimum visible area in world units (tiles).
+     * ExtendViewport may show more in the visible area on non 16:9 screens.
+     */
     static final float VIEW_WIDTH = 16f;
     static final float VIEW_HEIGHT = 9f;
 
+    // Loaded once and then shared by entities. Disposed in dispose().
     private final Texture playerTexture;
     private final Texture gooseTexture;
 
+    /**
+     * Loads map and textures.
+     * Sets up the camera and viewport.
+     * Spawns entities.
+     * 
+     * @param game game provides the shared batch
+     */
     public GameScreen(Main game) {
+        // TODO: read spawn positions from the Tiled spawn layer and use them to initialise entities
         this.game = game;
         this.spriteBatch = game.getBatch();
         gameMap = new GameMap("maps/campus.tmx");
@@ -53,6 +72,7 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
+    // false: do not recentre the camera, it is supposed to follow the player instead
     @Override 
     public void resize(int width, int height) {
         viewport.update(width, height, false);
@@ -67,7 +87,10 @@ public class GameScreen extends ScreenAdapter {
     private void update(float delta){
         player.update(delta);
         goose.update(delta);
+
+        // Follows the player's center, updated every frame
         viewport.getCamera().position.set(player.getPosition().x + player.getWidth() / 2, player.getPosition().y + player.getHeight() / 2, 0);
+        // Clamps the camera so that it stays within the map borders
         viewport.getCamera().position.set(MathUtils.clamp(camera.position.x, viewport.getWorldWidth() / 2, worldWidth - viewport.getWorldWidth() / 2), MathUtils.clamp(camera.position.y, viewport.getWorldHeight() / 2, worldHeight - viewport.getWorldHeight() / 2), 0);
     }
 
