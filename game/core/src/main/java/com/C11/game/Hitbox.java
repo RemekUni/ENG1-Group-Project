@@ -15,5 +15,7 @@ public class Hitbox extends Rectangle {
         super(x, y, width, height);
     }
 
+    // placeholder function
+    public void onHit() {}
 
 }
