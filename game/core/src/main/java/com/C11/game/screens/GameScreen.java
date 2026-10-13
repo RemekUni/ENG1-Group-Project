@@ -7,6 +7,7 @@ import com.C11.game.world.GameMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -26,10 +27,14 @@ public class GameScreen extends ScreenAdapter {
     static final float VIEW_WIDTH = 16f;
     static final float VIEW_HEIGHT = 9f;
 
+    private final Texture playerTexture;
+
     public GameScreen(Main game) {
         this.game = game;
         this.spriteBatch = game.getBatch();
         gameMap = new GameMap("maps/campus.tmx");
+
+        playerTexture = new Texture("sprites/tile_0098.png");
 
         worldWidth = gameMap.getWorldWidth();
         worldHeight = gameMap.getWorldHeight();
@@ -39,7 +44,7 @@ public class GameScreen extends ScreenAdapter {
 
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
-        player = new Player(worldWidth/2, worldHeight/2, gameMap);
+        player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap);
 
     }
 
@@ -56,7 +61,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void update(float delta){
         player.update(delta);
-        viewport.getCamera().position.set(player.getVector2Position().x + player.getWidth() / 2, player.getVector2Position().y + player.getHeight() / 2, 0);
+        viewport.getCamera().position.set(player.getPosition().x + player.getWidth() / 2, player.getPosition().y + player.getHeight() / 2, 0);
         viewport.getCamera().position.set(MathUtils.clamp(camera.position.x, viewport.getWorldWidth() / 2, worldWidth - viewport.getWorldWidth() / 2), MathUtils.clamp(camera.position.y, viewport.getWorldHeight() / 2, worldHeight - viewport.getWorldHeight() / 2), 0);
     }
 
@@ -79,7 +84,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         gameMap.dispose();
-        player.dispose();
+        playerTexture.dispose();
     }
     
 }
