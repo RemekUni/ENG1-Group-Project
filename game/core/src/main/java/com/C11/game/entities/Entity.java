@@ -66,6 +66,14 @@ public abstract class Entity {
         return position;
     }
 
+    public float getCenterX() {
+        return position.x + size / 2f;
+    }
+
+    public float getCenterY() {
+        return position.y + size / 2f;
+    }
+
     public float getWidth() {
         return size;
     }

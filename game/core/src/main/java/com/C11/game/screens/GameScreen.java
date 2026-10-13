@@ -2,6 +2,7 @@ package com.C11.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.C11.game.Main;
+import com.C11.game.entities.Goose;
 import com.C11.game.entities.Player;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -20,6 +21,7 @@ public class GameScreen extends ScreenAdapter {
     private final OrthographicCamera camera;
     private final SpriteBatch spriteBatch;
     private final Player player;
+    private final Goose goose;
     
     private final float worldWidth;
     private final float worldHeight;
@@ -28,6 +30,7 @@ public class GameScreen extends ScreenAdapter {
     static final float VIEW_HEIGHT = 9f;
 
     private final Texture playerTexture;
+    private final Texture gooseTexture;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -35,6 +38,7 @@ public class GameScreen extends ScreenAdapter {
         gameMap = new GameMap("maps/campus.tmx");
 
         playerTexture = new Texture("sprites/tile_0098.png");
+        gooseTexture = new Texture("sprites/duck.png");
 
         worldWidth = gameMap.getWorldWidth();
         worldHeight = gameMap.getWorldHeight();
@@ -45,6 +49,7 @@ public class GameScreen extends ScreenAdapter {
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap);
+        goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player);
 
     }
 
@@ -61,6 +66,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void update(float delta){
         player.update(delta);
+        goose.update(delta);
         viewport.getCamera().position.set(player.getPosition().x + player.getWidth() / 2, player.getPosition().y + player.getHeight() / 2, 0);
         viewport.getCamera().position.set(MathUtils.clamp(camera.position.x, viewport.getWorldWidth() / 2, worldWidth - viewport.getWorldWidth() / 2), MathUtils.clamp(camera.position.y, viewport.getWorldHeight() / 2, worldHeight - viewport.getWorldHeight() / 2), 0);
     }
@@ -77,6 +83,7 @@ public class GameScreen extends ScreenAdapter {
         spriteBatch.begin();
 
         player.draw(spriteBatch);
+        goose.draw(spriteBatch);
 
         spriteBatch.end();
     }
@@ -85,6 +92,7 @@ public class GameScreen extends ScreenAdapter {
     public void dispose() {
         gameMap.dispose();
         playerTexture.dispose();
+        gooseTexture.dispose();
     }
     
 }
