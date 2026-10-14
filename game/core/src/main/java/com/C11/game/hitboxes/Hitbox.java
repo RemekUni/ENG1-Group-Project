@@ -13,9 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class Hitbox extends Rectangle {
     /**
      *
-     * @param HITBOX_WIDTH_SCALE horizontal position of the hitbox
-     * @param HITBOX_HEIGHT_SCALE vertical position of the hitbox
-     * @param position how wide the hit box should be
+     * @param HITBOX_WIDTH_SCALE horizontal scale of the hitbox.
+     * @param HITBOX_HEIGHT_SCALE vertical scale of the hitbox.
+     * @param position the location of the hitbox in the map.
      */
     public Hitbox(float HITBOX_WIDTH_SCALE, float HITBOX_HEIGHT_SCALE, Vector2 position, float size) {
         super(position.x, position.y, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE);
