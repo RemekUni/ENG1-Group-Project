@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.C11.game.Main;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.Player;
+import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -45,6 +46,10 @@ public class GameScreen extends ScreenAdapter {
     private final Texture playerTexture;
     private final Texture gooseTexture;
 
+    private boolean isPaused;
+
+    private final PauseMenu pauseMenu;
+
     /**
      * Loads map and textures.
      * Sets up the camera and viewport.
@@ -72,28 +77,43 @@ public class GameScreen extends ScreenAdapter {
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player);
 
+        pauseMenu = new PauseMenu(() -> isPaused = false);
+        pauseGame();
     }
 
     // false: do not recentre the camera, it is supposed to follow the player instead
     @Override 
     public void resize(int width, int height) {
         viewport.update(width, height, false);
+        followPlayer();
+        pauseMenu.resize(width, height);
     }
 
     @Override
     public void render(float delta) {
-        // TODO: replace this if statement with a pause screen that can have an exit button or settings to change the window type (fullscreen, borderless full, windowed)
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-            Gdx.app.exit();
+            if (isPaused) isPaused = false;
+            else pauseGame();
         }
-        update(delta);
+        if (!isPaused) update(delta);
         draw();
+
+        if (isPaused) pauseMenu.render(delta);
+
     }
 
     private void update(float delta){
         player.update(delta);
         goose.update(delta);
+        followPlayer();
+    }
 
+    private void pauseGame() {
+        isPaused = true;
+        pauseMenu.show();
+    }
+
+    private void followPlayer() {
         // Follows the player's center, updated every frame
         viewport.getCamera().position.set(player.getPosition().x + player.getWidth() / 2, player.getPosition().y + player.getHeight() / 2, 0);
         // Clamps the camera so that it stays within the map borders
@@ -118,10 +138,16 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
+    public void pause() {
+        pauseGame();
+    }
+
+    @Override
     public void dispose() {
         gameMap.dispose();
         playerTexture.dispose();
         gooseTexture.dispose();
+        pauseMenu.dispose();
     }
     
 }
