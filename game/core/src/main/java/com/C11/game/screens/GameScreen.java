@@ -1,5 +1,6 @@
 package com.C11.game.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.C11.game.Main;
 import com.C11.game.entities.Goose;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Input.Keys;
 
 /**
  * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
@@ -80,6 +82,10 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        // TODO: replace this if statement with a pause screen that can have an exit button or settings to change the window type (fullscreen, borderless full, windowed)
+        if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
         update(delta);
         draw();
     }
