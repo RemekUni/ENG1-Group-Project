@@ -1,4 +1,4 @@
-package com.C11.game;
+package com.C11.game.hitboxes;
 
 /**
  * A class that inherits the Hitbox abstract class to allow different functionalities
@@ -6,13 +6,13 @@ package com.C11.game;
  *
  * @author kieranmckenna (gnv523@york.ac.uk)
  */
-public class HiddenItem extends Hitbox{
-    public HiddenItem(float x, float y, float width, float height){
-        super(x, y, width, height);
+public class HiddenItem extends Item {
+    public HiddenItem(float x, float y, float width, float height, boolean oneShot){
+        super(x, y, width, height, oneShot);
     }
 
     @Override
-    public void onHit(){
+    public void action(){
         //Collect an item
     }
 }

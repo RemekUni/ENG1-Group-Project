@@ -1,4 +1,4 @@
-package com.C11.game;
+package com.C11.game.hitboxes;
 
 /**
  * A class that inherits the Hitbox abstract class to allow different functionalities
