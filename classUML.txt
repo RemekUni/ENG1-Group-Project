@@ -1,0 +1,68 @@
+@startuml
+class Main {
+	-spritebatch : SpriteBatch
+	
+	+getBatch()
+	+create()
+	+dispose()
+}
+
+abstract class Entity {
+	-position : Vector2
+	-size : float
+	-speed : float
+	-entityTexture : Texture
+	
+	-gameMap : GameMap
+	-bounds : Rectangle
+	
+	-hitboxWidth : float
+	-hitboxHeight : float
+	-hitboxOffsetX : float
+	
+	+Entity(entityTexture : Texture, gameMap : GameMap, startX : float,\n startY : float, speed : float, hitboxWidthScale : float, hitboxHeightScale : float) 
+	
+	~void move(direction : Vector2, delta : float)
+	
+	+void update(delta : float)
+	
+	~boolean isColliding()
+	
+	+void draw(batch : SpriteBatch)
+	
+	+Vector2 getPosition()
+	+float getCenterX()
+	+float getCenterY()
+	+float getWidth()
+	+float getHeight()
+}
+
+class Player {
+
+}
+
+class Goose {
+
+}
+
+class Timer {
+
+}
+
+class Hitbox {
+
+}
+
+class HiddenItem {
+
+}
+
+Entity <|-- Player
+Entity <|-- Goose
+
+Rectangle <|-- Hitbox
+Hitbox <|-- HiddenItem
+
+ScreenAdapter <|-- GameScreen
+@enduml
+
