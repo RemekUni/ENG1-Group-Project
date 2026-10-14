@@ -25,7 +25,7 @@ public class PauseMenu implements Disposable {
     private static final float UI_WIDTH = 1280f;
     private static final float UI_HEIGHT = 720f;
 
-    public PauseMenu(Runnable onResume) {
+    public PauseMenu(Runnable onResume, Runnable onExit) {
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new ExtendViewport(UI_WIDTH, UI_HEIGHT));
 
@@ -41,7 +41,16 @@ public class PauseMenu implements Disposable {
                 onResume.run();
             }   
         });
+
+        TextButton exitButton = new TextButton("Exit Game", skin);
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                onExit.run();
+            }
+        });
         root.add(resumeButton).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
+        root.add(exitButton).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
     }
 
     public void render(float delta) {

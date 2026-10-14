@@ -77,7 +77,7 @@ public class GameScreen extends ScreenAdapter {
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player);
 
-        pauseMenu = new PauseMenu(() -> isPaused = false);
+        pauseMenu = new PauseMenu(() -> isPaused = false, () -> Gdx.app.exit());
         pauseGame();
     }
 
