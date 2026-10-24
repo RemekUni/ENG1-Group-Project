@@ -1,4 +1,4 @@
-package com.C11.game;
+package com.C11.game.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.TimeUtils;

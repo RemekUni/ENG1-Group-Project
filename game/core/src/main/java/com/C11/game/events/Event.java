@@ -1,5 +1,6 @@
-package com.C11.game.hitboxes;
+package com.C11.game.events;
 
+import com.C11.game.hitboxes.Trigger;
 import com.badlogic.gdx.math.Vector2;
 
 /**

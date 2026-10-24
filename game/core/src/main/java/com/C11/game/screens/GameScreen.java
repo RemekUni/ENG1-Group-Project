@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.C11.game.Main;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.Player;
+import com.C11.game.events.HiddenEvent;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,7 +19,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input.Keys;
 import java.util.ArrayList;
 import java.util.List;
-import com.C11.game.HiddenEvent;
 
 /**
  * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
@@ -84,9 +84,9 @@ public class GameScreen extends ScreenAdapter {
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player);
         
-        events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2, 2, player) {
+        events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2f, 2f, 1f, player, true) {
             @Override
-            public void onHit() {
+            public void action() {
                 System.out.println("Hidden event triggered!");
             }
         });

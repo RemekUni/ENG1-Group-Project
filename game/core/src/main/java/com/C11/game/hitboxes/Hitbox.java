@@ -18,7 +18,7 @@ public abstract class Hitbox extends Rectangle {
      * @param position the location of the hitbox in the map.
      */
     public Hitbox(float HITBOX_WIDTH_SCALE, float HITBOX_HEIGHT_SCALE, Vector2 position, float size) {
-        super(position.x, position.y, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE);
+        super(position.x, position.y, size * HITBOX_WIDTH_SCALE, size * HITBOX_HEIGHT_SCALE);
     }
 }
 

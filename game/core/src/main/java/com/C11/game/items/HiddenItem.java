@@ -1,4 +1,4 @@
-package com.C11.game.hitboxes;
+package com.C11.game.items;
 
 import com.badlogic.gdx.math.Vector2;
 

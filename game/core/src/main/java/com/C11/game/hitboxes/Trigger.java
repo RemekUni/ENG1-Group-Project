@@ -19,12 +19,15 @@ public abstract class Trigger extends Hitbox {
     public abstract void action(); //Defined in the subclasses.
 
     /**
-     * If oneShot and hitbox has been triggered, call the action and set triggered to true.
+     * If oneShot and hitbox has been triggered, call the action, set triggered to true, and return true.
+     * 
+     * @return true if action ran
      */
-    public void trigger(){
-        if (triggered && oneShot) return;
+    public boolean trigger(){
+        if (triggered && oneShot) return false;
         action();
         triggered = true;
+        return true;
     }
 
     /**
