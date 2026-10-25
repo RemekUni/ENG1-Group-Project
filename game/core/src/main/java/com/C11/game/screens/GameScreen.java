@@ -23,6 +23,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input.Keys;
+import java.util.ArrayList;
+import java.util.List;
+import com.C11.game.HiddenEvent;
 
 /**
  * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
@@ -62,6 +65,9 @@ public class GameScreen extends ScreenAdapter {
 
     private final PauseMenu pauseMenu;
 
+    // Hidden events on the map, checked every frame in update()
+    private final List<HiddenEvent> events = new ArrayList<>();
+    private int eventsTriggered = 0; // for FR_EVENT_COUNTER
 
     /**
      * Loads map and textures.
@@ -93,6 +99,13 @@ public class GameScreen extends ScreenAdapter {
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap);
         collectorEntities.add(player);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player);
+        
+        events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2, 2, player) {
+            @Override
+            public void onHit() {
+                System.out.println("Hidden event triggered!");
+            }
+        });
         collectorEntities.add(goose);
 
 
@@ -139,6 +152,12 @@ public class GameScreen extends ScreenAdapter {
     private void update(float delta){
         player.update(delta);
         goose.update(delta);
+        // TODO: test event only, replace with real events
+        for (HiddenEvent event : events) {
+            if (event.check()) {
+                eventsTriggered++;
+            }
+        }
 
         // Items
         for (Item item : items) {
