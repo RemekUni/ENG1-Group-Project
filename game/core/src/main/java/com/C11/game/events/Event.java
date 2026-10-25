@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
  * @author kieranmckenna (gnv523@york.ac.uk)
  */
 public abstract class Event extends Trigger{
-    public Event(float HITBOX_WIDTH_SCALE, float HITBOX_HEIGHT_SCALE, Vector2 position, float size, boolean oneShot){
-        super(HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, position, size, oneShot);
+    public Event(float widthScale, float heightScale, Vector2 position, float size, boolean oneShot){
+        super(widthScale, heightScale, position, size, oneShot);
     }
 }

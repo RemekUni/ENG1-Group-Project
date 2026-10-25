@@ -4,7 +4,7 @@ import com.C11.game.entities.Player;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * A invisible rectangle on the map that triggers once (if ONE_SHOT is set to true), the first time the
+ * A invisible rectangle on the map that triggers once (if oneShot is set to true), the first time the
  * player walks into it. Subclasses define what happens in action().
  *
  * Planned events (not yet implemented):
@@ -16,8 +16,8 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class HiddenEvent extends Event {
     protected final Player player;
 
-    public HiddenEvent(float startX, float startY, float HITBOX_WIDTH_SCALE, float HITBOX_HEIGHT_SCALE, float size, Player player, boolean ONE_SHOT) {
-        super(HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, new Vector2(startX, startY), size, ONE_SHOT);
+    public HiddenEvent(float startX, float startY, float widthScale, float heightScale, float size, Player player, boolean oneShot) {
+        super(widthScale, heightScale, new Vector2(startX, startY), size, oneShot);
         this.player = player;
     }
 

@@ -12,8 +12,8 @@ public abstract class Trigger extends Hitbox {
     private final boolean oneShot;//Whether the action can be done more than once.
     private boolean triggered = false;
 
-    public Trigger(float HITBOX_WIDTH_SCALE, float HITBOX_HEIGHT_SCALE, Vector2 position, float size, boolean oneShot) {
-        super(HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, position, size);
+    public Trigger(float widthScale, float heightScale, Vector2 position, float size, boolean oneShot) {
+        super(widthScale, heightScale, position, size);
         this.oneShot = oneShot;
     }
     public abstract void action(); //Defined in the subclasses.
