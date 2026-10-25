@@ -125,5 +125,17 @@ public abstract class Entity {
     public float getHeight() {
         return size;
     }
+
+    public float getHitboxWidth() {
+        return hitboxWidth;
+    }
+
+    public float getHitboxHeight() {
+        return hitboxHeight;
+    }
+
+    public float getHitboxOffsetX() {
+        return hitboxOffsetX;
+    } 
     
 }

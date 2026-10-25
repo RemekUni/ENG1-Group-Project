@@ -2,7 +2,13 @@ package com.C11.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+import com.C11.game.Item;
 import com.C11.game.Main;
+import com.C11.game.entities.Entity;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.Player;
 import com.C11.game.ui.PauseMenu;
@@ -13,6 +19,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input.Keys;
@@ -31,6 +38,8 @@ public class GameScreen extends ScreenAdapter {
     private final SpriteBatch spriteBatch;
     private final Player player;
     private final Goose goose;
+
+    private Array<Item> items;
     
     private final float worldWidth;
     private final float worldHeight;
@@ -45,10 +54,14 @@ public class GameScreen extends ScreenAdapter {
     // Loaded once and then shared by entities. Disposed in dispose().
     private final Texture playerTexture;
     private final Texture gooseTexture;
+    private final Texture itemTexture1; // TODO: Use one secitoned texture sprite for multiple item types
+
+    private Array<Entity> collectorEntities;
 
     private boolean isPaused;
 
     private final PauseMenu pauseMenu;
+
 
     /**
      * Loads map and textures.
@@ -65,6 +78,7 @@ public class GameScreen extends ScreenAdapter {
 
         playerTexture = new Texture("sprites/tile_0098.png");
         gooseTexture = new Texture("sprites/duck.png");
+        itemTexture1 = new Texture("sprites/item-prototype.png");
 
         worldWidth = gameMap.getWorldWidth();
         worldHeight = gameMap.getWorldHeight();
@@ -74,8 +88,28 @@ public class GameScreen extends ScreenAdapter {
 
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
+        collectorEntities = new Array<>();
+
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap);
+        collectorEntities.add(player);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player);
+        collectorEntities.add(goose);
+
+
+        
+        // -- items --
+        items = new Array<>();
+
+        // temp/dev
+        int itemCount = 50;
+        for (int i = 0; i < itemCount; i++) {
+            int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) worldWidth);
+            int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
+
+
+            Item itemType1 = new Item(itemTexture1, gameMap, randomX, randomY, collectorEntities, items);
+            items.add(itemType1);
+        }
 
         pauseMenu = new PauseMenu(() -> isPaused = false, () -> Gdx.app.exit());
         pauseGame();
@@ -105,6 +139,12 @@ public class GameScreen extends ScreenAdapter {
     private void update(float delta){
         player.update(delta);
         goose.update(delta);
+
+        // Items
+        for (Item item : items) {
+            item.update(delta);
+        }
+
         followPlayer();
     }
 
@@ -133,6 +173,10 @@ public class GameScreen extends ScreenAdapter {
 
         player.draw(spriteBatch);
         goose.draw(spriteBatch);
+        // Items
+        for (Item item : items) {
+            item.draw(spriteBatch);
+        }
 
         spriteBatch.end();
     }
