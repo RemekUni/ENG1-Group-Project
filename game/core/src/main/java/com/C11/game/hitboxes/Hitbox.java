@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 public class Hitbox extends Rectangle {
     private final float offsetX;
     private final float offsetY;
+    private final float width;
+    private final float height;
     
     /**
      * Main Hitbox constructor for actually creating the hitbox rectangle
@@ -25,6 +27,8 @@ public class Hitbox extends Rectangle {
      */
     public Hitbox(float width, float height, float offsetX, float offsetY, Vector2 position) {
         super(position.x + offsetX, position.y + offsetY, width, height);
+        this.width = width;
+        this.height = height;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
     }
@@ -69,5 +73,13 @@ public class Hitbox extends Rectangle {
      */
     public void follow(Vector2 position) {
         setPosition(position.x + offsetX, position.y + offsetY);
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 }

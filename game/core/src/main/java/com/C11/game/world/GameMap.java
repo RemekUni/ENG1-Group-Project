@@ -1,10 +1,15 @@
 package com.C11.game.world;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -41,6 +46,22 @@ public class GameMap implements Disposable {
      */
     public GameMap(String mapFilePath) {
         map = new TmxMapLoader().load(mapFilePath);
+
+        // -- Fix tiling edges caused by float imprecisions by using Nearest Neighbour Filtering on the texture during the runtime (in case of edge boundaries shifted it will use that neighbouring pixels)
+        // UPD: Was not tested yet - may not work if tile bounds match the texture dimensions rather than extending by 1
+        // UPD2: TODO: Tile bounds do indeed need to be increased
+        TiledMapTileSet tileset = map.getTileSets().getTileSet(0);
+
+        for (TiledMapTile tile : tileset) {
+            if (tile instanceof StaticTiledMapTile) {
+                TextureRegion region = tile.getTextureRegion();
+                region.getTexture().setFilter(
+                    Texture.TextureFilter.Nearest,
+                    Texture.TextureFilter.Nearest
+                );
+            }
+        }
+
         collisionRects = new Array<>();
 
         worldWidth = map.getProperties().get("width", Integer.class);

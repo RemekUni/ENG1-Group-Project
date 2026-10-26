@@ -19,6 +19,10 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -26,7 +30,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input.Keys;
 import java.util.ArrayList;
 import java.util.List;
-import com.C11.game.HiddenEvent;
+import com.C11.game.events.HiddenEvent;
 import com.C11.game.ItemType;
 
 /**
@@ -122,7 +126,7 @@ public class GameScreen extends ScreenAdapter {
             int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
 
 
-            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", gooseTexture), randomX, randomY, collectorEntities, items);
+            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", itemTexture1), randomX, randomY, gameMap, collectorEntities, items);
             items.add(itemType1);
         }
 

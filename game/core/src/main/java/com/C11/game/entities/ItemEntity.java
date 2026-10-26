@@ -19,7 +19,7 @@ public class ItemEntity extends Entity {
     // Entity can pick up items in 1 unit distance
     private static final float PICKUP_DISTANCE = 0.5f;
     
-    private static final float IDLE_ANIMATION_SPEED = 0.5f;
+    private static final float IDLE_ANIMATION_SPEED = 0.1f;
     private final float animationRandomShift = new Random().nextFloat(2);
 
     private Array<Entity> collectorEntities;
@@ -27,9 +27,9 @@ public class ItemEntity extends Entity {
 
 
     // collectorEntities should be an ArrayList to allow for a variable number of entities during the runtime
-    public ItemEntity(ItemType itemType, float x, float y, Array<Entity> collectorEntities, Array<ItemEntity> itemsArray) {
-        // TODO: Resolve redundant gameMap bounds logic; current bypass: empty gameMap instantiation - TMX map instantiations fails but eliminates the dependency
-        super(itemType.getEntityTexture(), new GameMap(""), x, y, IDLE_ANIMATION_SPEED, 0, 0);
+    public ItemEntity(ItemType itemType, float x, float y, GameMap gameMap, Array<Entity> collectorEntities, Array<ItemEntity> itemsArray) {
+        // TODO: Resolve redundant gameMap bounds logic
+        super(itemType.getEntityTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0);
 
         this.collectorEntities = collectorEntities;
         this.itemsArray = itemsArray;
@@ -37,7 +37,7 @@ public class ItemEntity extends Entity {
 
     private void idleAnimate(Vector2 pos, float delta) {
         lifetime += delta;
-        final float periodFrequency = 2f;
+        final float periodFrequency = 1.5f;
 
         direction.y = MathUtils.sin((lifetime + animationRandomShift) * periodFrequency); 
     }
@@ -50,8 +50,8 @@ public class ItemEntity extends Entity {
             float y = this.getPosition().y;
             float entityY = entity.getPosition().y;
 
-            boolean isInXBounds = x >= entityX - PICKUP_DISTANCE && x <= entityX + entity.getHitboxWidth() + PICKUP_DISTANCE;
-            boolean isInYBounds = y >= entityY - PICKUP_DISTANCE && y <= entityY + entity.getHitboxHeight() + PICKUP_DISTANCE;
+            boolean isInXBounds = x >= entityX - PICKUP_DISTANCE && x <= entityX + entity.getHitbox().getWidth() + PICKUP_DISTANCE;
+            boolean isInYBounds = y >= entityY - PICKUP_DISTANCE && y <= entityY + entity.getHitbox().getHeight() + PICKUP_DISTANCE;
 
             if (isInYBounds && isInXBounds) {
                 return isInXBounds && isInYBounds;
