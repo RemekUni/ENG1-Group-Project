@@ -91,7 +91,7 @@ public class GameScreen extends ScreenAdapter {
             }
         });
 
-        pauseMenu = new PauseMenu(() -> isPaused = false, () -> Gdx.app.exit());
+        pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
         pauseGame();
     }
 
@@ -106,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-            if (isPaused) isPaused = false;
+            if (isPaused) resumeGame();
             else pauseGame();
         }
         if (!isPaused) update(delta);
@@ -131,6 +131,11 @@ public class GameScreen extends ScreenAdapter {
     private void pauseGame() {
         isPaused = true;
         pauseMenu.show();
+    }
+
+    private void resumeGame() {
+        isPaused = false;
+        pauseMenu.hide();
     }
 
     private void followPlayer() {
