@@ -1,49 +1,45 @@
-package com.C11.game;
+package com.C11.game.entities;
 
 import java.util.Random;
 
-import com.C11.game.entities.Entity;
+import com.C11.game.ItemType;
 import com.C11.game.world.GameMap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 
 // TODO: Make own abstract class for items that will inherit from Entity
-public class Item extends Entity {
+public class ItemEntity extends Entity {
 
-    // private Vector2 pos;
     private float lifetime = 0f;
 
     private final Vector2 direction = new Vector2();
 
     // Entity can pick up items in 1 unit distance
     private static final float PICKUP_DISTANCE = 0.5f;
+    
+    private static final float IDLE_ANIMATION_SPEED = 0.5f;
+    private final float animationRandomShift = new Random().nextFloat(2);
 
     private Array<Entity> collectorEntities;
-    private Array<Item> itemsArray;
+    private Array<ItemEntity> itemsArray;
 
-    private float randomAnimationShift;
 
     // collectorEntities should be an ArrayList to allow for a variable number of entities during the runtime
-    public Item(Texture entityTexture, GameMap gameMap, float startX, float startY, Array<Entity> collectorEntities, Array<Item> itemsArray) {
-        // TODO: Consider refactoring to omit #gameMap as item may not be in need to be checked for out of bounds
-        super(entityTexture, gameMap, startX, startY, 0.1f, 0, 0);
+    public ItemEntity(ItemType itemType, float x, float y, Array<Entity> collectorEntities, Array<ItemEntity> itemsArray) {
+        // TODO: Resolve redundant gameMap bounds logic; current bypass: empty gameMap instantiation - TMX map instantiations fails but eliminates the dependency
+        super(itemType.getEntityTexture(), new GameMap(""), x, y, IDLE_ANIMATION_SPEED, 0, 0);
 
         this.collectorEntities = collectorEntities;
         this.itemsArray = itemsArray;
-
-        this.randomAnimationShift = new Random().nextFloat(2);
-
-        // pos = new Vector2(startX, startY);
     }
 
     private void idleAnimate(Vector2 pos, float delta) {
         lifetime += delta;
-        float animationSpeed = 2f;
+        final float periodFrequency = 2f;
 
-        direction.y = MathUtils.sin((lifetime + randomAnimationShift) * animationSpeed); 
+        direction.y = MathUtils.sin((lifetime + animationRandomShift) * periodFrequency); 
     }
 
     private boolean isCollidingEntity() {
@@ -74,9 +70,8 @@ public class Item extends Entity {
         idleAnimate(direction, delta);
 
         boolean pickupItem = isCollidingEntity();
-        // TODO: Memory leak - item is still in memory after removal from the render list
+        // Delete item entity from the reference list. GC should then dispose it from memory as it will not be referenced anywhere
         if (pickupItem) itemsArray.removeValue(this, true);
-
 
         move(direction, delta);
     }

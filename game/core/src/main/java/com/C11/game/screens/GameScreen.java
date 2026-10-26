@@ -6,10 +6,10 @@ import com.badlogic.gdx.ScreenAdapter;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.C11.game.Item;
 import com.C11.game.Main;
 import com.C11.game.entities.Entity;
 import com.C11.game.entities.Goose;
+import com.C11.game.entities.ItemEntity;
 import com.C11.game.entities.Player;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
@@ -26,6 +26,7 @@ import com.badlogic.gdx.Input.Keys;
 import java.util.ArrayList;
 import java.util.List;
 import com.C11.game.HiddenEvent;
+import com.C11.game.ItemType;
 
 /**
  * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
@@ -42,7 +43,7 @@ public class GameScreen extends ScreenAdapter {
     private final Player player;
     private final Goose goose;
 
-    private Array<Item> items;
+    private Array<ItemEntity> items;
     
     private final float worldWidth;
     private final float worldHeight;
@@ -120,7 +121,7 @@ public class GameScreen extends ScreenAdapter {
             int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
 
 
-            Item itemType1 = new Item(itemTexture1, gameMap, randomX, randomY, collectorEntities, items);
+            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", gooseTexture), randomX, randomY, collectorEntities, items);
             items.add(itemType1);
         }
 
@@ -160,7 +161,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         // Items
-        for (Item item : items) {
+        for (ItemEntity item : items) {
             item.update(delta);
         }
 
@@ -193,7 +194,7 @@ public class GameScreen extends ScreenAdapter {
         player.draw(spriteBatch);
         goose.draw(spriteBatch);
         // Items
-        for (Item item : items) {
+        for (ItemEntity item : items) {
             item.draw(spriteBatch);
         }
 
