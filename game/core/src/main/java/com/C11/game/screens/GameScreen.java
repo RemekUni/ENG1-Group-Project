@@ -11,6 +11,7 @@ import com.C11.game.entities.Entity;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.ItemEntity;
 import com.C11.game.entities.Player;
+import com.C11.game.events.HiddenEvent;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -101,9 +102,9 @@ public class GameScreen extends ScreenAdapter {
         collectorEntities.add(player);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player);
         
-        events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2, 2, player) {
+        events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2f, 2f, 1f, player, true) {
             @Override
-            public void onHit() {
+            public void action() {
                 System.out.println("Hidden event triggered!");
             }
         });
