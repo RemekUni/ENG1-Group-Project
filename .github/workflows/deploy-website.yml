@@ -1,23 +1,23 @@
 name: Deploy website
 
-  on:
-    push:
-      branches: [main]
-      paths:
-        - "website/**"
-    workflow_dispatch:
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+  workflow_dispatch:
 
-  jobs:
-    deploy:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Check out private repo
-          uses: actions/checkout@v4
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out private repo
+        uses: actions/checkout@v4
 
-        - name: Push website/ to public repo
-          uses: peaceiris/actions-gh-pages@v4
-          with:
-            deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-            external_repository: Dorian-UoY/C11-website
-            publish_branch: gh-pages
-            publish_dir: ./website
+      - name: Push website/ to public repo
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: Dorian-UoY/C11-website
+          publish_branch: gh-pages
+          publish_dir: ./website
