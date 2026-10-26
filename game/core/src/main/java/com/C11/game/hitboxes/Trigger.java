@@ -12,19 +12,22 @@ public abstract class Trigger extends Hitbox {
     private final boolean oneShot;//Whether the action can be done more than once.
     private boolean triggered = false;
 
-    public Trigger(float HITBOX_WIDTH_SCALE, float HITBOX_HEIGHT_SCALE, Vector2 position, float size, boolean oneShot) {
-        super(HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, position, size);
+    public Trigger(float widthScale, float heightScale, Vector2 position, float size, boolean oneShot) {
+        super(widthScale, heightScale, position, size);
         this.oneShot = oneShot;
     }
     public abstract void action(); //Defined in the subclasses.
 
     /**
-     * If oneShot and hitbox has been triggered, call the action and set triggered to true.
+     * If oneShot and hitbox has been triggered, call the action, set triggered to true, and return true.
+     * 
+     * @return true if action ran
      */
-    public void trigger(){
-        if (triggered && oneShot) return;
+    public boolean trigger(){
+        if (triggered && oneShot) return false;
         action();
         triggered = true;
+        return true;
     }
 
     /**

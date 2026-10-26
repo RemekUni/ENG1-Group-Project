@@ -1,5 +1,6 @@
-package com.C11.game.hitboxes;
+package com.C11.game.items;
 
+import com.C11.game.hitboxes.Trigger;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -8,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
  *  @author kieranmckenna (gnv523@york.ac.uk)
  */
 public abstract class Item extends Trigger{
-    public Item(float HITBOX_WIDTH_SCALE, float HITBOX_HEIGHT_SCALE, Vector2 position, float size, boolean oneShot){
-        super(HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, position, size, oneShot);
+    public Item(float widthScale, float heightScale, Vector2 position, float size, boolean oneShot){
+        super(widthScale, heightScale, position, size, oneShot);
     }
 }

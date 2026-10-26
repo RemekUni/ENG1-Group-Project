@@ -1,9 +1,9 @@
 package com.C11.game.entities;
 
+import com.C11.game.hitboxes.Hitbox;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -20,11 +20,8 @@ public abstract class Entity {
     private Texture entityTexture;
 
     private final GameMap gameMap;
-    private final Rectangle bounds;
 
-    private final float hitboxWidth;
-    private final float hitboxHeight;
-    private final float hitboxOffsetX;
+    private final Hitbox hitbox;
 
     /**
      * Creates an entity at the given position.
@@ -47,11 +44,7 @@ public abstract class Entity {
         // This is assuming all entities are square. will need to be changed if we add non-square entities
         size = entityTexture.getWidth() * gameMap.getUnitScale();
 
-        hitboxWidth = size * hitboxWidthScale;
-        hitboxHeight = size * hitboxHeightScale;
-        hitboxOffsetX = (size - hitboxWidth) / 2f;
-
-        bounds = new Rectangle();
+        hitbox = Hitbox.forSprite(size, hitboxWidthScale, hitboxHeightScale, position);
     }
 
     /**
@@ -78,6 +71,8 @@ public abstract class Entity {
         if (isColliding()) {
             position.y -=dy;
         }
+
+        hitbox.follow(position);
     }
 
     /** 
@@ -86,10 +81,10 @@ public abstract class Entity {
      */
     public abstract void update(float delta);
 
-    // Hitbox is centered horizontally and aligned to the bottom of the sprite
+    // Check for hitbox collisions on the map after first snapping the hitbox to its entity
     private boolean isColliding() {
-        bounds.set(position.x + hitboxOffsetX, position.y, hitboxWidth, hitboxHeight);
-        return gameMap.isBlocked(bounds);
+        hitbox.follow(position);
+        return gameMap.isBlocked(hitbox);
     }
 
     /** 
@@ -125,5 +120,9 @@ public abstract class Entity {
     public float getHeight() {
         return size;
     }
-    
+
+    /** @return the entity's collision hitbox in world units, updated by move(). Treat as read-only */
+    public Hitbox getHitbox() {
+        return hitbox;
+    }
 }
