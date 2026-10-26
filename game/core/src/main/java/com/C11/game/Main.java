@@ -1,32 +1,35 @@
 package com.C11.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Game;
+import com.C11.game.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main extends ApplicationAdapter {
-    private SpriteBatch batch;
-    private Texture image;
+/** 
+ * Root game class: It creates resources shared by all screens (spriteBatch) and shows the first screen.
+ * Screens borrow the batch using getBatch() and MUST NOT dispose it.
+ */
+public class Main extends Game {
+    private SpriteBatch spriteBatch;
 
-    @Override
-    public void create() {
-        batch = new SpriteBatch();
-        image = new Texture("libgdx.png");
+    /**
+     * Returns the shared spriteBatch
+     * 
+     * @return the shared spriteBatch; owned and disposed by Main
+     */
+    public SpriteBatch getBatch() {
+        return spriteBatch;
     }
 
     @Override
-    public void render() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        batch.begin();
-        batch.draw(image, 140, 210);
-        batch.end();
+    public void create() {
+        spriteBatch = new SpriteBatch();
+        setScreen(new GameScreen(this));
+        
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
-        image.dispose();
+        getScreen().dispose();
+        spriteBatch.dispose();
     }
 }
