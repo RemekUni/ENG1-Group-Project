@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Class for spawning in an item entity on the map with the specified attributes. Inherits from #Entity.
+ * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link Entity}.
  * 
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
@@ -34,9 +34,9 @@ public class ItemEntity extends Entity {
      * @param itemType item type.
      * @param gameMap map, used for collision checks
      * @param x starting 'x' position of entity's bottom-left corner, in world units
-     * @param starting 'y' position of entity's bottom-left corner, in world units
-     * @param entities dynamic array of collector entities that can pickup the item
-     * @param itemsArray dynamic array of items on the map
+     * @param y starting 'y' position of entity's bottom-left corner, in world units
+     * @param entitiesArray reference to dynamic array of all entities
+     * 
      */
     public ItemEntity(ItemType itemType, GameMap gameMap, float x, float y, Array<Entity> entities) {
         super(itemType.getEntityTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entities);
@@ -73,8 +73,6 @@ public class ItemEntity extends Entity {
 
         return null;
     }
-
-
 
     @Override
     public void update(float delta) {

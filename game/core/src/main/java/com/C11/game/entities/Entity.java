@@ -34,6 +34,7 @@ public abstract class Entity {
      * @param speed movement speed in tiles per second
      * @param hitboxWidthScale hitbox width as a fraction of the sprite width (centered)
      * @param hitboxHeightScale same as width, but for height (bottom-aligned)
+     * @param entitiesArray reference to dynamic array of all entities
      */
     public Entity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, Array<Entity> entitiesArray) {
         this.entityTexture = entityTexture;
