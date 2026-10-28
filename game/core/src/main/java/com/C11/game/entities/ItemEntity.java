@@ -58,8 +58,6 @@ public class ItemEntity extends Entity {
         float y = this.getPosition().y;
             
         for (Entity entity : entities) {
-            if (!(entity instanceof CollectorEntity)) continue;
-
             float entityX = entity.getPosition().x;
 
             float entityY = entity.getPosition().y;
@@ -69,7 +67,7 @@ public class ItemEntity extends Entity {
 
             // Run through all collectors until catching the first entity that is inbounds
             if (isInYBounds && isInXBounds) {
-                return (CollectorEntity) entity;
+                if (entity instanceof CollectorEntity collector) return collector;
             }
         }
 

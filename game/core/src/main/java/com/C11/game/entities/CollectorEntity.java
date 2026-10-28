@@ -35,7 +35,7 @@ public abstract class CollectorEntity extends Entity {
 
         // dev/temp
         for (ItemType item : inventory) {
-            System.out.println(item.getName() + " | " + item.getEntityTexture());
+            System.out.println(this + " | " + item.getName() + " | " + item.getEntityTexture());
         }
     }
 

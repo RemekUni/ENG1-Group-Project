@@ -104,7 +104,7 @@ public class GameScreen extends ScreenAdapter {
 
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities, itemEntities);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities);
-        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities);
+        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, itemEntities);
         
         events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2f, 2f, 1f, player, true) {
             @Override
@@ -152,6 +152,7 @@ public class GameScreen extends ScreenAdapter {
     private void update(float delta){
         player.update(delta);
         goose.update(delta);
+        goose2.update(delta);
         // TODO: test event only, replace with real events
         for (HiddenEvent event : events) {
             if (event.check()) {
@@ -197,6 +198,7 @@ public class GameScreen extends ScreenAdapter {
 
         player.draw(spriteBatch);
         goose.draw(spriteBatch);
+        goose2.draw(spriteBatch);
         // Items
         for (ItemEntity item : itemEntities) {
             item.draw(spriteBatch);
