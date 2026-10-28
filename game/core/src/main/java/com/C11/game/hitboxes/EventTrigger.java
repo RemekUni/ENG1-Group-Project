@@ -8,11 +8,11 @@ import com.badlogic.gdx.math.Vector2;
  *
  * @author kieranmckenna (gnv523@york.ac.uk)
  */
-public abstract class Trigger extends Hitbox {
+public abstract class EventTrigger extends Hitbox {
     private final boolean oneShot;//Whether the action can be done more than once.
     private boolean triggered = false;
 
-    public Trigger(float widthScale, float heightScale, Vector2 position, float size, boolean oneShot) {
+    public EventTrigger(float widthScale, float heightScale, Vector2 position, float size, boolean oneShot) {
         super(widthScale, heightScale, position, size);
         this.oneShot = oneShot;
     }
@@ -20,7 +20,7 @@ public abstract class Trigger extends Hitbox {
 
     /**
      * If oneShot and hitbox has been triggered, call the action, set triggered to true, and return true.
-     * 
+     *
      * @return true if action ran
      */
     public boolean trigger(){

@@ -1,6 +1,7 @@
 package com.C11.game.events;
 
 import com.C11.game.entities.Player;
+import com.C11.game.hitboxes.EventTrigger;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -13,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
  *
  * @author Remigiusz Pertek (vfc515@york.ac.uk)
  */
-public abstract class HiddenEvent extends Event {
+public abstract class HiddenEvent extends EventTrigger {
     protected final Player player;
 
     public HiddenEvent(float startX, float startY, float widthScale, float heightScale, float size, Player player, boolean oneShot) {
