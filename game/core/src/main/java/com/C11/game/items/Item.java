@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * The Events class extends Trigger class and allows hitboxes to be categorized as an item.
+ * 
+ * @req FR_ITEMS
  *
  *  @author kieranmckenna (gnv523@york.ac.uk)
  */

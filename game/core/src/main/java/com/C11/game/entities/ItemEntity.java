@@ -8,7 +8,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-
+/**
+ * @req UR_INVENTORY
+ * 
+ */
 // TODO: Make own abstract class for items that will inherit from Entity
 public class ItemEntity extends Entity {
 

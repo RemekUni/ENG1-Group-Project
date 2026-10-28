@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector2;
  * Subclasses decide which way to move in update() and then call move().
  * Entity does not own its texture, so it does not dispose it, the creator does
  * 
+ * @req UR_BOUNDARIES
+ * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public abstract class Entity {
@@ -52,6 +54,8 @@ public abstract class Entity {
      * X and Y are resolved separately so entities slide against walls instead of sticking (just makes movement smoother in general)
      * 
      * Note: normalises direction in-place, which means the callers vector will get changed
+     * 
+     * @req FR_PLAYER_BOUNDARY FR_GEESE_BOUNDARY
      * 
      * @param direction vector direction for entity to move
      * @param delta time in seconds from last frame

@@ -2,6 +2,10 @@ package com.C11.game;
 
 import com.badlogic.gdx.graphics.Texture;
 
+/**
+ * @req UR_INVENTORY
+ * 
+ */
 public class ItemType {
 
     private String name;

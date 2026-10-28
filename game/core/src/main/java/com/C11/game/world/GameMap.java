@@ -20,6 +20,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
  * Everything outside this class works in 'world units', where 1 unit = 1 tile.
  * Other classes should not access the TiledMap or layer names directly
  * 
+ * @req UR_MAP UR_BOUNDARIES FR_MAP_TEXTURE FR_MAP_BOUNDARY
+ * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class GameMap implements Disposable {
@@ -41,6 +43,8 @@ public class GameMap implements Disposable {
      * Loads the map file using the mapFilePath param.
      * Gets the collision rectangles, world width/height, and unit scale from the map file.
      * Creates the map renderer and adds map boundaries.
+     * 
+     * @req FR_MAP_TEXTURE
      * 
      * @param mapFilePath path relative to the assets folder, e.g. "maps/campus.tmx"
      */
@@ -75,6 +79,7 @@ public class GameMap implements Disposable {
     }
 
     // Tiled stores rectangles in pixels; scale to world units. The y-axis flip is already done by TmxMapLoader
+    /** @req FR_MAP_COLLISION */
     private void loadCollisionRects() {
         // TODO: add in a null check for layers
         MapLayer layer = map.getLayers().get(COLLISION_LAYER);
@@ -89,6 +94,7 @@ public class GameMap implements Disposable {
     }
 
     // Four 1 tile thick walls around the map, creating a boundary at the map edges so nothing can leave it
+    /** @req FR_MAP_BOUNDARY */
     private void addMapBoundary() {
         collisionRects.add(new Rectangle(-1, 0, 1, worldHeight));
         collisionRects.add(new Rectangle(worldWidth, 0, 1, worldHeight));
@@ -134,6 +140,8 @@ public class GameMap implements Disposable {
 
     /** 
      * Draws the visible part of the map using the camera's view 
+     * 
+     * @req FR_MAP_TEXTURE
      * 
      * @param camera the camera whose view decides what part of the map is drawn
      */
