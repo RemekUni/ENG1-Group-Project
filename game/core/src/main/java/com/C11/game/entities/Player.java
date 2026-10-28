@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+
 import com.C11.game.world.GameMap;
 
 /**
@@ -14,7 +16,7 @@ import com.C11.game.world.GameMap;
  * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
-public class Player extends Entity{
+public class Player extends CollectorEntity{
     private final Vector2 direction = new Vector2();
 
     // tiles per second
@@ -33,8 +35,8 @@ public class Player extends Entity{
      * @param startY starting 'y' position of entity's bottom-left corner, in world units
      * @param gameMap map used for collision checks
      */
-    public Player(Texture playerTexture, float startX, float startY, GameMap gameMap) {
-        super(playerTexture, gameMap, startX, startY, PLAYER_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE);
+    public Player(Texture playerTexture, float startX, float startY, GameMap gameMap, Array<Entity> entitiesArray, Array<ItemEntity> itemsArray) {
+        super(playerTexture, gameMap, startX, startY, PLAYER_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesArray, itemsArray);
     }
 
     // Opposite keys cancel out; x and y can both be set for diagonals. Entity.move() normalises direction so diagonal movement is not faster
@@ -43,21 +45,21 @@ public class Player extends Entity{
     public void update(float delta) {
         direction.set(0, 0);
         
-        if (Gdx.input.isKeyPressed(Keys.D)) {
+        if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
             direction.x += 1;
         } 
-        if (Gdx.input.isKeyPressed(Keys.A)) {
+        if (Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) {
             direction.x -= 1;
         } 
-        if (Gdx.input.isKeyPressed(Keys.S)) {
+        if (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN)) {
             direction.y -= 1;
         } 
-        if (Gdx.input.isKeyPressed(Keys.W)) {
+        if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
             direction.y += 1;
         }
 
         move(direction, delta);
-
     }
+
     
 }

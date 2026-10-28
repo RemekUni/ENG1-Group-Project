@@ -5,6 +5,7 @@ import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Base class for anything that moves on the map (like player or geese). Handles position, drawing, and collision-aware movement.
@@ -35,8 +36,9 @@ public abstract class Entity {
      * @param speed movement speed in tiles per second
      * @param hitboxWidthScale hitbox width as a fraction of the sprite width (centered)
      * @param hitboxHeightScale same as width, but for height (bottom-aligned)
+     * @param entitiesArray reference to dynamic array of all entities
      */
-    public Entity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale) {
+    public Entity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, Array<Entity> entitiesArray) {
         this.entityTexture = entityTexture;
         this.gameMap = gameMap;
         this.speed = speed;
@@ -47,6 +49,8 @@ public abstract class Entity {
         size = entityTexture.getWidth() * gameMap.getUnitScale();
 
         hitbox = Hitbox.forSprite(size, hitboxWidthScale, hitboxHeightScale, position);
+
+        entitiesArray.add(this);
     }
 
     /**

@@ -49,8 +49,10 @@ public class GameScreen extends ScreenAdapter {
     private final SpriteBatch spriteBatch;
     private final Player player;
     private final Goose goose;
+    private final Goose goose2;
 
-    private Array<ItemEntity> items;
+    private Array<Entity> entities = new Array<>();
+    private Array<ItemEntity> itemEntities = new Array<>();;
     
     private final float worldWidth;
     private final float worldHeight;
@@ -67,7 +69,6 @@ public class GameScreen extends ScreenAdapter {
     private final Texture gooseTexture;
     private final Texture itemTexture1; // TODO: Use one secitoned texture sprite for multiple item types
 
-    private Array<Entity> collectorEntities;
 
     private boolean isPaused;
 
@@ -102,11 +103,10 @@ public class GameScreen extends ScreenAdapter {
 
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
-        collectorEntities = new Array<>();
 
-        player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap);
-        collectorEntities.add(player);
-        goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player);
+        player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities, itemEntities);
+        goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities);
+        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, itemEntities);
         
         events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2f, 2f, 1f, player, true) {
             @Override
@@ -114,12 +114,6 @@ public class GameScreen extends ScreenAdapter {
                 System.out.println("Hidden event triggered!");
             }
         });
-        collectorEntities.add(goose);
-
-
-        
-        // -- items --
-        items = new Array<>();
 
         // temp/dev
         int itemCount = 50;
@@ -128,8 +122,8 @@ public class GameScreen extends ScreenAdapter {
             int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
 
 
-            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", itemTexture1), randomX, randomY, gameMap, collectorEntities, items);
-            items.add(itemType1);
+            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", itemTexture1), gameMap, randomX, randomY, entities);
+            itemEntities.add(itemType1);
         }
 
         pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
@@ -162,6 +156,7 @@ public class GameScreen extends ScreenAdapter {
     private void update(float delta){
         player.update(delta);
         goose.update(delta);
+        goose2.update(delta);
         // TODO: test event only, replace with real events
         for (HiddenEvent event : events) {
             if (event.check()) {
@@ -170,7 +165,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         // Items
-        for (ItemEntity item : items) {
+        for (ItemEntity item : itemEntities) {
             item.update(delta);
         }
 
@@ -209,8 +204,9 @@ public class GameScreen extends ScreenAdapter {
 
         player.draw(spriteBatch);
         goose.draw(spriteBatch);
+        goose2.draw(spriteBatch);
         // Items
-        for (ItemEntity item : items) {
+        for (ItemEntity item : itemEntities) {
             item.draw(spriteBatch);
         }
 
