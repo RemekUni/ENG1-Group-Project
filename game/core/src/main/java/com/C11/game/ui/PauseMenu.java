@@ -16,6 +16,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
  * This class dims the game and shows buttons.
  * The GameScreen creates it, calls render/resize/show and then disposes it.
  * 
+ * @req FR_PAUSE
+ * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class PauseMenu implements Disposable {

@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
  * Planned events (not yet implemented):
  * Negative: goose jumpscare, geese steal shoes, abandoned sandwich
  * Positive: golden goose, friendly student
+ * 
+ * @req UR_HIDDEN_EVENTS FR_TRIGGER_EVENT
  *
  * @author Remigiusz Pertek (vfc515@york.ac.uk)
  */

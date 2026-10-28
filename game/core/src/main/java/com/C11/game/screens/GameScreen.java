@@ -37,6 +37,8 @@ import com.C11.game.ItemType;
  * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
  * Each frame runs update(delta), then draw(). These are separate to allow for game pausing to only skip updates but keep drawing the paused game screen.
  * 
+ * @req UR_MAP UR_CHARACTER UR_GEESE
+ * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class GameScreen extends ScreenAdapter {
@@ -136,6 +138,7 @@ public class GameScreen extends ScreenAdapter {
         pauseMenu.resize(width, height);
     }
 
+    /** @req FR_PAUSE */
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
@@ -149,6 +152,7 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
+    /** @req FR_EVENT_COUNTER FR_TRIGGER_EVENT */
     private void update(float delta){
         player.update(delta);
         goose.update(delta);
@@ -168,11 +172,13 @@ public class GameScreen extends ScreenAdapter {
         followPlayer();
     }
 
+    /** @req FR_PAUSE */
     private void pauseGame() {
         isPaused = true;
         pauseMenu.show();
     }
 
+    /** @req FR_PAUSE */
     private void resumeGame() {
         isPaused = false;
         pauseMenu.hide();

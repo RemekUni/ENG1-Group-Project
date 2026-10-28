@@ -6,6 +6,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 /**
  * A Timer which returns true on update() when the set time has elapsed. Will repeat
  * until specifically stopped.
+ * 
+ * @req FR_TIMER FR_PAUSE
  *
  * @author Paul Turner (sfn544@york.ac.uk)
  */
@@ -25,6 +27,8 @@ public class Timer {
 
     /**
      * Pauses the timer while retaining its elapsed time.
+     * 
+     * @req FR_PAUSE
      */
     public void pause() {
         if (playing) {
@@ -36,6 +40,8 @@ public class Timer {
 
     /**
      * Unpauses the timer and allows it to continue from when it was paused.
+     * 
+     * @req FR_PAUSE
      */
     public void unpause() {
         if (!playing) {
@@ -71,6 +77,8 @@ public class Timer {
 
     /**
      * Checks to see if the set time has elapsed. Will only check if the timer is playing.
+     * 
+     * @req FR_TIMER
      *
      * @return true when the timer reaches the set time; false on all other occasions.
      */

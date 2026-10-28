@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.Array;
 /**
  * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link Entity}.
  * 
+ * @req UR_INVENTORY
+ * 
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public class ItemEntity extends Entity {

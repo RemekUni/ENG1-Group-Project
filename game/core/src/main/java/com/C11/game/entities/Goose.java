@@ -8,6 +8,8 @@ import com.C11.game.world.GameMap;
 /**
  * A goose that chases a given target and stops when close.
  * 
+ * @req FR_GEESE FR_GEESE_BOUNDARY
+ * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class Goose extends CollectorEntity {

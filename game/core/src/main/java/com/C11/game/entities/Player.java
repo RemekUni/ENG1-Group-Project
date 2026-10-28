@@ -12,6 +12,8 @@ import com.C11.game.world.GameMap;
  * The player-controlled sprite. Moves with WASD.
  * Collision is handled by Entity
  * 
+ * @req UR_CHARACTER FR_PLAYER_BOUNDARY
+ * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class Player extends CollectorEntity{
