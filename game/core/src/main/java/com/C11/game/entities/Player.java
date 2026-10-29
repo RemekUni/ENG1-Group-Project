@@ -35,8 +35,8 @@ public class Player extends CollectorEntity{
      * @param startY starting 'y' position of entity's bottom-left corner, in world units
      * @param gameMap map used for collision checks
      */
-    public Player(Texture playerTexture, float startX, float startY, GameMap gameMap, Array<Entity> entitiesArray, Array<ItemEntity> itemsArray) {
-        super(playerTexture, gameMap, startX, startY, PLAYER_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesArray, itemsArray);
+    public Player(Texture playerTexture, float startX, float startY, GameMap gameMap, Array<Entity> entitiesArray) {
+        super(playerTexture, gameMap, startX, startY, PLAYER_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesArray);
     }
 
     // Opposite keys cancel out; x and y can both be set for diagonals. Entity.move() normalises direction so diagonal movement is not faster
@@ -61,5 +61,11 @@ public class Player extends CollectorEntity{
         move(direction, delta);
     }
 
-    
+    public void throwItem() {
+
+    }
+
+    private void startAim() {
+
+    }
 }

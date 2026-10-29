@@ -104,9 +104,11 @@ public class GameScreen extends ScreenAdapter {
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
 
-        player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities, itemEntities);
+        player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities);
+        player.enableCollection(itemEntities);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities);
-        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, itemEntities);
+        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities);
+        goose2.enableCollection(itemEntities);
         
         events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2f, 2f, 1f, player, true) {
             @Override

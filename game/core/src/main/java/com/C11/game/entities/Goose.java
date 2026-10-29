@@ -30,7 +30,7 @@ public class Goose extends CollectorEntity {
     private final Entity target;
 
     /**
-     * Creates a goose that chases a target, collection <b>off</b> by default
+     * Creates a goose that chases a target.
      * 
      * @param gooseTexture texture of the goose
      * @param startX starting 'x' position of entity's bottom-left corner, in world units
@@ -44,21 +44,6 @@ public class Goose extends CollectorEntity {
         this.target = target;
     }
 
-    /**
-     * Creates a goose that chases a target, collection <b>on</b> by default
-     * 
-     * @param gooseTexture texture of the goose
-     * @param startX starting 'x' position of entity's bottom-left corner, in world units
-     * @param startY starting 'y' position of entity's bottom-left corner, in world units
-     * @param gameMap map used for collision checks
-     * @param target the entity this goose moves towards 
-     * @param entitiesArray reference to dynamic array of all entities
-     * @param itemsArray dynamic array of all items on the map
-     */
-    public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, Entity target, Array<Entity> entitiesArray, Array<ItemEntity> itemsArray) {
-        super(gooseTexture, gameMap, startX, startY, GOOSE_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesArray, itemsArray);
-        this.target = target;
-    }
 
     @Override 
     public void update(float delta) {
