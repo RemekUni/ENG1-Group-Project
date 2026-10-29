@@ -1,5 +1,7 @@
 package com.C11.game.hitboxes;
 
+import com.C11.game.world.GameMap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -9,11 +11,17 @@ import com.badlogic.gdx.math.Vector2;
  * @author kieranmckenna (gnv523@york.ac.uk)
  */
 public abstract class EventTrigger extends Hitbox {
-    private final boolean oneShot;//Whether the action can be done more than once.
-    private boolean triggered = false;
+    protected boolean oneShot;//Whether the action can be done more than once.
+    protected boolean triggered = false;
+    protected Vector2 position;
+    protected float size;
+    protected Texture texture;
 
-    public EventTrigger(float widthScale, float heightScale, Vector2 position, float size, boolean oneShot) {
-        super(widthScale, heightScale, position, size);
+    public EventTrigger(Texture texture, float startX, float startY, GameMap gameMap, float size, boolean oneShot) {
+        super(1.0f, 1.0f, new Vector2(startX, startY), size);
+        this.texture = texture;
+        this.position = new Vector2(startX, startY);
+        this.size = size;
         this.oneShot = oneShot;
     }
     public abstract void action(); //Defined in the subclasses.

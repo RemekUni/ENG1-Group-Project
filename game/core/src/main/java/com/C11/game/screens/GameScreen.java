@@ -1,15 +1,15 @@
 package com.C11.game.screens;
 
+import com.C11.game.events.AbandonedSandwich;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.C11.game.Main;
 import com.C11.game.entities.Entity;
 import com.C11.game.entities.Goose;
-import com.C11.game.entities.ItemEntity;
+import com.C11.game.items.ItemEntity;
 import com.C11.game.entities.Player;
 import com.C11.game.events.HiddenEvent;
 import com.C11.game.ui.PauseMenu;
@@ -19,10 +19,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -30,13 +26,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input.Keys;
 import java.util.ArrayList;
 import java.util.List;
-import com.C11.game.events.HiddenEvent;
+
 import com.C11.game.ItemType;
 
 /**
  * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
  * Each frame runs update(delta), then draw(). These are separate to allow for game pausing to only skip updates but keep drawing the paused game screen.
- * 
+ *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class GameScreen extends ScreenAdapter {
@@ -48,10 +44,11 @@ public class GameScreen extends ScreenAdapter {
     private final Player player;
     private final Goose goose;
     private final Goose goose2;
+    private final AbandonedSandwich sandwich;
 
     private Array<Entity> entities = new Array<>();
     private Array<ItemEntity> itemEntities = new Array<>();;
-    
+
     private final float worldWidth;
     private final float worldHeight;
 
@@ -66,6 +63,7 @@ public class GameScreen extends ScreenAdapter {
     private final Texture playerTexture;
     private final Texture gooseTexture;
     private final Texture itemTexture1; // TODO: Use one secitoned texture sprite for multiple item types
+    private final Texture sandwichTexture;
 
 
     private boolean isPaused;
@@ -80,7 +78,7 @@ public class GameScreen extends ScreenAdapter {
      * Loads map and textures.
      * Sets up the camera and viewport.
      * Spawns entities.
-     * 
+     *
      * @param game game provides the shared batch
      */
     public GameScreen(Main game) {
@@ -92,6 +90,7 @@ public class GameScreen extends ScreenAdapter {
         playerTexture = new Texture("sprites/tile_0098.png");
         gooseTexture = new Texture("sprites/duck.png");
         itemTexture1 = new Texture("sprites/item-prototype.png");
+        sandwichTexture = new Texture("sprites/sandwich.png");
 
         worldWidth = gameMap.getWorldWidth();
         worldHeight = gameMap.getWorldHeight();
@@ -105,7 +104,9 @@ public class GameScreen extends ScreenAdapter {
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities, itemEntities);
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities);
         goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, itemEntities);
-        
+
+        sandwich = new AbandonedSandwich(sandwichTexture, 80, 400, gameMap, 0.5f, true);
+
         events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2f, 2f, 1f, player, true) {
             @Override
             public void action() {
@@ -129,7 +130,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     // false: do not recentre the camera, it is supposed to follow the player instead
-    @Override 
+    @Override
     public void resize(int width, int height) {
         viewport.update(width, height, false);
         followPlayer();
@@ -203,6 +204,8 @@ public class GameScreen extends ScreenAdapter {
         for (ItemEntity item : itemEntities) {
             item.draw(spriteBatch);
         }
+        //Abandoned sandwich event
+        sandwich.draw(spriteBatch);
 
         spriteBatch.end();
     }
@@ -219,5 +222,5 @@ public class GameScreen extends ScreenAdapter {
         gooseTexture.dispose();
         pauseMenu.dispose();
     }
-    
+
 }
