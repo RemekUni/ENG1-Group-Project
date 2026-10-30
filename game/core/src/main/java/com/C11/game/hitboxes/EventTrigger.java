@@ -2,6 +2,8 @@ package com.C11.game.hitboxes;
 
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -15,9 +17,18 @@ public abstract class EventTrigger extends Hitbox {
     protected boolean triggered = false;
     protected Vector2 position;
     protected float size;
-    protected Texture texture;
+    protected TextureRegion texture;
 
-    public EventTrigger(Texture texture, float startX, float startY, GameMap gameMap, float size, boolean oneShot) {
+    /**
+     * Constructor to initialize all the events
+     * @param texture a texture region for the sprite/asset you are using.
+     * @param startX bottom left x coordinate of the asset
+     * @param startY bottom left y coordinate of the asset
+     * @param gameMap the gameMap
+     * @param size how big the asset should be
+     * @param oneShot if event can happen multiple timea
+     */
+    public EventTrigger(TextureRegion texture, float startX, float startY, GameMap gameMap, float size, boolean oneShot) {
         super(1.0f, 1.0f, new Vector2(startX, startY), size);
         this.texture = texture;
         this.position = new Vector2(startX, startY);
@@ -45,6 +56,13 @@ public abstract class EventTrigger extends Hitbox {
     public boolean isComplete(){
         return triggered && oneShot;
     }
+
+    public void draw(SpriteBatch batch) {
+        if (!isComplete() && texture != null) {
+            batch.draw(texture, position.x, position.y, size, size);
+        }
+    }
 }
+
 
 

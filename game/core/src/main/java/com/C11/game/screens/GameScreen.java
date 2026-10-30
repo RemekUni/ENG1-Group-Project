@@ -1,6 +1,7 @@
 package com.C11.game.screens;
 
 import com.C11.game.events.AbandonedSandwich;
+import com.C11.game.hitboxes.EventTrigger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 
@@ -11,9 +12,9 @@ import com.C11.game.entities.Entity;
 import com.C11.game.entities.Goose;
 import com.C11.game.items.ItemEntity;
 import com.C11.game.entities.Player;
-import com.C11.game.events.HiddenEvent;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -71,7 +72,7 @@ public class GameScreen extends ScreenAdapter {
     private final PauseMenu pauseMenu;
 
     // Hidden events on the map, checked every frame in update()
-    private final List<HiddenEvent> events = new ArrayList<>();
+    private final List<EventTrigger> events = new ArrayList<>();
     private int eventsTriggered = 0; // for FR_EVENT_COUNTER
 
     /**
@@ -105,14 +106,11 @@ public class GameScreen extends ScreenAdapter {
         goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities);
         goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, itemEntities);
 
-        sandwich = new AbandonedSandwich(sandwichTexture, 80, 400, gameMap, 0.5f, true);
-
-        events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2f, 2f, 1f, player, true) {
-            @Override
-            public void action() {
-                System.out.println("Hidden event triggered!");
-            }
-        });
+        //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
+        int sandwichWidth = sandwichTexture.getWidth() /2;
+        int sandwichHeight = sandwichTexture.getHeight();
+        TextureRegion singleSandwichTexture = new TextureRegion(sandwichTexture, 0 ,0 , sandwichWidth, sandwichHeight);
+        sandwich = new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f);
 
         // temp/dev
         int itemCount = 50;
@@ -155,10 +153,15 @@ public class GameScreen extends ScreenAdapter {
         goose.update(delta);
         goose2.update(delta);
         // TODO: test event only, replace with real events
-        for (HiddenEvent event : events) {
-            if (event.check()) {
+        for (EventTrigger event : events) {
+            if (event.trigger()) {
                 eventsTriggered++;
             }
+        }
+
+        //This checks if player touches the sandwich and calls trigger which runs the event
+        if (!sandwich.isComplete() && sandwich.overlaps(player.getHitbox())){
+            sandwich.trigger();
         }
 
         // Items
@@ -221,6 +224,7 @@ public class GameScreen extends ScreenAdapter {
         playerTexture.dispose();
         gooseTexture.dispose();
         pauseMenu.dispose();
+        sandwichTexture.dispose();
     }
 
 }
