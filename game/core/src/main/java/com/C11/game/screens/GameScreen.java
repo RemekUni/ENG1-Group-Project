@@ -43,8 +43,7 @@ public class GameScreen extends ScreenAdapter {
     private final OrthographicCamera camera;
     private final SpriteBatch spriteBatch;
     private final Player player;
-    private final Goose goose;
-    private final Goose goose2;
+    private final Array<Goose> geese = new Array<>();
     private final AbandonedSandwich sandwich;
 
     private Array<Entity> entities = new Array<>();
@@ -103,8 +102,10 @@ public class GameScreen extends ScreenAdapter {
 
 
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities, itemEntities);
-        goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities);
-        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, itemEntities);
+
+        //Add initial 2 geese to the gameMap by adding to the array
+        geese.add(new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities));
+        geese.add(new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, itemEntities));
 
         //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
         int sandwichWidth = sandwichTexture.getWidth() /2;
@@ -150,8 +151,9 @@ public class GameScreen extends ScreenAdapter {
 
     private void update(float delta){
         player.update(delta);
-        goose.update(delta);
-        goose2.update(delta);
+        for (Goose goose : geese) {
+            goose.update(delta);
+        }
         // TODO: test event only, replace with real events
         for (EventTrigger event : events) {
             if (event.trigger()) {
@@ -201,8 +203,10 @@ public class GameScreen extends ScreenAdapter {
         spriteBatch.begin();
 
         player.draw(spriteBatch);
-        goose.draw(spriteBatch);
-        goose2.draw(spriteBatch);
+       for (Goose goose : geese) {
+           goose.draw(spriteBatch);
+       }
+
         // Items
         for (ItemEntity item : itemEntities) {
             item.draw(spriteBatch);
