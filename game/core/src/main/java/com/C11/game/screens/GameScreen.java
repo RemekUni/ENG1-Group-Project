@@ -111,7 +111,7 @@ public class GameScreen extends ScreenAdapter {
         int sandwichWidth = sandwichTexture.getWidth() /2;
         int sandwichHeight = sandwichTexture.getHeight();
         TextureRegion singleSandwichTexture = new TextureRegion(sandwichTexture, 0 ,0 , sandwichWidth, sandwichHeight);
-        sandwich = new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f);
+        sandwich = new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f, player, gooseTexture, entities, geese);
 
         // temp/dev
         int itemCount = 50;
