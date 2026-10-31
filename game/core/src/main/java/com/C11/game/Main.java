@@ -1,8 +1,12 @@
 package com.C11.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.C11.game.screens.EndScreen;
 import com.C11.game.screens.GameScreen;
+import com.C11.game.screens.StartScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /** 
  * Root game class: It creates resources shared by all screens (spriteBatch) and shows the first screen.
@@ -10,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class Main extends Game {
     private SpriteBatch spriteBatch;
+    private Skin skin;
 
     /**
      * Returns the shared spriteBatch
@@ -23,7 +28,9 @@ public class Main extends Game {
     @Override
     public void create() {
         spriteBatch = new SpriteBatch();
-        setScreen(new GameScreen(this));
+        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        // setScreen(new GameScreen(this));
+        setScreen(new EndScreen(skin, () -> System.out.println(), () -> System.out.println()));
         
     }
 
@@ -31,5 +38,6 @@ public class Main extends Game {
     public void dispose() {
         getScreen().dispose();
         spriteBatch.dispose();
+        skin.dispose();
     }
 }

@@ -224,6 +224,7 @@ public class GameScreen extends ScreenAdapter {
         playerTexture.dispose();
         gooseTexture.dispose();
         pauseMenu.dispose();
+        itemTexture1.dispose();
     }
     
 }
