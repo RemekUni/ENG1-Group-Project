@@ -1,13 +1,14 @@
 package com.C11.game.entities;
 
 import com.C11.game.ItemType;
+import com.C11.game.items.ItemEntity;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 
 /**
  * Creates a collector entity at the given position. Inherits from {@link Entity}.
- * 
+ *
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 // TODO: The default collection state in constructor implementation is really unintuitive: rewrite to be a separate method instead.
@@ -53,9 +54,9 @@ public abstract class CollectorEntity extends Entity {
         this.isCollectionEnabled = false;
         // ..itemsArray initialisation can be ommitted as it will not be called unless collection is enabled afterwards, through #setCollectionOn which requires itemsArray to be initialised.s
     }
-    
+
     public void collectItem(ItemEntity itemEntity) {
-        if (!isCollectionEnabled) return; 
+        if (!isCollectionEnabled) return;
 
         // Remove #ItemEntity from the render list. GC should then dispose it from memory as it will not be referenced anywhere
         itemsArray.removeValue(itemEntity, true);
