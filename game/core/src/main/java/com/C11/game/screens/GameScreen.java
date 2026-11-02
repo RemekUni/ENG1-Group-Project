@@ -65,7 +65,7 @@ public class GameScreen extends ScreenAdapter {
     // Loaded once and then shared by entities. Disposed in dispose().
     private final Texture PLAYER_TEXTURE;
     private final Texture GOOSE_TEXTURE;
-    private final Texture ITEM_TEXTURE_1; // TODO: Use one secitoned texture sprite for multiple item types
+    private final Texture ITEM_TEXTURE_1; // TODO: Use one sectioned texture sprite for multiple item types
 
 
     private boolean isPaused;
@@ -178,7 +178,7 @@ public class GameScreen extends ScreenAdapter {
 
         if (TIMER_DISPLAY.getTimer().update()) {
             if (TIMER_DISPLAY.getTimer().getTicks() == TIMER_DISPLAY.getInitialTime()) {
-                TIMER_DISPLAY.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display.
+                TIMER_DISPLAY.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
                 System.out.println("TIMER OVER TIMER OVER");
                 pause(); // Call pause for now, change to gameover screen when made :)
             }
@@ -190,12 +190,14 @@ public class GameScreen extends ScreenAdapter {
     /** @req FR_PAUSE */
     private void pauseGame() {
         isPaused = true;
+        TIMER_DISPLAY.getTimer().pause();
         PAUSE_MENU.show();
     }
 
     /** @req FR_PAUSE */
     private void resumeGame() {
         isPaused = false;
+        TIMER_DISPLAY.getTimer().unpause();
         PAUSE_MENU.hide();
     }
 
@@ -204,9 +206,6 @@ public class GameScreen extends ScreenAdapter {
         VIEWPORT.getCamera().position.set(PLAYER.getPosition().x + PLAYER.getWidth() / 2, PLAYER.getPosition().y + PLAYER.getHeight() / 2, 0);
         // Clamps the camera so that it stays within the map borders
         VIEWPORT.getCamera().position.set(MathUtils.clamp(CAMERA.position.x, VIEWPORT.getWorldWidth() / 2, WORLD_WIDTH - VIEWPORT.getWorldWidth() / 2), MathUtils.clamp(CAMERA.position.y, VIEWPORT.getWorldHeight() / 2, WORLD_HEIGHT - VIEWPORT.getWorldHeight() / 2), 0);
-
-//        viewportText.getCamera().position.set(player.getPosition().x + player.getWidth() / 2, player.getPosition().y + player.getHeight() / 2, 0);
-//        viewportText.getCamera().position.set(MathUtils.clamp(camera.position.x, viewport.getWorldWidth() / 2, worldWidth - viewport.getWorldWidth() / 2), MathUtils.clamp(camera.position.y, viewport.getWorldHeight() / 2, worldHeight - viewport.getWorldHeight() / 2), 0);
     }
 
     private void draw() {
