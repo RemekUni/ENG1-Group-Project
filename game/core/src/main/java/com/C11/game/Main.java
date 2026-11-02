@@ -2,6 +2,7 @@ package com.C11.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.C11.game.screens.EndScreen;
 import com.C11.game.screens.GameScreen;
 import com.C11.game.screens.StartScreen;
@@ -29,14 +30,33 @@ public class Main extends Game {
     public void create() {
         spriteBatch = new SpriteBatch();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        // setScreen(new GameScreen(this));
-        setScreen(new EndScreen(skin, () -> System.out.println(), () -> System.out.println()));
+        showStartScreen();
         
+    }
+
+    public void showStartScreen() {
+        switchScreen(new StartScreen(skin, () -> startGame(), () -> Gdx.app.exit()));
+    }
+
+    public void startGame() {
+        switchScreen(new GameScreen(this));
+    }
+
+    public void showEndScreen() {
+        switchScreen(new EndScreen(skin, () -> showStartScreen(), () -> Gdx.app.exit()));
+    }
+
+    private void switchScreen(Screen next) {
+        Gdx.app.postRunnable(() -> {
+            final Screen previous = getScreen();
+            setScreen(next);
+            if (previous != null) previous.dispose();
+        });
     }
 
     @Override
     public void dispose() {
-        getScreen().dispose();
+        if (getScreen() != null) getScreen().dispose();
         spriteBatch.dispose();
         skin.dispose();
     }

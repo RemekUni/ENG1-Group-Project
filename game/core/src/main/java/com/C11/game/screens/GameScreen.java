@@ -127,6 +127,10 @@ public class GameScreen extends ScreenAdapter {
         }
 
         pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
+    }
+
+    @Override 
+    public void show() {
         pauseGame();
     }
 
@@ -144,6 +148,8 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             if (isPaused) resumeGame();
             else pauseGame();
+        } else if (Gdx.input.isKeyJustPressed(Keys.P)) {
+            game.showEndScreen();
         }
         if (!isPaused) update(delta);
         draw();
