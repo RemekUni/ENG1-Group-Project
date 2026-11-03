@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector2;
  * A Hitbox class that creates a rectangle around an area on the map and the sprite that
  * can be used to trigger events in the Trigger Class or for collisions.
  * It extends the Rectangle Class as the required "overlaps()" method is already defined.
+ * 
+ * @req FR_MAP_COLLISION FR_TRIGGER_EVENT
  *
  * @author kieranmckenna (gnv523@york.ac.uk)
  */
