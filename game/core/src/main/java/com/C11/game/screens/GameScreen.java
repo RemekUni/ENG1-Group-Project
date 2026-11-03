@@ -1,6 +1,8 @@
 package com.C11.game.screens;
 
 import com.C11.game.ui.TimerDisplay;
+import com.C11.game.utils.GameResult;
+import com.C11.game.utils.GameState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 
@@ -49,6 +51,8 @@ public class GameScreen extends ScreenAdapter {
     private final Goose GOOSE;
     private final Goose GOOSE2;
 
+    private final GameState gameState;
+
     private Array<Entity> entities = new Array<>();
     private Array<ItemEntity> itemEntities = new Array<>();;
 
@@ -76,7 +80,6 @@ public class GameScreen extends ScreenAdapter {
 
     // Hidden events on the map, checked every frame in update()
     private final List<HiddenEvent> EVENTS = new ArrayList<>();
-    private int eventsTriggered = 0; // for FR_EVENT_COUNTER
 
     /**
      * Loads map and textures.
@@ -89,8 +92,9 @@ public class GameScreen extends ScreenAdapter {
         // TODO: read spawn positions from the Tiled spawn layer and use them to initialise entities
         this.game = game;
         this.SPRITE_BATCH = game.getBatch();
+        this.gameState = new GameState();
         gameMap = new GameMap("maps/campus.tmx");
-        GAME_LENGTH = 500;
+        GAME_LENGTH = 30;
         TIMER_DISPLAY = new TimerDisplay("SuperNormal.ttf", GAME_LENGTH);
         TIMER_DISPLAY.getTimer().start();
 
@@ -155,8 +159,6 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             if (isPaused) resumeGame();
             else pauseGame();
-        } else if (Gdx.input.isKeyJustPressed(Keys.P)) {
-            game.showEndScreen();
         }
         if (!isPaused) update(delta);
         draw();
@@ -173,7 +175,7 @@ public class GameScreen extends ScreenAdapter {
         // TODO: test event only, replace with real events
         for (HiddenEvent event : EVENTS) {
             if (event.check()) {
-                eventsTriggered++;
+                gameState.recordEventTriggered();
             }
         }
 
@@ -186,11 +188,16 @@ public class GameScreen extends ScreenAdapter {
             if (TIMER_DISPLAY.getTimer().getTicks() == TIMER_DISPLAY.getInitialTime()) {
                 TIMER_DISPLAY.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
                 System.out.println("TIMER OVER TIMER OVER");
-                pause(); // Call pause for now, change to gameover screen when made :)
+                endGame();
             }
         }
 
         followPlayer();
+    }
+
+    private void endGame() {
+        GameResult result = gameState.toResult(TIMER_DISPLAY.getTimer().getTicks());
+        game.showEndScreen(result);
     }
 
     /** @req FR_PAUSE */
@@ -263,7 +270,6 @@ public class GameScreen extends ScreenAdapter {
         gooseTexture.dispose();
         pauseMenu.dispose();
         itemTexture1.dispose();
-        gooseTexture.dispose();
     }
 
 }

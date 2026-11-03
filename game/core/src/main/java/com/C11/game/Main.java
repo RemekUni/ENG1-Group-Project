@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.C11.game.screens.EndScreen;
 import com.C11.game.screens.GameScreen;
 import com.C11.game.screens.StartScreen;
+import com.C11.game.utils.GameResult;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -42,8 +43,8 @@ public class Main extends Game {
         switchScreen(new GameScreen(this));
     }
 
-    public void showEndScreen() {
-        switchScreen(new EndScreen(skin, () -> showStartScreen(), () -> Gdx.app.exit()));
+    public void showEndScreen(GameResult result) {
+        switchScreen(new EndScreen(skin, result, () -> showStartScreen(), () -> Gdx.app.exit()));
     }
 
     private void switchScreen(Screen next) {
