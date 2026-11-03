@@ -1,6 +1,7 @@
 package com.C11.game.screens;
 
-import com.C11.game.ui.TimerDisplay;
+import com.C11.game.events.AbandonedSandwich;
+import com.C11.game.hitboxes.EventTrigger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 
@@ -9,11 +10,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.C11.game.Main;
 import com.C11.game.entities.Entity;
 import com.C11.game.entities.Goose;
-import com.C11.game.entities.ItemEntity;
+import com.C11.game.items.ItemEntity;
 import com.C11.game.entities.Player;
-import com.C11.game.events.HiddenEvent;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -33,27 +34,23 @@ import com.C11.game.ItemType;
  * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
  * Each frame runs update(delta), then draw(). These are separate to allow for game pausing to only skip updates but keep drawing the paused game screen.
  *
- * @req UR_MAP UR_CHARACTER UR_GEESE
- *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class GameScreen extends ScreenAdapter {
     private final Main game;
-    private final GameMap GAME_MAP;
-    private final Viewport VIEWPORT;
-    private final Viewport VIEWPORT_TEXT;
-    private final OrthographicCamera CAMERA;
-    private final OrthographicCamera CAMERA_TEXT;
-    private final SpriteBatch SPRITE_BATCH;
-    private final Player PLAYER;
-    private final Goose GOOSE;
-    private final Goose GOOSE2;
+    private final GameMap gameMap;
+    private final Viewport viewport;
+    private final OrthographicCamera camera;
+    private final SpriteBatch spriteBatch;
+    private final Player player;
+    private final Array<Goose> geese = new Array<>();
+    private final AbandonedSandwich sandwich;
 
     private Array<Entity> entities = new Array<>();
     private Array<ItemEntity> itemEntities = new Array<>();;
 
-    private final float WORLD_WIDTH;
-    private final float WORLD_HEIGHT;
+    private final float worldWidth;
+    private final float worldHeight;
 
     /**
      * Minimum visible area in world units (tiles).
@@ -63,19 +60,18 @@ public class GameScreen extends ScreenAdapter {
     static final float VIEW_HEIGHT = 9f;
 
     // Loaded once and then shared by entities. Disposed in dispose().
-    private final Texture PLAYER_TEXTURE;
-    private final Texture GOOSE_TEXTURE;
-    private final Texture ITEM_TEXTURE_1; // TODO: Use one sectioned texture sprite for multiple item types
+    private final Texture playerTexture;
+    private final Texture gooseTexture;
+    private final Texture itemTexture1; // TODO: Use one secitoned texture sprite for multiple item types
+    private final Texture sandwichTexture;
 
 
     private boolean isPaused;
 
-    private final PauseMenu PAUSE_MENU;
-    private final TimerDisplay TIMER_DISPLAY;
-    private final int GAME_LENGTH;
+    private final PauseMenu pauseMenu;
 
     // Hidden events on the map, checked every frame in update()
-    private final List<HiddenEvent> EVENTS = new ArrayList<>();
+    private final List<EventTrigger> events = new ArrayList<>();
     private int eventsTriggered = 0; // for FR_EVENT_COUNTER
 
     /**
@@ -88,64 +84,58 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(Main game) {
         // TODO: read spawn positions from the Tiled spawn layer and use them to initialise entities
         this.game = game;
-        this.SPRITE_BATCH = game.getBatch();
-        GAME_MAP = new GameMap("maps/campus.tmx");
+        this.spriteBatch = game.getBatch();
+        gameMap = new GameMap("maps/campus.tmx");
 
-        PLAYER_TEXTURE = new Texture("sprites/tile_0098.png");
-        GOOSE_TEXTURE = new Texture("sprites/duck.png");
-        ITEM_TEXTURE_1 = new Texture("sprites/item-prototype.png");
+        playerTexture = new Texture("sprites/tile_0098.png");
+        gooseTexture = new Texture("sprites/duck.png");
+        itemTexture1 = new Texture("sprites/item-prototype.png");
+        sandwichTexture = new Texture("sprites/sandwich.png");
 
-        WORLD_WIDTH = GAME_MAP.getWorldWidth();
-        WORLD_HEIGHT = GAME_MAP.getWorldHeight();
+        worldWidth = gameMap.getWorldWidth();
+        worldHeight = gameMap.getWorldHeight();
 
-        CAMERA = new OrthographicCamera();
-        VIEWPORT = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, CAMERA);
-        CAMERA_TEXT = new OrthographicCamera();
-        // worldWidth is multiplied by an arbitrary number to better facilitate text.
-        VIEWPORT_TEXT = new ExtendViewport(WORLD_WIDTH * 20, WORLD_HEIGHT * 20, CAMERA_TEXT);
+        camera = new OrthographicCamera();
+        viewport = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, camera);
 
-        CAMERA.position.set(WORLD_WIDTH /2f, WORLD_HEIGHT /2f, 0);
+        camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
 
-        PLAYER = new Player(PLAYER_TEXTURE, WORLD_WIDTH /2, WORLD_HEIGHT /2, GAME_MAP, entities, itemEntities);
-        GOOSE = new Goose(GOOSE_TEXTURE, WORLD_WIDTH /2 - 10, WORLD_HEIGHT /2, GAME_MAP, PLAYER, entities);
-        GOOSE2 = new Goose(GOOSE_TEXTURE, WORLD_WIDTH /2 + 10, WORLD_HEIGHT /2, GAME_MAP, PLAYER, entities, itemEntities);
+        player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities, itemEntities);
 
-        EVENTS.add(new HiddenEvent(WORLD_WIDTH /2 + 3, WORLD_HEIGHT /2, 2f, 2f, 1f, PLAYER, true) {
-            @Override
-            public void action() {
-                System.out.println("Hidden event triggered!");
-            }
-        });
+        //Add initial 2 geese to the gameMap by adding to the array
+        geese.add(new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities));
+        geese.add(new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, itemEntities));
+
+        //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
+        int sandwichWidth = sandwichTexture.getWidth() /2;
+        int sandwichHeight = sandwichTexture.getHeight();
+        TextureRegion singleSandwichTexture = new TextureRegion(sandwichTexture, 0 ,0 , sandwichWidth, sandwichHeight);
+        sandwich = new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f, player, gooseTexture, entities, geese);
 
         // temp/dev
         int itemCount = 50;
         for (int i = 0; i < itemCount; i++) {
-            int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) WORLD_WIDTH);
-            int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) WORLD_HEIGHT);
+            int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) worldWidth);
+            int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
 
 
-            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", ITEM_TEXTURE_1), GAME_MAP, randomX, randomY, entities);
+            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", itemTexture1), gameMap, randomX, randomY, entities);
             itemEntities.add(itemType1);
         }
 
-        GAME_LENGTH = 500;
-        TIMER_DISPLAY = new TimerDisplay("SuperNormal.ttf", GAME_LENGTH);
-        TIMER_DISPLAY.getTimer().start();
-        PAUSE_MENU = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
+        pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
         pauseGame();
     }
 
     // false: do not recentre the camera, it is supposed to follow the player instead
     @Override
     public void resize(int width, int height) {
-        VIEWPORT.update(width, height, false);
-        VIEWPORT_TEXT.update(width, height, false);
+        viewport.update(width, height, false);
         followPlayer();
-        PAUSE_MENU.resize(width, height);
+        pauseMenu.resize(width, height);
     }
 
-    /** @req FR_PAUSE */
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
@@ -155,20 +145,25 @@ public class GameScreen extends ScreenAdapter {
         if (!isPaused) update(delta);
         draw();
 
-        if (isPaused) PAUSE_MENU.render(delta);
+        if (isPaused) pauseMenu.render(delta);
 
     }
 
-    /** @req FR_EVENT_COUNTER FR_TRIGGER_EVENT */
-    private void update(float delta) {
-        GOOSE.update(delta);
-        GOOSE2.update(delta);
-        PLAYER.update(delta);
+    private void update(float delta){
+        player.update(delta);
+        for (Goose goose : geese) {
+            goose.update(delta);
+        }
         // TODO: test event only, replace with real events
-        for (HiddenEvent event : EVENTS) {
-            if (event.check()) {
+        for (EventTrigger event : events) {
+            if (event.trigger()) {
                 eventsTriggered++;
             }
+        }
+
+        //This checks if player touches the sandwich and calls trigger which runs the event
+        if (!sandwich.isComplete() && sandwich.overlaps(player.getHitbox())){
+            sandwich.trigger();
         }
 
         // Items
@@ -176,73 +171,50 @@ public class GameScreen extends ScreenAdapter {
             item.update(delta);
         }
 
-        if (TIMER_DISPLAY.getTimer().update()) {
-            if (TIMER_DISPLAY.getTimer().getTicks() == TIMER_DISPLAY.getInitialTime()) {
-                TIMER_DISPLAY.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
-                System.out.println("TIMER OVER TIMER OVER");
-                pause(); // Call pause for now, change to gameover screen when made :)
-            }
-        }
-
         followPlayer();
     }
 
-    /** @req FR_PAUSE */
     private void pauseGame() {
         isPaused = true;
-        TIMER_DISPLAY.getTimer().pause();
-        PAUSE_MENU.show();
+        pauseMenu.show();
     }
 
-    /** @req FR_PAUSE */
     private void resumeGame() {
         isPaused = false;
-        TIMER_DISPLAY.getTimer().unpause();
-        PAUSE_MENU.hide();
+        pauseMenu.hide();
     }
 
     private void followPlayer() {
         // Follows the player's center, updated every frame
-        VIEWPORT.getCamera().position.set(PLAYER.getPosition().x + PLAYER.getWidth() / 2, PLAYER.getPosition().y + PLAYER.getHeight() / 2, 0);
+        viewport.getCamera().position.set(player.getPosition().x + player.getWidth() / 2, player.getPosition().y + player.getHeight() / 2, 0);
         // Clamps the camera so that it stays within the map borders
-        VIEWPORT.getCamera().position.set(MathUtils.clamp(CAMERA.position.x, VIEWPORT.getWorldWidth() / 2, WORLD_WIDTH - VIEWPORT.getWorldWidth() / 2), MathUtils.clamp(CAMERA.position.y, VIEWPORT.getWorldHeight() / 2, WORLD_HEIGHT - VIEWPORT.getWorldHeight() / 2), 0);
+        viewport.getCamera().position.set(MathUtils.clamp(camera.position.x, viewport.getWorldWidth() / 2, worldWidth - viewport.getWorldWidth() / 2), MathUtils.clamp(camera.position.y, viewport.getWorldHeight() / 2, worldHeight - viewport.getWorldHeight() / 2), 0);
     }
 
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
 
-        VIEWPORT.apply();
-        CAMERA.update();
+        viewport.apply();
+        camera.update();
 
-        GAME_MAP.render(CAMERA);
+        gameMap.render(camera);
 
-        SPRITE_BATCH.setProjectionMatrix(VIEWPORT.getCamera().combined);
-        SPRITE_BATCH.begin();
+        spriteBatch.setProjectionMatrix(camera.combined);
+        spriteBatch.begin();
 
-        PLAYER.draw(SPRITE_BATCH);
-        GOOSE.draw(SPRITE_BATCH);
-        GOOSE2.draw(SPRITE_BATCH);
+        player.draw(spriteBatch);
+       for (Goose goose : geese) {
+           goose.draw(spriteBatch);
+       }
+
         // Items
         for (ItemEntity item : itemEntities) {
-            item.draw(SPRITE_BATCH);
+            item.draw(spriteBatch);
         }
+        //Abandoned sandwich event
+        sandwich.draw(spriteBatch);
 
-        SPRITE_BATCH.end();
-
-
-        // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-        //                                  RENDER ALL TEXT HERE!
-        // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-        VIEWPORT_TEXT.apply();
-        SPRITE_BATCH.setProjectionMatrix(VIEWPORT_TEXT.getCamera().combined);
-
-        SPRITE_BATCH.begin();
-
-        TIMER_DISPLAY.draw(SPRITE_BATCH, WORLD_WIDTH / 2 - 100, WORLD_HEIGHT / 2 + 350);
-
-        SPRITE_BATCH.end();
-
+        spriteBatch.end();
     }
 
     @Override
@@ -252,10 +224,11 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        GAME_MAP.dispose();
-        PLAYER_TEXTURE.dispose();
-        GOOSE_TEXTURE.dispose();
-        PAUSE_MENU.dispose();
+        gameMap.dispose();
+        playerTexture.dispose();
+        gooseTexture.dispose();
+        pauseMenu.dispose();
+        sandwichTexture.dispose();
     }
 
 }
