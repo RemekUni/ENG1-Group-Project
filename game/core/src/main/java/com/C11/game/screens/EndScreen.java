@@ -14,6 +14,7 @@ public class EndScreen extends MenuScreen{
         addBodyLabel("GAME OVER!");
         addBodyLabel("Time Elapsed: " + result.getTimeElapsed() / 60 + ":" + String.format("%02d", result.getTimeElapsed() % 60));
         addBodyLabel("Events Triggered: " + result.getEventsTriggered());
+        addBodyLabel("Items Picked Up: " + result.getItemsPickedUp());
         addBodyLabel("Items Used: " + result.getItemsUsed());
 
         addButton("Back To Main Menu", onMainMenu);

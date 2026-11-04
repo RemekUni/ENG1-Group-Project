@@ -4,11 +4,13 @@ public class GameResult {
     private final int eventsTriggered;
     private final int itemsUsed;
     private final int timeElapsed;
+    private final int itemsPickedUp;
 
-    public GameResult(int elapsedSeconds, int events, int items) {
+    public GameResult(int elapsedSeconds, int events, int itemsUsed, int itemsPickedUp) {
         this.timeElapsed = elapsedSeconds;
         this.eventsTriggered = events;
-        this.itemsUsed = items;
+        this.itemsUsed = itemsUsed;
+        this.itemsPickedUp = itemsPickedUp;
     }
 
     public int getEventsTriggered() {
@@ -21,6 +23,10 @@ public class GameResult {
 
     public int getTimeElapsed() {
         return timeElapsed;
+    }
+
+    public int getItemsPickedUp() {
+        return itemsPickedUp;
     }
 
 }

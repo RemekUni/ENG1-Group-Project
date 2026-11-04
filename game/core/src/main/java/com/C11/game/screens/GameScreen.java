@@ -51,7 +51,6 @@ public class GameScreen extends ScreenAdapter {
     private final Goose goose;
     private final Goose goose2;
     private final Array<Goose> geese = new Array<>();
-    private final AbandonedSandwich sandwich;
 
     private final GameState gameState;
 
@@ -77,8 +76,8 @@ public class GameScreen extends ScreenAdapter {
     private boolean isPaused;
 
     private final PauseMenu pauseMenu;
-    private final TimerDisplay TIMER_DISPLAY;
-    private final int GAME_LENGTH;
+    private final TimerDisplay timerDisplay;
+    static private final int GAME_LENGTH = 30;
 
     // Hidden events on the map, checked every frame in update()
     private final List<EventTrigger> events = new ArrayList<>();
@@ -96,9 +95,8 @@ public class GameScreen extends ScreenAdapter {
         this.spriteBatch = game.getBatch();
         this.gameState = new GameState();
         gameMap = new GameMap("maps/campus.tmx");
-        GAME_LENGTH = 30;
-        TIMER_DISPLAY = new TimerDisplay("SuperNormal.ttf", GAME_LENGTH);
-        TIMER_DISPLAY.getTimer().start();
+        timerDisplay = new TimerDisplay("SuperNormal.ttf", GAME_LENGTH);
+        timerDisplay.getTimer().start();
 
         playerTexture = new Texture("sprites/tile_0098.png");
         gooseTexture = new Texture("sprites/duck.png");
@@ -109,7 +107,9 @@ public class GameScreen extends ScreenAdapter {
         worldHeight = gameMap.getWorldHeight();
 
         camera = new OrthographicCamera();
+        cameraText = new OrthographicCamera();
         viewport = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, camera);
+        viewportText = new ExtendViewport(worldWidth * 20, worldHeight * 20, cameraText);
 
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
@@ -125,7 +125,7 @@ public class GameScreen extends ScreenAdapter {
         int sandwichWidth = sandwichTexture.getWidth() /2;
         int sandwichHeight = sandwichTexture.getHeight();
         TextureRegion singleSandwichTexture = new TextureRegion(sandwichTexture, 0 ,0 , sandwichWidth, sandwichHeight);
-        sandwich = new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f, player, gooseTexture, entities, geese);
+        events.add(new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f, player, gooseTexture, entities, geese));
 
         // temp/dev
         int itemCount = 50;
@@ -150,6 +150,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, false);
+        viewportText.update(width, height, false);
         followPlayer();
         pauseMenu.resize(width, height);
     }
@@ -172,16 +173,11 @@ public class GameScreen extends ScreenAdapter {
         for (Goose goose : geese) {
             goose.update(delta);
         }
-        // TODO: test event only, replace with real events
+
         for (EventTrigger event : events) {
-            if (event.trigger()) {
+            if (event.overlaps(player.getHitbox()) && event.trigger()) {
                 gameState.recordEventTriggered();
             }
-        }
-
-        //This checks if player touches the sandwich and calls trigger which runs the event
-        if (!sandwich.isComplete() && sandwich.overlaps(player.getHitbox())){
-            sandwich.trigger();
         }
 
         // Items
@@ -189,9 +185,9 @@ public class GameScreen extends ScreenAdapter {
             item.update(delta);
         }
 
-        if (TIMER_DISPLAY.getTimer().update()) {
-            if (TIMER_DISPLAY.getTimer().getTicks() == TIMER_DISPLAY.getInitialTime()) {
-                TIMER_DISPLAY.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
+        if (timerDisplay.getTimer().update()) {
+            if (timerDisplay.getTimer().getTicks() == timerDisplay.getInitialTime()) {
+                timerDisplay.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
                 System.out.println("TIMER OVER TIMER OVER");
                 endGame();
             }
@@ -201,20 +197,20 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void endGame() {
-        GameResult result = gameState.toResult(TIMER_DISPLAY.getTimer().getTicks());
+        GameResult result = gameState.toResult(timerDisplay.getTimer().getTicks());
         game.showEndScreen(result);
     }
 
     /** @req FR_PAUSE */
     private void pauseGame() {
         isPaused = true;
-        TIMER_DISPLAY.getTimer().pause();
+        timerDisplay.getTimer().pause();
         pauseMenu.show();
     }
 
     private void resumeGame() {
         isPaused = false;
-        TIMER_DISPLAY.getTimer().unpause();
+        timerDisplay.getTimer().unpause();
         pauseMenu.hide();
     }
 
@@ -237,16 +233,31 @@ public class GameScreen extends ScreenAdapter {
         spriteBatch.begin();
 
         player.draw(spriteBatch);
-       for (Goose goose : geese) {
+        for (Goose goose : geese) {
            goose.draw(spriteBatch);
-       }
+        }
 
         // Items
         for (ItemEntity item : itemEntities) {
             item.draw(spriteBatch);
         }
-        //Abandoned sandwich event
-        sandwich.draw(spriteBatch);
+
+        for (EventTrigger event : events) {
+            event.draw(spriteBatch);
+        }
+
+        spriteBatch.end();
+
+        // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        //                                  RENDER ALL TEXT HERE!
+        // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+        viewportText.apply();
+        spriteBatch.setProjectionMatrix(cameraText.combined);
+
+        spriteBatch.begin();
+
+        timerDisplay.draw(spriteBatch, worldWidth / 2 - 100, worldHeight / 2 + 350);
 
         spriteBatch.end();
     }
@@ -263,6 +274,8 @@ public class GameScreen extends ScreenAdapter {
         gooseTexture.dispose();
         pauseMenu.dispose();
         sandwichTexture.dispose();
+        itemTexture1.dispose();
+        timerDisplay.dispose();
     }
 
 }
