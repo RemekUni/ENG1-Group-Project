@@ -5,6 +5,7 @@ import com.C11.game.utils.Timer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Provides a specific implementation of the Timer class which provides a text display.
@@ -13,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  *
  * @author Paul Turner (sfn544@york.ac.uk)
  */
-public class TimerDisplay {
+public class TimerDisplay implements Disposable {
     private Timer timer;
     private BitmapFont font;
     private int initialTime;
@@ -45,5 +46,10 @@ public class TimerDisplay {
     public void draw(SpriteBatch batch, float x, float y) {
         String displayTime = Integer.toString(initialTime - timer.getTicks());
         font.draw(batch, displayTime, x, y);
+    }
+
+    @Override
+    public void dispose() {
+        font.dispose();
     }
 }
