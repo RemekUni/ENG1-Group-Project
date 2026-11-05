@@ -35,6 +35,8 @@ public class Main extends Game {
         
     }
 
+    // helpers for cycling through the different screens. should grow larger once more screens added
+
     public void showStartScreen() {
         switchScreen(new StartScreen(skin, () -> startGame(), () -> Gdx.app.exit()));
     }

@@ -14,6 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+/**
+ * Base template for static screens, which owns its own stage.
+ * Tables are used for designing the layout where you can add buttons, titles, bodies etc.
+ * When shown, input processor is set to its respective screen for button clicks
+ * 
+ * @author Dorian Kerzan (rvl546@york.ac.uk)
+ */
 public abstract class MenuScreen extends ScreenAdapter {
     private final Stage stage;
     private final Color bgColor;
@@ -40,6 +47,13 @@ public abstract class MenuScreen extends ScreenAdapter {
     private final Table body;
     private final Table content;
 
+    /**
+     * Main constructor for the base menu screens. it sets up the global stage and tables that get reused with every menu screen.
+     * 
+     * @param skin the ui skin owned by main
+     * @param title the title of the screen
+     * @param color background colour of the screen
+     */
     protected MenuScreen(Skin skin, String title, Color color) {
         stage = new Stage(new ExtendViewport(UI_WIDTH, UI_HEIGHT));
         bgColor = color;
@@ -56,12 +70,20 @@ public abstract class MenuScreen extends ScreenAdapter {
         Label titleLabel = new Label(title, skin);
         titleLabel.setFontScale(TITLE_SCALE);
 
+        // root is the main table for the entire screen with body and button tables inside it
+        // the button table will sit underneath the body table
         root.add(titleLabel).padBottom(TITLE_PADDING_BOT).padTop(TITLE_PADDING_TOP).row();
         content.add(body).padBottom(BODY_PADDING_BOT).row();
         content.add(buttons).row();
         root.add(content).expandY();
     }
 
+    /**
+     * helper for adding buttons to the screen
+     * 
+     * @param buttonText name displayed on the button
+     * @param onClick runnable that listens for clicks on the button
+     */
     protected void addButton(String buttonText, Runnable onClick) {
         TextButton button = new TextButton(buttonText, skin);
         button.addListener(new ChangeListener() {
@@ -74,6 +96,11 @@ public abstract class MenuScreen extends ScreenAdapter {
         buttons.add(button).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
     }
 
+    /**
+     * helper for adding text to the body of the screen
+     * 
+     * @param text any text to be displayed in the body for that specific row
+     */
     protected void addBodyLabel(String text) {
         Label label = new Label(text, skin);
         body.add(label).row();

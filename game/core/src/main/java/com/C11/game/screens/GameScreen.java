@@ -141,6 +141,8 @@ public class GameScreen extends ScreenAdapter {
         pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
     }
 
+    // pauses at the start of the game as required
+    /** @req FR_PAUSE */
     @Override 
     public void show() {
         pauseGame();
@@ -174,6 +176,7 @@ public class GameScreen extends ScreenAdapter {
             goose.update(delta);
         }
 
+        // goes through all events then records a gameState counter for them if they fired
         for (EventTrigger event : events) {
             if (event.overlaps(player.getHitbox()) && event.trigger()) {
                 gameState.recordEventTriggered();
@@ -196,6 +199,7 @@ public class GameScreen extends ScreenAdapter {
         followPlayer();
     }
 
+    // small helper to create GameResult snapshot and show the end screen. should be used whenever anything triggers the end of the game
     private void endGame() {
         GameResult result = gameState.toResult(timerDisplay.getTimer().getTicks());
         game.showEndScreen(result);

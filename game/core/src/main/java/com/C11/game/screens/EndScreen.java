@@ -4,10 +4,25 @@ import com.C11.game.utils.GameResult;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+/**
+ * End screen which will load once the game has ended in any way.
+ * The end screen will take a snapshot of the stats and results from the game and display them,
+ * along with back to main menu and exit buttons.
+ * 
+ * @author Dorian Kerzan (rvl546@york.ac.uk)
+ */
 public class EndScreen extends MenuScreen{
     private static final String TITLE = "End Menu";
     private static final Color BG_COLOR = Color.BLACK;
 
+    /**
+     * Main constructor that builds the information and buttons that are displayed
+     * 
+     * @param skin the ui skin owned by main
+     * @param result the snapshot stats and results used in the body of the end screen
+     * @param onMainMenu runnable for the 'Back To Main Menu' button
+     * @param onExit runnable for 'Exit Game' button
+     */
     public EndScreen(Skin skin, GameResult result, Runnable onMainMenu, Runnable onExit) {
         super(skin, TITLE, BG_COLOR);
 
