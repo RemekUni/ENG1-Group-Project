@@ -1,6 +1,10 @@
 package com.C11.game.screens;
 
 import com.C11.game.events.*;
+import com.C11.game.ui.TimerDisplay;
+import com.C11.game.utils.GameResult;
+import com.C11.game.utils.GameState;
+import com.C11.game.events.AbandonedSandwich;
 import com.C11.game.hitboxes.EventTrigger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -42,10 +46,16 @@ public class GameScreen extends ScreenAdapter {
     private final Main game;
     private final GameMap gameMap;
     private final Viewport viewport;
+    private final Viewport viewportText;
     private final OrthographicCamera camera;
+    private final OrthographicCamera cameraText;
     private final SpriteBatch spriteBatch;
     private final Player player;
+    private final Goose goose;
+    private final Goose goose2;
     private final Array<Goose> geese = new Array<>();
+
+    private final GameState gameState;
 
     private final Array<Entity> entities = new Array<>();
     private final Array<ItemEntity> baguettes = new Array<>();;
@@ -67,14 +77,14 @@ public class GameScreen extends ScreenAdapter {
     private final Texture sandwichTexture;
     private final Texture canTexture;
 
-
     private boolean isPaused;
 
     private final PauseMenu pauseMenu;
+    private final TimerDisplay timerDisplay;
+    static private final int GAME_LENGTH = 30;
 
     // Hidden events on the map, checked every frame in update()
     private final List<EventTrigger> events = new ArrayList<>();
-    private int eventsTriggered = 0; // for FR_EVENT_COUNTER
 
     /**
      * Loads map and textures.
@@ -87,7 +97,10 @@ public class GameScreen extends ScreenAdapter {
         // TODO: read spawn positions from the Tiled spawn layer and use them to initialise entities
         this.game = game;
         this.spriteBatch = game.getBatch();
+        this.gameState = new GameState();
         gameMap = new GameMap("maps/campus.tmx");
+        timerDisplay = new TimerDisplay("SuperNormal.ttf", GAME_LENGTH);
+        timerDisplay.getTimer().start();
 
         playerTexture = new Texture("sprites/tile_0098.png");
         gooseTexture = new Texture("sprites/duck.png");
@@ -99,7 +112,9 @@ public class GameScreen extends ScreenAdapter {
         worldHeight = gameMap.getWorldHeight();
 
         camera = new OrthographicCamera();
+        cameraText = new OrthographicCamera();
         viewport = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, camera);
+        viewportText = new ExtendViewport(worldWidth * 20, worldHeight * 20, cameraText);
 
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
@@ -140,6 +155,12 @@ public class GameScreen extends ScreenAdapter {
         }
 
         pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
+    }
+
+    // pauses at the start of the game as required
+    /** @req FR_PAUSE */
+    @Override 
+    public void show() {
         pauseGame();
     }
 
@@ -147,6 +168,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, false);
+        viewportText.update(width, height, false);
         followPlayer();
         pauseMenu.resize(width, height);
     }
@@ -183,16 +205,33 @@ public class GameScreen extends ScreenAdapter {
             baguette.update(delta);
         }
 
+        if (timerDisplay.getTimer().update()) {
+            if (timerDisplay.getTimer().getTicks() == timerDisplay.getInitialTime()) {
+                timerDisplay.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
+                System.out.println("TIMER OVER TIMER OVER");
+                endGame();
+            }
+        }
+
         followPlayer();
     }
 
+    // small helper to create GameResult snapshot and show the end screen. should be used whenever anything triggers the end of the game
+    private void endGame() {
+        GameResult result = gameState.toResult(timerDisplay.getTimer().getTicks());
+        game.showEndScreen(result);
+    }
+
+    /** @req FR_PAUSE */
     private void pauseGame() {
         isPaused = true;
+        timerDisplay.getTimer().pause();
         pauseMenu.show();
     }
 
     private void resumeGame() {
         isPaused = false;
+        timerDisplay.getTimer().unpause();
         pauseMenu.hide();
     }
 
@@ -215,18 +254,31 @@ public class GameScreen extends ScreenAdapter {
         spriteBatch.begin();
 
         player.draw(spriteBatch);
-       for (Goose goose : geese) {
+        for (Goose goose : geese) {
            goose.draw(spriteBatch);
-       }
+        }
 
         // baguettes (TODO: remove/refactor)
         for (ItemEntity item : baguettes) {
             item.draw(spriteBatch);
         }
-        // Draw the events
-        for (EventTrigger event : events){
+
+        for (EventTrigger event : events) {
             event.draw(spriteBatch);
         }
+
+        spriteBatch.end();
+
+        // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        //                                  RENDER ALL TEXT HERE!
+        // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+        viewportText.apply();
+        spriteBatch.setProjectionMatrix(cameraText.combined);
+
+        spriteBatch.begin();
+
+        timerDisplay.draw(spriteBatch, worldWidth / 2 - 100, worldHeight / 2 + 350);
 
         spriteBatch.end();
     }
@@ -245,6 +297,7 @@ public class GameScreen extends ScreenAdapter {
         baguetteTexture.dispose();
         sandwichTexture.dispose();
         canTexture.dispose();
+        timerDisplay.dispose();
     }
 
 }
