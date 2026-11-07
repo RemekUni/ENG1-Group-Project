@@ -1,6 +1,7 @@
 package com.C11.game.entities;
 
 import com.C11.game.ItemType;
+import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
@@ -11,11 +12,14 @@ import com.badlogic.gdx.utils.Array;
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public abstract class CollectorEntity extends Entity {
-    private final Array<ItemType> inventory = new Array<>();
+    protected final Array<ItemType> inventory = new Array<>();
     private int inventorySize = 2;
 
     private boolean isCollectionEnabled;
-    private Array<ItemEntity> itemsArray;
+    private Array<ItemEntity> itemEntities;
+
+    private GameMap gameMap;
+
 
     /**
      * Spawn a collector entity at the specified world position with item collection <b>disabled</b> by default - enable with {@link #enableCollection(Array)}.
@@ -28,17 +32,19 @@ public abstract class CollectorEntity extends Entity {
      * @param hitboxHeightScale same as width, but for height (bottom-aligned)
      * @param entitiesArray reference to dynamic array of all entities
      */
-    public CollectorEntity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, Array<Entity> entitiesArray) {
-        super(entityTexture, gameMap, startX, startY, speed, hitboxWidthScale, hitboxHeightScale, entitiesArray);
+    public CollectorEntity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
+        super(entityTexture, gameMap, startX, startY, speed, hitboxWidthScale, hitboxHeightScale, entitiesHandler);
+        this.gameMap = gameMap;
 
         this.isCollectionEnabled = false;
+        this.itemEntities = entitiesHandler.getItemEntities();
     }
     
     public void collectItem(ItemEntity itemEntity) {
         if (!isCollectionEnabled) return; 
 
         // Remove #ItemEntity from the render list. GC should then dispose it from memory as it will not be referenced anywhere
-        itemsArray.removeValue(itemEntity, true);
+        itemEntities.removeValue(itemEntity, true);
         // Add item to entity's inventory
         inventory.add(itemEntity.getItem());
 
@@ -53,14 +59,14 @@ public abstract class CollectorEntity extends Entity {
     }
 
     /**
-     * Enable item collection. Use this method overload <b>only if</b> previously already defined an {@link #itemsArray} using {@link #enableCollection(Array)}.
+     * Enable item collection. Use this method overload <b>only if</b> previously already defined an {@link #itemEntities} using {@link #enableCollection(Array)}.
      *
      * @throws IllegalStateException if the item array was not originally initialised via {@link #enableCollection(Array)}.
      * @see #enableCollection(Array)
      */
     public void enableCollection() {
-        if (itemsArray == null) {
-            itemsArray = new Array<>();
+        if (itemEntities == null) {
+            itemEntities = new Array<>();
             throw new IllegalStateException(
                 "Item array is not initialised. An empty array has been created as a fallback to prevent a crash. "
                 + "However, this may cause unexpected behaviour. Please provide the existing item array via "
@@ -72,24 +78,17 @@ public abstract class CollectorEntity extends Entity {
     }
 
     /**
-     * Enable item collection. Use this method overload if enabling collection for the entity for the first time.
-     * @param itemsArray
-     * @see #enableCollection()
-     */
-    public void enableCollection(Array<ItemEntity> itemsArray) {
-        // In case collection will be toggled on it is required to have itemsArray initialised, for the items to be collectable
-        this.itemsArray = itemsArray;
-
-        this.isCollectionEnabled = true;
-    }
-
-    /**
-     * Disable item collection. Does not remove the reference to {@link #itemsArray}.
+     * Disable item collection. Does not remove the reference to {@link #itemEntities}.
      * Call {@link #enableCollection()} to re-enable collection using the existing
      * item array, rather than {@link #enableCollection(Array)}.
      */
     public void disableCollection() {
         this.isCollectionEnabled = false;
+    }
+
+    public void throwItem(ItemType itemType) {
+        new ItemEntity(itemType, gameMap, this.getPosition().x, this.getPosition().y, entitiesHandler);
+        inventory.removeValue(itemType, true);
     }
 
     public int getInventorySize() {

@@ -3,6 +3,7 @@ package com.C11.game.entities;
 import java.util.Random;
 
 import com.C11.game.ItemType;
+import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -23,8 +24,6 @@ public class ItemEntity extends Entity {
 
     private final ItemType ITEM;
 
-    private Array<Entity> entities;
-
     private float lifetime = 0f;
 
     private final Vector2 direction = new Vector2(0, 0);
@@ -40,10 +39,9 @@ public class ItemEntity extends Entity {
      * @param entitiesArray reference to dynamic array of all entities
      * 
      */
-    public ItemEntity(ItemType itemType, GameMap gameMap, float x, float y, Array<Entity> entities) {
-        super(itemType.getEntityTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entities);
+    public ItemEntity(ItemType itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler) {
+        super(itemType.getEntityTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
 
-        this.entities = entities;
         this.ITEM = itemType;
     }
 
@@ -59,7 +57,7 @@ public class ItemEntity extends Entity {
         float x = this.getPosition().x;
         float y = this.getPosition().y;
             
-        for (Entity entity : entities) {
+        for (Entity entity : entitiesHandler.getEntities()) {
             float entityX = entity.getPosition().x;
 
             float entityY = entity.getPosition().y;

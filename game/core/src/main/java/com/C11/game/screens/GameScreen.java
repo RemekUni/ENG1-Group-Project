@@ -13,6 +13,7 @@ import com.C11.game.entities.ItemEntity;
 import com.C11.game.entities.Player;
 import com.C11.game.events.HiddenEvent;
 import com.C11.game.ui.PauseMenu;
+import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -34,8 +35,10 @@ import com.C11.game.events.HiddenEvent;
 import com.C11.game.ItemType;
 
 /**
- * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
- * Each frame runs update(delta), then draw(). These are separate to allow for game pausing to only skip updates but keep drawing the paused game screen.
+ * Main gameplay screen. It owns the map, camera, viewport, entities and their
+ * respective textures.
+ * Each frame runs update(delta), then draw(). These are separate to allow for
+ * game pausing to only skip updates but keep drawing the paused game screen.
  * 
  * @req UR_MAP UR_CHARACTER UR_GEESE
  * 
@@ -51,9 +54,9 @@ public class GameScreen extends ScreenAdapter {
     private final Goose goose;
     private final Goose goose2;
 
-    private Array<Entity> entities = new Array<>();
+    private EntitiesHandler entitiesHandler = new EntitiesHandler();
     private Array<ItemEntity> itemEntities = new Array<>();;
-    
+
     private final float worldWidth;
     private final float worldHeight;
 
@@ -68,7 +71,6 @@ public class GameScreen extends ScreenAdapter {
     private final Texture playerTexture;
     private final Texture gooseTexture;
     private final Texture itemTexture1; // TODO: Use one secitoned texture sprite for multiple item types
-
 
     private boolean isPaused;
 
@@ -86,7 +88,8 @@ public class GameScreen extends ScreenAdapter {
      * @param game game provides the shared batch
      */
     public GameScreen(Main game) {
-        // TODO: read spawn positions from the Tiled spawn layer and use them to initialise entities
+        // TODO: read spawn positions from the Tiled spawn layer and use them to
+        // initialise entities
         this.game = game;
         this.spriteBatch = game.getBatch();
         gameMap = new GameMap("maps/campus.tmx");
@@ -101,16 +104,15 @@ public class GameScreen extends ScreenAdapter {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, camera);
 
-        camera.position.set(worldWidth/2f, worldHeight/2f, 0);
+        camera.position.set(worldWidth / 2f, worldHeight / 2f, 0);
 
+        player = new Player(playerTexture, worldWidth / 2, worldHeight / 2, gameMap, entitiesHandler);
+        player.enableCollection();
+        goose = new Goose(gooseTexture, worldWidth / 2 - 10, worldHeight / 2, gameMap, player, entitiesHandler);
+        goose2 = new Goose(gooseTexture, worldWidth / 2 + 10, worldHeight / 2, gameMap, player, entitiesHandler);
+        goose2.enableCollection();
 
-        player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities);
-        player.enableCollection(itemEntities);
-        goose = new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities);
-        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities);
-        goose2.enableCollection(itemEntities);
-        
-        events.add(new HiddenEvent(worldWidth/2 + 3, worldHeight/2, 2f, 2f, 1f, player, true) {
+        events.add(new HiddenEvent(worldWidth / 2 + 3, worldHeight / 2, 2f, 2f, 1f, player, true) {
             @Override
             public void action() {
                 System.out.println("Hidden event triggered!");
@@ -123,8 +125,8 @@ public class GameScreen extends ScreenAdapter {
             int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) worldWidth);
             int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
 
-
-            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", itemTexture1), gameMap, randomX, randomY, entities);
+            ItemEntity itemType1 = new ItemEntity(new ItemType("baguette", itemTexture1), gameMap, randomX, randomY,
+                    entitiesHandler);
             itemEntities.add(itemType1);
         }
 
@@ -132,8 +134,9 @@ public class GameScreen extends ScreenAdapter {
         pauseGame();
     }
 
-    // false: do not recentre the camera, it is supposed to follow the player instead
-    @Override 
+    // false: do not recentre the camera, it is supposed to follow the player
+    // instead
+    @Override
     public void resize(int width, int height) {
         viewport.update(width, height, false);
         followPlayer();
@@ -144,31 +147,29 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-            if (isPaused) resumeGame();
-            else pauseGame();
+            if (isPaused)
+                resumeGame();
+            else
+                pauseGame();
         }
-        if (!isPaused) update(delta);
+        if (!isPaused)
+            update(delta);
         draw();
 
-        if (isPaused) pauseMenu.render(delta);
+        if (isPaused)
+            pauseMenu.render(delta);
 
     }
 
     /** @req FR_EVENT_COUNTER FR_TRIGGER_EVENT */
-    private void update(float delta){
-        player.update(delta);
-        goose.update(delta);
-        goose2.update(delta);
+    private void update(float delta) {
+        entitiesHandler.updateEntities(delta);
+
         // TODO: test event only, replace with real events
         for (HiddenEvent event : events) {
             if (event.check()) {
                 eventsTriggered++;
             }
-        }
-
-        // Items
-        for (ItemEntity item : itemEntities) {
-            item.update(delta);
         }
 
         followPlayer();
@@ -188,9 +189,15 @@ public class GameScreen extends ScreenAdapter {
 
     private void followPlayer() {
         // Follows the player's center, updated every frame
-        viewport.getCamera().position.set(player.getPosition().x + player.getWidth() / 2, player.getPosition().y + player.getHeight() / 2, 0);
+        viewport.getCamera().position.set(player.getPosition().x + player.getWidth() / 2,
+                player.getPosition().y + player.getHeight() / 2, 0);
         // Clamps the camera so that it stays within the map borders
-        viewport.getCamera().position.set(MathUtils.clamp(camera.position.x, viewport.getWorldWidth() / 2, worldWidth - viewport.getWorldWidth() / 2), MathUtils.clamp(camera.position.y, viewport.getWorldHeight() / 2, worldHeight - viewport.getWorldHeight() / 2), 0);
+        viewport.getCamera().position.set(
+                MathUtils.clamp(camera.position.x, viewport.getWorldWidth() / 2,
+                        worldWidth - viewport.getWorldWidth() / 2),
+                MathUtils.clamp(camera.position.y, viewport.getWorldHeight() / 2,
+                        worldHeight - viewport.getWorldHeight() / 2),
+                0);
     }
 
     private void draw() {
@@ -204,9 +211,8 @@ public class GameScreen extends ScreenAdapter {
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
 
-        player.draw(spriteBatch);
-        goose.draw(spriteBatch);
-        goose2.draw(spriteBatch);
+        entitiesHandler.draw(spriteBatch);
+        
         // Items
         for (ItemEntity item : itemEntities) {
             item.draw(spriteBatch);
@@ -227,5 +233,5 @@ public class GameScreen extends ScreenAdapter {
         gooseTexture.dispose();
         pauseMenu.dispose();
     }
-    
+
 }

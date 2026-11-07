@@ -1,6 +1,7 @@
 package com.C11.game.entities;
 
 import com.C11.game.hitboxes.Hitbox;
+import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public abstract class Entity {
     private final Vector2 position;
+    // private final Vector2 direction = new Vector2();
+
     private float size;
     private float speed;
     private Texture entityTexture;
@@ -25,6 +28,8 @@ public abstract class Entity {
     private final GameMap gameMap;
 
     private final Hitbox hitbox;
+
+    protected EntitiesHandler entitiesHandler;
 
     /**
      * Creates an entity at the given position.
@@ -38,10 +43,11 @@ public abstract class Entity {
      * @param hitboxHeightScale same as width, but for height (bottom-aligned)
      * @param entitiesArray reference to dynamic array of all entities
      */
-    public Entity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, Array<Entity> entitiesArray) {
+    public Entity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
         this.entityTexture = entityTexture;
         this.gameMap = gameMap;
         this.speed = speed;
+        this.entitiesHandler = entitiesHandler;
 
         position = new Vector2(startX, startY);
 
@@ -50,7 +56,7 @@ public abstract class Entity {
 
         hitbox = Hitbox.forSprite(size, hitboxWidthScale, hitboxHeightScale, position);
 
-        entitiesArray.add(this);
+        entitiesHandler.add(this);
     }
 
     /**
@@ -133,4 +139,12 @@ public abstract class Entity {
     public Hitbox getHitbox() {
         return hitbox;
     }
+
+    // public Vector2 getDirection() {
+    //     return direction;
+    // }
+
+    // public void setDirection(float x, float y) {
+    //     this.direction.set(x, y);
+    // }
 }

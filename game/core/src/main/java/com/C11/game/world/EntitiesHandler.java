@@ -1,11 +1,13 @@
 package com.C11.game.world;
 
 import com.C11.game.entities.Entity;
+import com.C11.game.entities.ItemEntity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
 public class EntitiesHandler {
     private Array<Entity> entities = new Array<>();
+    private Array<ItemEntity> itemEntities = new Array<>();
 
     public EntitiesHandler() {
 
@@ -27,11 +29,18 @@ public class EntitiesHandler {
         }
     }
 
-    public void addEntity(Entity entity) {
+    public void add(Entity entity) {
         entities.add(entity);
+        if (entity instanceof ItemEntity itemEntity) {
+            itemEntities.add(itemEntity);
+        }
     }
 
     public Array<Entity> getEntities() {
         return entities;
+    }
+
+    public Array<ItemEntity> getItemEntities() {
+        return itemEntities;
     }
 }

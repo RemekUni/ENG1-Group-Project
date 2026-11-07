@@ -3,6 +3,7 @@ package com.C11.game.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
 
 /**
@@ -39,8 +40,8 @@ public class Goose extends CollectorEntity {
      * @param target the entity this goose moves towards 
      * @param entitiesArray reference to dynamic array of all entities
      */
-    public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, Entity target, Array<Entity> entitiesArray) {
-        super(gooseTexture, gameMap, startX, startY, GOOSE_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesArray);
+    public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, Entity target, EntitiesHandler entitiesHandler) {
+        super(gooseTexture, gameMap, startX, startY, GOOSE_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesHandler);
         this.target = target;
     }
 
