@@ -4,7 +4,6 @@ import com.C11.game.events.*;
 import com.C11.game.ui.TimerDisplay;
 import com.C11.game.utils.GameResult;
 import com.C11.game.utils.GameState;
-import com.C11.game.events.AbandonedSandwich;
 import com.C11.game.hitboxes.EventTrigger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -85,6 +84,7 @@ public class GameScreen extends ScreenAdapter {
 
     // Hidden events on the map, checked every frame in update()
     private final List<EventTrigger> events = new ArrayList<>();
+    private int eventsTriggered = 0;
 
     /**
      * Loads map and textures.
@@ -120,10 +120,12 @@ public class GameScreen extends ScreenAdapter {
 
 
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities, baguettes);
+        goose = new Goose(gooseTexture, worldWidth /2 - 10, worldHeight /2, gameMap, player, entities);
+        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, baguettes);
 
         //Add initial 2 geese to the gameMap by adding to the array
-        geese.add(new Goose(gooseTexture, worldWidth/2 - 10, worldHeight/2, gameMap, player, entities));
-        geese.add(new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, baguettes));
+        geese.add(goose);
+        geese.add(goose2);
 
         //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
         int sandwichWidth = sandwichTexture.getWidth() /2;
