@@ -20,6 +20,8 @@ public class Player extends CollectorEntity{
 
     // tiles per second
     private static final float PLAYER_SPEED = 4f;
+    private static final float BOOSTED_SPEED = 7f;
+    private float boostTimer = 0f;
 
     // Hitbox covers lower half of the sprite and is 2/3 of its width.
     // This lets the player get between 1 tile spaces more easily and looks better when approaching collision objects such as buildings and trees.
@@ -42,6 +44,14 @@ public class Player extends CollectorEntity{
     // TODO: map keys to actions, not hardcoded
     @Override
     public void update(float delta) {
+        if (boostTimer > 0){
+            boostTimer-=delta;
+
+            if (boostTimer <=0){
+                setSpeed(PLAYER_SPEED); //remove the speed increase once the boost has expired 
+            }
+        }
+
         direction.set(0, 0);
 
         if (Gdx.input.isKeyPressed(Keys.D)) {
@@ -58,6 +68,11 @@ public class Player extends CollectorEntity{
         }
 
         move(direction, delta);
+    }
+
+    public void activateSpeedBoost(float boostTime){
+        setSpeed(BOOSTED_SPEED);
+        boostTimer += boostTime; // += allows for stacking
     }
 
 

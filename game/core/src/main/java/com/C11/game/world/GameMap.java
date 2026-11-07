@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.objects.PointMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -23,6 +25,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
  * @req UR_MAP UR_BOUNDARIES FR_MAP_TEXTURE FR_MAP_BOUNDARY
  * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
+ * 
+ * @author James (hjp562@york.ac.uk) - getObjectPositions only
  */
 public class GameMap implements Disposable {
     private TiledMap map;
@@ -36,6 +40,8 @@ public class GameMap implements Disposable {
      * Must match the object layer's name in Tiled
      */
     private static final String COLLISION_LAYER = "collision";
+    private static final String SANDWICH_LAYER = "sandwiches";
+    private static final String CAN_LAYER = "cans";
 
     private final Array<Rectangle> collisionRects;
 
@@ -154,5 +160,41 @@ public class GameMap implements Disposable {
     public void dispose() {
         map.dispose();
         mapRenderer.dispose();
+    }
+
+    /**
+     * Returns the positions of objects from a given layer of the tmx
+     * @param layerName the name of the layer in campus.tmx
+     * @return 
+     */
+    private Array<Vector2> getObjectPositions(String layerName){
+        Array<Vector2> positions = new Array<>();
+        MapLayer layer = map.getLayers().get(layerName);
+        if (layer == null){
+            throw new IllegalArgumentException("Map layer " + layerName +" was not found.");
+        }
+
+        for (PointMapObject object : layer.getObjects().getByType(PointMapObject.class)){
+            Vector2 point = object.getPoint();
+            positions.add(new Vector2(point.x * unitScale, point.y * unitScale));
+        }
+
+        return positions;
+    }
+    
+    /**
+     * Returns the positions of sandwiches, as specified in the tmx
+     * @return Array<Vector2> positions
+     */
+    public Array<Vector2> getSandwichPositions(){
+        return getObjectPositions(SANDWICH_LAYER);
+    }
+    
+    /**
+     * Returns the positions of cans, as specified in the tmx
+     * @return Array<Vector2> positions
+     */
+    public Array<Vector2> getCanPositions(){
+        return getObjectPositions(CAN_LAYER);
     }
 }
