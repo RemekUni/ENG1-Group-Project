@@ -141,4 +141,13 @@ public abstract class Entity {
     public Hitbox getHitbox() {
         return hitbox;
     }
+
+    /** @return the entity's current rate of speed in world unites  */
+    public float getSpeed(){
+        return speed;
+    }
+    /** @param speed set the speed to the desired speed */
+    public void setSpeed(float speed){
+        this.speed = speed;
+    }
 }
