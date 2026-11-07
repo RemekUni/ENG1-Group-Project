@@ -5,6 +5,7 @@ import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -52,6 +53,11 @@ public abstract class Entity {
 
         hitbox = Hitbox.forSprite(size, hitboxWidthScale, hitboxHeightScale, position);
 
+        while (!isSpawnClear()) {
+            position.x += MathUtils.random(-1f, 1f);
+            position.y += MathUtils.random(-1f, 1f);
+        }
+
         entitiesArray.add(this);
         this.entitiesArray = entitiesArray;
     }
@@ -92,7 +98,7 @@ public abstract class Entity {
      */
     public abstract void update(float delta);
 
-    // Check for hitbox collisions on the map after first snapping the hitbox to its entity
+    // Check for hitbox collisions on all entities and then the map after first snapping the hitbox to its entity
     private boolean isColliding() {
         hitbox.follow(position);
         for (Entity entity : this.entitiesArray) {
@@ -101,6 +107,12 @@ public abstract class Entity {
             }
         }
         return gameMap.isBlocked(hitbox);
+    }
+
+    /** @return true if the entity's spawn position is clear of collisions */
+    private boolean isSpawnClear() { 
+        hitbox.follow(position);
+        return !gameMap.isBlocked(getHitbox());
     }
 
     /** 

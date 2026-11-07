@@ -50,8 +50,6 @@ public class GameScreen extends ScreenAdapter {
     private final OrthographicCamera cameraText;
     private final SpriteBatch spriteBatch;
     private final Player player;
-    private final Goose goose;
-    private final Goose goose2;
     private final Array<Goose> geese = new Array<>();
 
     private final GameState gameState;
@@ -120,12 +118,14 @@ public class GameScreen extends ScreenAdapter {
 
 
         player = new Player(playerTexture, worldWidth/2, worldHeight/2, gameMap, entities, baguettes);
-        goose = new Goose(gooseTexture, worldWidth /2 - 10, worldHeight /2, gameMap, player, entities);
-        goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, baguettes);
+        Goose goose = new Goose(gooseTexture, worldWidth /2 - 10, worldHeight /2, gameMap, player, entities);
+        Goose goose2 = new Goose(gooseTexture, worldWidth/2 + 10, worldHeight/2, gameMap, player, entities, baguettes);
+        Goose goose3 = new Goose(gooseTexture, worldWidth/2 + 3, worldHeight/2, gameMap, entities, baguettes); // stationary goose
 
         //Add initial 2 geese to the gameMap by adding to the array
         geese.add(goose);
         geese.add(goose2);
+        geese.add(goose3);
 
         //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
         int sandwichWidth = sandwichTexture.getWidth() /2;
