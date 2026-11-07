@@ -1,0 +1,234 @@
+@startuml
+interface Game
+interface ScreenAdapter
+
+abstract class Rectangle
+
+class Main {
+	-SpriteBatch spritebatch
+
+	+getBatch()
+	+create()
+	+dispose()
+}
+
+abstract class Entity {
+	-Vector2 position
+	-float size
+	-float speed
+	-Texture entityTexture
+
+	-GameMap gameMap
+	-Rectangle bounds
+
+	-float hitboxWidth
+	-float hitboxHeight
+	-float hitboxOffsetX
+
+	+Entity(Texture entityTexture, GameMap gameMap, float startX,\n float startY, float speed, float hitboxWidthScale, float hitboxHeightScale)
+
+	~void move(Vector2 direction, float delta)
+
+	+{abstract} void update(float delta)
+
+	~boolean isColliding()
+
+	+void draw(SpriteBatch batch)
+
+	+Vector2 getPosition()
+	+float getCenterX()
+	+float getCenterY()
+	+float getWidth()
+	+float getHeight()
+}
+
+abstract class Hitbox {
+	+Hitbox(float x, float y,\n float width, float height)
+}
+
+
+abstract class EventTrigger {
+	-boolean oneShot
+	-boolean triggered
+
+	+EventTrigger(TextureRegion texture, float startX, float startY, GameMap gameMap, float size, boolean oneShot)
+	+{abstract} void action()
+	+void trigger()
+	+boolean isComplete()
+}
+
+class AbandonedSandwich {
+    - Player player
+    - Texture gooseTexture
+    - GameMap gamemap
+    - Array<Entity> entities
+    - Array<Goose> geese
+
+    +AbandonedSandwich(TextureRegion sandwichTexture, float startX, float startY, GameMap gameMap, float size, Player player, Texture gooseTexture, Array<Entity> entities, Array<Goose> geese)
+    +void action()
+
+}
+
+class GameScreen {
+	-Main game
+	-GameMap gameMap
+	-Viewport viewport
+	-OrthographicCamera camera
+	-SpriteBatch spriteBatch
+	-Player player
+	-Array<Goose> geese
+	-AbandonedSandwich sandwich
+
+	-float worldWidth
+	-float worldHeight
+
+	-{static} float VIEW_WIDTH
+	-{static} float VIEW_HEIGHT
+
+	-Texture playerTexture
+	-Texture gooseTexture
+
+	-boolean isPaused
+
+	-PauseMenu pauseMenu
+
+	+GameScreen(Main game)
+
+	+void resize(int width, int height)
+	+void render(float delta)
+
+	~void update(float delta)
+	~void pauseGame()
+	~void followPlayer()
+	~void draw()
+
+	+void pause()
+	+void dispose()
+}
+
+class Player {
+	-Vector2 direction
+	-{static} float PLAYER_SPEED
+	-{static} float HITBOX_WIDTH_SCALE
+	-{static} float HITBOX_HEIGHT_SCALE
+
+	+Player(Texture playerTexture, float startX,\n float startY, GameMap gameMap)
+
+	+void update(float delta)
+}
+
+class Goose {
+	-Vector2 direction
+	-{static} float GOOSE_SPEED
+	-{static} float HITBOX_WIDTH_SCALE
+	-{static} float HITBOX_HEIGHT_SCALE
+	-{static} float STOP_DISTANCE
+	-Entity target
+
+	+Goose(Texture gooseTexture, float startX,\n float startY, GameMap gameMap, Entity target)
+
+	+void update(float delta)
+
+}
+
+class GameMap {
+	-TiledMap map
+	-OrthogonalTiledMapRenderer mapRenderer
+	-float unitScale
+	-float worldWidth
+	-float worldHeight
+
+	-{static} String COLLISION_LAYER
+
+	-Array<Rectangle> collisionRects
+
+	+GameMap(String mapFilePath)
+
+	~void loadCollisionRects()
+	~void addMapBoundary()
+
+	+boolean isBlocked(Rectangle bounds)
+
+	+float getWorldWidth()
+	+float getWorldHeight()
+	+float getUnitScale()
+
+	+void render(OrthographicCamera camera)
+	+void dispose()
+}
+
+class PauseMenu {
+	-Stage stage
+	-Skin skin
+
+	-{static} float DIM_ALPHA
+
+	-{static} float BUTTON_WIDTH_FRACTION
+	-{static} float BUTTON_PADDING
+
+	-{static} float UI_WIDTH
+	-{static} float UI_HEIGHT
+
+	+PauseMenu(Runnable onResume, Runnable onExit)
+
+	+void render(float delta)
+	+void resize(int width, int height)
+	+void show()
+	+void dispose()
+}
+
+class Timer {
+	-long startTime
+	-long currentTime
+	-long length
+	-boolean playing
+	-int ticks
+
+	+Timer(float tickLength)
+
+	+void pause()
+	+void unpause()
+
+	+void start()
+	+void stop()
+
+	+boolean update()
+
+	+void setLenth(float tickLength)
+
+	+boolean isPlaying()
+
+	+long getElapsedTime()
+
+	+int getTicks()
+}
+
+Game <|-- Main
+Main --> SpriteBatch : creates
+Main --> GameScreen : initalizes, sets as screen
+
+GameScreen --> Player : creates, loads texture
+GameScreen --> Goose : creates, loads texture
+GameScreen --> GameMap : loads from file,\nsets bounds
+GameScreen --> PauseMenu : initializes, then starts paused
+
+Entity <|-- Player
+Entity <|-- Goose
+Hitbox <|-- EventTrigger
+EventTrigger <|-- AbandonedSandwich
+
+ScreenAdapter <|-- GameScreen
+
+Disposable <|.. GameMap
+Disposable <|.. PauseMenu
+
+hide empty members
+
+remove Timer
+
+remove Rectangle
+remove Game
+remove ScreenAdapter
+remove Disposable
+remove SpriteBatch
+@enduml

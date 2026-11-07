@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * Creates a collector entity at the given position. Inherits from {@link Entity}.
- * 
+ *
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public abstract class CollectorEntity extends Entity {
@@ -39,9 +39,9 @@ public abstract class CollectorEntity extends Entity {
         this.isCollectionEnabled = false;
         this.itemEntities = entitiesHandler.getItemEntities();
     }
-    
+
     public void collectItem(ItemEntity itemEntity) {
-        if (!isCollectionEnabled) return; 
+        if (!isCollectionEnabled) return;
 
         // Remove #ItemEntity from the render list. GC should then dispose it from memory as it will not be referenced anywhere
         itemEntities.removeValue(itemEntity, true);

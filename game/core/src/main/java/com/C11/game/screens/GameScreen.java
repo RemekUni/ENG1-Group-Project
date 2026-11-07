@@ -1,29 +1,29 @@
 package com.C11.game.screens;
 
+import com.C11.game.ui.TimerDisplay;
+import com.C11.game.utils.GameResult;
+import com.C11.game.utils.GameState;
+import com.C11.game.events.AbandonedSandwich;
+import com.C11.game.hitboxes.EventTrigger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.C11.game.Main;
 import com.C11.game.entities.Entity;
 import com.C11.game.entities.Goose;
-import com.C11.game.entities.ItemEntity;
+import com.C11.game.items.ItemEntity;
 import com.C11.game.entities.Player;
-import com.C11.game.events.HiddenEvent;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -31,28 +31,29 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input.Keys;
 import java.util.ArrayList;
 import java.util.List;
-import com.C11.game.events.HiddenEvent;
+
 import com.C11.game.ItemType;
 
 /**
- * Main gameplay screen. It owns the map, camera, viewport, entities and their
- * respective textures.
- * Each frame runs update(delta), then draw(). These are separate to allow for
- * game pausing to only skip updates but keep drawing the paused game screen.
- * 
- * @req UR_MAP UR_CHARACTER UR_GEESE
- * 
+ * Main gameplay screen. It owns the map, camera, viewport, entities and their respective textures.
+ * Each frame runs update(delta), then draw(). These are separate to allow for game pausing to only skip updates but keep drawing the paused game screen.
+ *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class GameScreen extends ScreenAdapter {
     private final Main game;
     private final GameMap gameMap;
     private final Viewport viewport;
+    private final Viewport viewportText;
     private final OrthographicCamera camera;
+    private final OrthographicCamera cameraText;
     private final SpriteBatch spriteBatch;
     private final Player player;
     private final Goose goose;
     private final Goose goose2;
+    private final Array<Goose> geese = new Array<>();
+
+    private final GameState gameState;
 
     private EntitiesHandler entitiesHandler = new EntitiesHandler();
     private Array<ItemEntity> itemEntities = new Array<>();;
@@ -71,20 +72,22 @@ public class GameScreen extends ScreenAdapter {
     private final Texture playerTexture;
     private final Texture gooseTexture;
     private final Texture itemTexture1; // TODO: Use one secitoned texture sprite for multiple item types
+    private final Texture sandwichTexture;
 
     private boolean isPaused;
 
     private final PauseMenu pauseMenu;
+    private final TimerDisplay timerDisplay;
+    static private final int GAME_LENGTH = 30;
 
     // Hidden events on the map, checked every frame in update()
-    private final List<HiddenEvent> events = new ArrayList<>();
-    private int eventsTriggered = 0; // for FR_EVENT_COUNTER
+    private final List<EventTrigger> events = new ArrayList<>();
 
     /**
      * Loads map and textures.
      * Sets up the camera and viewport.
      * Spawns entities.
-     * 
+     *
      * @param game game provides the shared batch
      */
     public GameScreen(Main game) {
@@ -92,32 +95,39 @@ public class GameScreen extends ScreenAdapter {
         // initialise entities
         this.game = game;
         this.spriteBatch = game.getBatch();
+        this.gameState = new GameState();
         gameMap = new GameMap("maps/campus.tmx");
+        timerDisplay = new TimerDisplay("SuperNormal.ttf", GAME_LENGTH);
+        timerDisplay.getTimer().start();
 
         playerTexture = new Texture("sprites/tile_0098.png");
         gooseTexture = new Texture("sprites/duck.png");
         itemTexture1 = new Texture("sprites/item-prototype.png");
+        sandwichTexture = new Texture("sprites/sandwich.png");
 
         worldWidth = gameMap.getWorldWidth();
         worldHeight = gameMap.getWorldHeight();
 
         camera = new OrthographicCamera();
+        cameraText = new OrthographicCamera();
         viewport = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, camera);
+        viewportText = new ExtendViewport(worldWidth * 20, worldHeight * 20, cameraText);
 
+        camera.position.set(worldWidth/2f, worldHeight/2f, 0);
+
+        //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
+        int sandwichWidth = sandwichTexture.getWidth() /2;
+        int sandwichHeight = sandwichTexture.getHeight();
+        TextureRegion singleSandwichTexture = new TextureRegion(sandwichTexture, 0 ,0 , sandwichWidth, sandwichHeight);
+        events.add(new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f, player, gooseTexture, entitiesHandler.getEntities(), geese));
         camera.position.set(worldWidth / 2f, worldHeight / 2f, 0);
 
         player = new Player(playerTexture, worldWidth / 2, worldHeight / 2, gameMap, entitiesHandler);
         player.enableCollection();
+        // Add initial 2 geese to the gameMap
         goose = new Goose(gooseTexture, worldWidth / 2 - 10, worldHeight / 2, gameMap, player, entitiesHandler);
         goose2 = new Goose(gooseTexture, worldWidth / 2 + 10, worldHeight / 2, gameMap, player, entitiesHandler);
         goose2.enableCollection();
-
-        events.add(new HiddenEvent(worldWidth / 2 + 3, worldHeight / 2, 2f, 2f, 1f, player, true) {
-            @Override
-            public void action() {
-                System.out.println("Hidden event triggered!");
-            }
-        });
 
         // temp/dev
         int itemCount = 50;
@@ -131,19 +141,24 @@ public class GameScreen extends ScreenAdapter {
         }
 
         pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
+    }
+
+    // pauses at the start of the game as required
+    /** @req FR_PAUSE */
+    @Override 
+    public void show() {
         pauseGame();
     }
 
-    // false: do not recentre the camera, it is supposed to follow the player
-    // instead
+    // false: do not recentre the camera, it is supposed to follow the player instead
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, false);
+        viewportText.update(width, height, false);
         followPlayer();
         pauseMenu.resize(width, height);
     }
 
-    /** @req FR_PAUSE */
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
@@ -161,29 +176,44 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    /** @req FR_EVENT_COUNTER FR_TRIGGER_EVENT */
-    private void update(float delta) {
+    private void update(float delta){
         entitiesHandler.updateEntities(delta);
 
-        // TODO: test event only, replace with real events
-        for (HiddenEvent event : events) {
-            if (event.check()) {
-                eventsTriggered++;
+        // goes through all events then records a gameState counter for them if they fired
+        for (EventTrigger event : events) {
+            if (event.overlaps(player.getHitbox()) && event.trigger()) {
+                gameState.recordEventTriggered();
+            }
+        }
+
+
+        if (timerDisplay.getTimer().update()) {
+            if (timerDisplay.getTimer().getTicks() == timerDisplay.getInitialTime()) {
+                timerDisplay.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
+                System.out.println("TIMER OVER TIMER OVER");
+                endGame();
             }
         }
 
         followPlayer();
     }
 
-    /** @req FR_PAUSE */
-    private void pauseGame() {
-        isPaused = true;
-        pauseMenu.show();
+    // small helper to create GameResult snapshot and show the end screen. should be used whenever anything triggers the end of the game
+    private void endGame() {
+        GameResult result = gameState.toResult(timerDisplay.getTimer().getTicks());
+        game.showEndScreen(result);
     }
 
     /** @req FR_PAUSE */
+    private void pauseGame() {
+        isPaused = true;
+        timerDisplay.getTimer().pause();
+        pauseMenu.show();
+    }
+
     private void resumeGame() {
         isPaused = false;
+        timerDisplay.getTimer().unpause();
         pauseMenu.hide();
     }
 
@@ -212,11 +242,23 @@ public class GameScreen extends ScreenAdapter {
         spriteBatch.begin();
 
         entitiesHandler.draw(spriteBatch);
-        
-        // Items
-        for (ItemEntity item : itemEntities) {
-            item.draw(spriteBatch);
+
+        for (EventTrigger event : events) {
+            event.draw(spriteBatch);
         }
+
+        spriteBatch.end();
+
+        // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        //                                  RENDER ALL TEXT HERE!
+        // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+        viewportText.apply();
+        spriteBatch.setProjectionMatrix(cameraText.combined);
+
+        spriteBatch.begin();
+
+        timerDisplay.draw(spriteBatch, worldWidth / 2 - 100, worldHeight / 2 + 350);
 
         spriteBatch.end();
     }
@@ -232,6 +274,9 @@ public class GameScreen extends ScreenAdapter {
         playerTexture.dispose();
         gooseTexture.dispose();
         pauseMenu.dispose();
+        sandwichTexture.dispose();
+        itemTexture1.dispose();
+        timerDisplay.dispose();
     }
 
 }
