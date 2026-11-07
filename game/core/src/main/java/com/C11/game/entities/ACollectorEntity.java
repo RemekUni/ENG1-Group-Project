@@ -1,18 +1,17 @@
 package com.C11.game.entities;
 
-import com.C11.game.ItemType;
-import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
+import com.C11.game.world.Item;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Creates a collector entity at the given position. Inherits from {@link Entity}.
+ * Abstract base class for a collector entity at the given position. Inherits from {@link AEntity}.
  *
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
-public abstract class CollectorEntity extends Entity {
-    protected final Array<ItemType> inventory = new Array<>();
+public abstract class ACollectorEntity extends AEntity {
+    protected final Array<Item> inventory = new Array<>();
     private int inventorySize = 2;
 
     private boolean isCollectionEnabled;
@@ -32,7 +31,7 @@ public abstract class CollectorEntity extends Entity {
      * @param hitboxHeightScale same as width, but for height (bottom-aligned)
      * @param entitiesArray reference to dynamic array of all entities
      */
-    public CollectorEntity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
+    public ACollectorEntity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
         super(entityTexture, gameMap, startX, startY, speed, hitboxWidthScale, hitboxHeightScale, entitiesHandler);
         this.gameMap = gameMap;
 
@@ -49,7 +48,7 @@ public abstract class CollectorEntity extends Entity {
         inventory.add(itemEntity.getItem());
 
         // dev/temp
-        for (ItemType item : inventory) {
+        for (Item item : inventory) {
             System.out.println(this + " | " + item.getName() + " | " + item.getEntityTexture());
         }
     }
@@ -86,7 +85,7 @@ public abstract class CollectorEntity extends Entity {
         this.isCollectionEnabled = false;
     }
 
-    public void throwItem(ItemType itemType) {
+    public void throwItem(Item itemType) {
         new ItemEntity(itemType, gameMap, this.getPosition().x, this.getPosition().y, entitiesHandler);
         inventory.removeValue(itemType, true);
     }

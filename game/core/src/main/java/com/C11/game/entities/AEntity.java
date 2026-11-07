@@ -1,15 +1,13 @@
 package com.C11.game.entities;
 
 import com.C11.game.hitboxes.Hitbox;
-import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 /**
- * Base class for anything that moves on the map (like player or geese). Handles position, drawing, and collision-aware movement.
+ * Abstract base class for anything that moves on the map (like player or geese). Handles position, drawing, and collision-aware movement.
  * Subclasses decide which way to move in update() and then call move().
  * Entity does not own its texture, so it does not dispose it, the creator does
  * 
@@ -17,7 +15,7 @@ import com.badlogic.gdx.utils.Array;
  * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
-public abstract class Entity {
+public abstract class AEntity {
     private final Vector2 position;
     // private final Vector2 direction = new Vector2();
 
@@ -43,7 +41,7 @@ public abstract class Entity {
      * @param hitboxHeightScale same as width, but for height (bottom-aligned)
      * @param entitiesArray reference to dynamic array of all entities
      */
-    public Entity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
+    public AEntity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
         this.entityTexture = entityTexture;
         this.gameMap = gameMap;
         this.speed = speed;

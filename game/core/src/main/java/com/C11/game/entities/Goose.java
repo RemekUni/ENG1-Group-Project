@@ -3,7 +3,6 @@ package com.C11.game.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
 
 /**
@@ -11,7 +10,7 @@ import com.C11.game.world.GameMap;
  *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
-public class Goose extends CollectorEntity {
+public class Goose extends ACollectorEntity {
     private final Vector2 direction = new Vector2();
 
     // tiles per second
@@ -26,7 +25,7 @@ public class Goose extends CollectorEntity {
 
     // Can be any target, not just the player, so later on the geese can chase a distraction too
     // TODO: the goose moving towards something was just a test i made to see how a goose could behave, this can later be made optional or removed entirely
-    private final Entity target;
+    private final AEntity target;
 
     /**
      * Creates a goose that chases a target, collection <b>off</b> by default
@@ -38,7 +37,7 @@ public class Goose extends CollectorEntity {
      * @param target the entity this goose moves towards
      * @param entitiesArray reference to dynamic array of all entities
      */
-    public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, Entity target, EntitiesHandler entitiesHandler) {
+    public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, AEntity target, EntitiesHandler entitiesHandler) {
         super(gooseTexture, gameMap, startX, startY, GOOSE_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesHandler);
         this.target = target;
     }

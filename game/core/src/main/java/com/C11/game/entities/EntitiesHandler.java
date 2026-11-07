@@ -1,13 +1,15 @@
-package com.C11.game.world;
+package com.C11.game.entities;
 
-import com.C11.game.entities.Entity;
-import com.C11.game.entities.ItemEntity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
 public class EntitiesHandler {
-    private Array<Entity> entities = new Array<>();
-    private Array<ItemEntity> itemEntities = new Array<>();
+    private final Array<AEntity> entities = new Array<>();
+    private final Array<ItemEntity> itemEntities = new Array<>();
+    private final Array<Goose> geeseEntities = new Array<>();
+
+
+    private Player player;
 
     public EntitiesHandler() {
 
@@ -29,14 +31,27 @@ public class EntitiesHandler {
         }
     }
 
-    public void add(Entity entity) {
+    public void add(AEntity entity) {
         entities.add(entity);
+
+        // -- Categorise entities --
+        // Item
         if (entity instanceof ItemEntity itemEntity) {
             itemEntities.add(itemEntity);
         }
+        // Goose
+        if (entity instanceof Goose goose) {
+            geeseEntities.add(goose);
+        }
+        // Player
+        if (entity instanceof Player player) {
+            if (this.player == null) return;
+
+            this.player = player;
+        }
     }
 
-    public Array<Entity> getEntities() {
+    public Array<AEntity> getEntities() {
         return entities;
     }
 

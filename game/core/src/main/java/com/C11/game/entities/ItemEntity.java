@@ -2,26 +2,25 @@ package com.C11.game.entities;
 
 import java.util.Random;
 
-import com.C11.game.ItemType;
-import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
+import com.C11.game.world.Item;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link Entity}.
+ * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link AEntity}.
  * This is for the baguette item ONLY for now.
  *
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
-public class ItemEntity extends Entity {
+public class ItemEntity extends AEntity {
 
     // -- Item entity rewritable attributes --
     public static final float PICKUP_DISTANCE = 0.5f;
     public static final float IDLE_ANIMATION_SPEED = 0.1f;
 
-    private final ItemType ITEM;
+    private final Item ITEM;
 
     private float lifetime = 0f;
 
@@ -38,7 +37,7 @@ public class ItemEntity extends Entity {
      * @param entitiesArray reference to dynamic array of all entities
      *
      */
-    public ItemEntity(ItemType itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler) {
+    public ItemEntity(Item itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler) {
         super(itemType.getEntityTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
 
         this.ITEM = itemType;
@@ -52,11 +51,11 @@ public class ItemEntity extends Entity {
         direction.y = MathUtils.sin((lifetime + ANIMATION_RANDOM_SHIFT) * periodFrequency);
     }
 
-    private CollectorEntity getCollisionCollectorEntity() {
+    private ACollectorEntity getCollisionCollectorEntity() {
         float x = this.getPosition().x;
         float y = this.getPosition().y;
             
-        for (Entity entity : entitiesHandler.getEntities()) {
+        for (AEntity entity : entitiesHandler.getEntities()) {
             float entityX = entity.getPosition().x;
 
             float entityY = entity.getPosition().y;
@@ -66,7 +65,7 @@ public class ItemEntity extends Entity {
 
             // Run through all collectors until catching the first entity that is inbounds
             if (isInYBounds && isInXBounds) {
-                if (entity instanceof CollectorEntity collector) return collector;
+                if (entity instanceof ACollectorEntity collector) return collector;
             }
         }
 
@@ -78,7 +77,7 @@ public class ItemEntity extends Entity {
         // Idle animated position
         idleAnimate(direction, delta);
 
-        CollectorEntity collisionCollectorEntity = getCollisionCollectorEntity();
+        ACollectorEntity collisionCollectorEntity = getCollisionCollectorEntity();
 
         // If collided entity is collector, make it collect the item
         if (collisionCollectorEntity != null) {
@@ -89,7 +88,7 @@ public class ItemEntity extends Entity {
         move(direction, delta);
     }
 
-    public ItemType getItem() {
+    public Item getItem() {
         return ITEM;
     }
 }

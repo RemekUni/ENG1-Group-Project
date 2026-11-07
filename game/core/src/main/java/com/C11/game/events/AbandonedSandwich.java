@@ -1,10 +1,10 @@
 package com.C11.game.events;
 
-import com.C11.game.entities.Entity;
+import com.C11.game.entities.EntitiesHandler;
+import com.C11.game.entities.AEntity;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.Player;
 import com.C11.game.hitboxes.EventTrigger;
-import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,15 +21,13 @@ public class AbandonedSandwich extends EventTrigger {
     private final Texture gooseTexture;
     private final GameMap gameMap;
     private final EntitiesHandler entitiesHandler;
-    private final Array<Goose> geese;
 
-    public AbandonedSandwich(TextureRegion sandwichTexture, float startX, float startY, GameMap gameMap, float size, Player player, Texture gooseTexture, EntitiesHandler entitiesHandler, Array<Goose> geese) {
+    public AbandonedSandwich(TextureRegion sandwichTexture, float startX, float startY, GameMap gameMap, float size, Player player, Texture gooseTexture, EntitiesHandler entitiesHandler) {
         super(sandwichTexture, startX, startY, gameMap, size, true); //You can only do this event once
         this.player = player;
         this.gooseTexture = gooseTexture;
         this.gameMap = gameMap;
         this.entitiesHandler = entitiesHandler;
-        this.geese = geese;
     }
 
     /**
@@ -48,8 +46,7 @@ public class AbandonedSandwich extends EventTrigger {
             float spawnX = player.getPosition().x + (float) Math.cos(angle) * spawnRadius;
             float spawnY = player.getPosition().y + (float) Math.sin(angle) * spawnRadius;
 
-            Goose addGoose = new Goose(gooseTexture, spawnX, spawnY, gameMap, player, entitiesHandler);
-            geese.add(addGoose);
+            new Goose(gooseTexture, spawnX, spawnY, gameMap, player, entitiesHandler);
         }
     }
 }

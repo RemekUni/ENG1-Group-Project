@@ -5,9 +5,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.C11.game.ItemType;
-import com.C11.game.world.EntitiesHandler;
 import com.C11.game.world.GameMap;
+import com.C11.game.world.Item;
 
 /**
  * The player-controlled sprite. Moves with WASD.
@@ -15,7 +14,7 @@ import com.C11.game.world.GameMap;
  *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
-public class Player extends CollectorEntity{
+public class Player extends ACollectorEntity{
     private final Vector2 direction = new Vector2();
 
     // tiles per second
@@ -75,13 +74,13 @@ public class Player extends CollectorEntity{
         doThrowLogic(inventory.get(inventoryIndex));
     }
 
-    public void throwItem(ItemType itemType) {
+    public void throwItem(Item itemType) {
         if (inventory.size == 0) return;
 
         doThrowLogic(itemType);
     }
 
-    private void doThrowLogic(ItemType itemType) {
+    private void doThrowLogic(Item itemType) {
         Vector2 throwVector = direction.scl(THROW_DISTANCE);
 
         this.inventory.removeValue(itemType, true);
