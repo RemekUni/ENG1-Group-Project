@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.C11.game.Main;
 import com.C11.game.entities.Entity;
 import com.C11.game.entities.Goose;
-import com.C11.game.items.ItemEntity;
+import com.C11.game.entities.ItemEntity;
 import com.C11.game.entities.Player;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.EntitiesHandler;
@@ -115,15 +115,17 @@ public class GameScreen extends ScreenAdapter {
 
         camera.position.set(worldWidth/2f, worldHeight/2f, 0);
 
+        player = new Player(playerTexture, worldWidth / 2, worldHeight / 2, gameMap, entitiesHandler);
+        player.enableCollection();
+
         //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
         int sandwichWidth = sandwichTexture.getWidth() /2;
         int sandwichHeight = sandwichTexture.getHeight();
         TextureRegion singleSandwichTexture = new TextureRegion(sandwichTexture, 0 ,0 , sandwichWidth, sandwichHeight);
-        events.add(new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f, player, gooseTexture, entitiesHandler.getEntities(), geese));
+        events.add(new AbandonedSandwich(singleSandwichTexture,  worldWidth / 2f + 2f, worldHeight / 2f, gameMap, 1.5f, player, gooseTexture, entitiesHandler, geese));
         camera.position.set(worldWidth / 2f, worldHeight / 2f, 0);
 
-        player = new Player(playerTexture, worldWidth / 2, worldHeight / 2, gameMap, entitiesHandler);
-        player.enableCollection();
+        
         // Add initial 2 geese to the gameMap
         goose = new Goose(gooseTexture, worldWidth / 2 - 10, worldHeight / 2, gameMap, player, entitiesHandler);
         goose2 = new Goose(gooseTexture, worldWidth / 2 + 10, worldHeight / 2, gameMap, player, entitiesHandler);

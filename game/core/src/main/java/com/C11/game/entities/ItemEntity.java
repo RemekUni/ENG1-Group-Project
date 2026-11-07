@@ -1,4 +1,4 @@
-package com.C11.game.items;
+package com.C11.game.entities;
 
 import java.util.Random;
 

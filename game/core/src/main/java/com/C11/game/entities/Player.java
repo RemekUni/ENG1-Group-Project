@@ -1,6 +1,5 @@
 package com.C11.game.entities;
 
-import com.C11.game.items.ItemEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
