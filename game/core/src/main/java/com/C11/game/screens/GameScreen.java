@@ -194,11 +194,10 @@ public class GameScreen extends ScreenAdapter {
             goose.update(delta);
         }
 
-        //This checks if player touches any event item (sandwich or can) and calls trigger which runs the event
+        // iterates through all events then records a gameState counter for them if they fired
         for (EventTrigger event : events){
-            if (!event.isComplete() && event.overlaps(player.getHitbox())){
-                event.trigger();
-                eventsTriggered++; //for eventual scoring 
+            if (event.overlaps(player.getHitbox()) && event.trigger()){
+                gameState.recordEventTriggered(); 
             }
         }
 
