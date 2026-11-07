@@ -26,6 +26,8 @@ public abstract class Entity {
 
     private final Hitbox hitbox;
 
+    private Array<Entity> entitiesArray;
+
     /**
      * Creates an entity at the given position.
      * 
@@ -51,6 +53,7 @@ public abstract class Entity {
         hitbox = Hitbox.forSprite(size, hitboxWidthScale, hitboxHeightScale, position);
 
         entitiesArray.add(this);
+        this.entitiesArray = entitiesArray;
     }
 
     /**
@@ -92,6 +95,11 @@ public abstract class Entity {
     // Check for hitbox collisions on the map after first snapping the hitbox to its entity
     private boolean isColliding() {
         hitbox.follow(position);
+        for (Entity entity : this.entitiesArray) {
+            if (entity != this && entity.getHitbox().overlaps(hitbox)) {
+                return true;
+            }
+        }
         return gameMap.isBlocked(hitbox);
     }
 
