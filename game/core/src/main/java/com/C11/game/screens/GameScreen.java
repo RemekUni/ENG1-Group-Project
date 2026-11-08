@@ -213,6 +213,12 @@ public class GameScreen extends ScreenAdapter {
                 System.out.println("TIMER OVER TIMER OVER");
                 endGame();
             }
+            // TEMPORARY TEST CODE: make the stationary goose leave the map after 5 seconds
+            if (timerDisplay.getTimer().getTicks() == 5) {
+                System.out.println("goose leaving map");
+                geese.get(2).leaveMap(); // make the stationary goose leave the map after 5 seconds 
+                // I don't understand why geese are stored in both entitiesArray and geese, but this code only removes the goose from entitiesArray
+            }
         }
 
         followPlayer();
@@ -255,9 +261,13 @@ public class GameScreen extends ScreenAdapter {
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
 
-        player.draw(spriteBatch);
-        for (Goose goose : geese) {
-           goose.draw(spriteBatch);
+        // player.draw(spriteBatch);
+        // for (Goose goose : geese) {
+        //    goose.draw(spriteBatch);
+        // }
+
+        for (Entity entity : entities) {
+            entity.draw(spriteBatch);
         }
 
         // baguettes (TODO: remove/refactor)

@@ -28,6 +28,8 @@ public class Goose extends CollectorEntity {
     // TODO: the goose moving towards something was just a test i made to see how a goose could behave, this can later be made optional or removed entirely
     private final Entity target;
 
+    private boolean leaveMap = false;
+
     /**
      * Creates a goose that chases a target, collection <b>off</b> by default
      *
@@ -76,14 +78,22 @@ public class Goose extends CollectorEntity {
 
     @Override
     public void update(float delta) {
-        direction.set(this.target.getCenterX(), this.target.getCenterY()).sub(getCenterX(), getCenterY());
-
+        if (leaveMap) {
+            direction.set(-100, 0); // move left to leave the map
+            if (getCenterX() < 5) {
+                // remove the goose from the game when it leaves the map
+                this.remove();
+            }
+        } 
+        else {
+            direction.set(this.target.getCenterX(), this.target.getCenterY()).sub(getCenterX(), getCenterY());
+        }
         if (direction.len() >= STOP_DISTANCE) {
             move(direction, delta);
         }
     }
 
     public void leaveMap() {
-        // TODO: implement
+        this.leaveMap = true;
     }
 }
