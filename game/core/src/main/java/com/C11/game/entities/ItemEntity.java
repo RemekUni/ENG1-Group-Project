@@ -6,7 +6,6 @@ import com.C11.game.world.GameMap;
 import com.C11.game.world.Item;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 /**
  * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link AEntity}.
@@ -17,8 +16,8 @@ import com.badlogic.gdx.utils.Array;
 public class ItemEntity extends AEntity {
 
     // -- Item entity rewritable attributes --
-    public static final float PICKUP_DISTANCE = 0.5f;
-    public static final float IDLE_ANIMATION_SPEED = 0.1f;
+    public float PICKUP_DISTANCE = 0.1f;
+    public static float IDLE_ANIMATION_SPEED = 0.1f;
 
     private final Item ITEM;
 
@@ -43,6 +42,11 @@ public class ItemEntity extends AEntity {
         this.ITEM = itemType;
     }
 
+    public void collect() {
+        entitiesHandler.getEntitiesSet().remove(this);
+        entitiesHandler.updateCategories();
+    }
+
     // Simple sin item animation
     private void idleAnimate(Vector2 pos, float delta) {
         lifetime += delta;
@@ -51,38 +55,10 @@ public class ItemEntity extends AEntity {
         direction.y = MathUtils.sin((lifetime + ANIMATION_RANDOM_SHIFT) * periodFrequency);
     }
 
-    private ACollectorEntity getCollisionCollectorEntity() {
-        float x = this.getPosition().x;
-        float y = this.getPosition().y;
-            
-        for (AEntity entity : entitiesHandler.getEntities()) {
-            float entityX = entity.getPosition().x;
-
-            float entityY = entity.getPosition().y;
-
-            boolean isInXBounds = x >= entityX - PICKUP_DISTANCE && x <= entityX + entity.getHitbox().getWidth() + PICKUP_DISTANCE;
-            boolean isInYBounds = y >= entityY - PICKUP_DISTANCE && y <= entityY + entity.getHitbox().getHeight() + PICKUP_DISTANCE;
-
-            // Run through all collectors until catching the first entity that is inbounds
-            if (isInYBounds && isInXBounds) {
-                if (entity instanceof ACollectorEntity collector) return collector;
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public void update(float delta) {
         // Idle animated position
         idleAnimate(direction, delta);
-
-        ACollectorEntity collisionCollectorEntity = getCollisionCollectorEntity();
-
-        // If collided entity is collector, make it collect the item
-        if (collisionCollectorEntity != null) {
-            collisionCollectorEntity.collectItem(this);
-        }
 
         // Animate the item by making use of #Entity.move()
         move(direction, delta);

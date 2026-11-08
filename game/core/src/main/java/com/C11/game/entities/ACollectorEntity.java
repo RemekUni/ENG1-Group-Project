@@ -4,6 +4,7 @@ import com.C11.game.world.GameMap;
 import com.C11.game.world.Item;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 
 /**
  * Abstract base class for a collector entity at the given position. Inherits from {@link AEntity}.
@@ -15,7 +16,6 @@ public abstract class ACollectorEntity extends AEntity {
     private int inventorySize = 2;
 
     private boolean isCollectionEnabled;
-    private Array<ItemEntity> itemEntities;
 
     private GameMap gameMap;
 
@@ -36,21 +36,20 @@ public abstract class ACollectorEntity extends AEntity {
         this.gameMap = gameMap;
 
         this.isCollectionEnabled = false;
-        this.itemEntities = entitiesHandler.getItemEntities();
     }
 
     public void collectItem(ItemEntity itemEntity) {
-        if (!isCollectionEnabled) return;
+        if (!isCollectionEnabled) return; // safe check
 
         // Remove #ItemEntity from the render list. GC should then dispose it from memory as it will not be referenced anywhere
-        itemEntities.removeValue(itemEntity, true);
+        itemEntity.collect();
         // Add item to entity's inventory
         inventory.add(itemEntity.getItem());
 
         // dev/temp
-        for (Item item : inventory) {
-            System.out.println(this + " | " + item.getName() + " | " + item.getEntityTexture());
-        }
+        // for (Item item : inventory) {
+        //     System.out.println(this + " | " + item.getName() + " | " + item.getEntityTexture());
+        // }
     }
 
     public boolean isCollectionEnabled() {
@@ -64,15 +63,6 @@ public abstract class ACollectorEntity extends AEntity {
      * @see #enableCollection(Array)
      */
     public void enableCollection() {
-        if (itemEntities == null) {
-            itemEntities = new Array<>();
-            throw new IllegalStateException(
-                "Item array is not initialised. An empty array has been created as a fallback to prevent a crash. "
-                + "However, this may cause unexpected behaviour. Please provide the existing item array via "
-                + "enableCollection(Array) to ensure correct behaviour."
-            );
-        }
-
         this.isCollectionEnabled = true;
     }
 

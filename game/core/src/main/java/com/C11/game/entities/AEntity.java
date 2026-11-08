@@ -54,7 +54,9 @@ public abstract class AEntity {
 
         hitbox = Hitbox.forSprite(size, hitboxWidthScale, hitboxHeightScale, position);
 
+        // Add to Entities set
         entitiesHandler.add(this);
+        entitiesHandler.updateCategories();
     }
 
     /**

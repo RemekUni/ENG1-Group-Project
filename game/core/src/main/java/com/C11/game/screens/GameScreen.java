@@ -142,6 +142,8 @@ public class GameScreen extends ScreenAdapter {
 
             ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, randomX, randomY, entitiesHandler);
         }
+        // ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, player.getPosition().x, player.getPosition().y + 4, entitiesHandler);
+
 
         pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
     }

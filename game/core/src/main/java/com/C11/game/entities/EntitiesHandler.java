@@ -1,13 +1,13 @@
 package com.C11.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 
 public class EntitiesHandler {
-    private final Array<AEntity> entities = new Array<>();
-    private final Array<ItemEntity> itemEntities = new Array<>();
-    private final Array<Goose> geeseEntities = new Array<>();
+    private final ObjectSet<AEntity> entities = new ObjectSet<>();
 
+    private ObjectSet<ItemEntity> itemEntities = new ObjectSet<>();
+    private ObjectSet<Goose> geese = new ObjectSet<>();
 
     private Player player;
 
@@ -15,19 +15,37 @@ public class EntitiesHandler {
 
     }
 
-    // libGDX Array's default iterator does not support nested iteration over the same array. [lwjgl3:runException in thread "main" com.badlogic.gdx.utils.GdxRuntimeException: #iterator() cannot be used nested.]
-    // One case would be looping through each entity again in #ItemEntity inside #getCollisionCollectorEntity().
-    // Use indexed loop instead
-    // TODO: Ensure removing elements from inside nested loop would not break anything // UPD: it does. Items cannot be removed from the array
     public void updateEntities(float delta) {
-        for (int i = 0; i < entities.size; i++) {
-            entities.get(i).update(delta);
+        // Update each entity        
+        for (AEntity entity : entities) {
+            entity.update(delta);
+
+            // Make collectors collect items
+            if (entity instanceof ACollectorEntity collector) {
+                float cX = entity.getPosition().x;
+                float cY = entity.getPosition().y;
+
+                for (ItemEntity itemEntity : itemEntities) {
+                    float iX = itemEntity.getPosition().x;
+                    float iY = itemEntity.getPosition().y;
+
+                    boolean isInXBounds = iX >= cX - itemEntity.PICKUP_DISTANCE && iX <= cX + entity.getHitbox().getWidth() + itemEntity.PICKUP_DISTANCE;
+                    boolean isInYBounds = iY >= cY - itemEntity.PICKUP_DISTANCE && iY <= cY + entity.getHitbox().getHeight() + itemEntity.PICKUP_DISTANCE;
+
+                    // Run through all collectors until catching the first entity that is inbounds
+                    if (isInYBounds && isInXBounds) {
+                        if (collector.isCollectionEnabled()) {
+                            collector.collectItem(itemEntity);
+                        }
+                    }
+                }
+            }
         }
     }
 
     public void draw(SpriteBatch batch) {
-        for (int i = 0; i < entities.size; i++) {
-            entities.get(i).draw(batch);
+        for (AEntity entity : entities) {
+            entity.draw(batch);
         }
     }
 
@@ -41,7 +59,7 @@ public class EntitiesHandler {
         }
         // Goose
         if (entity instanceof Goose goose) {
-            geeseEntities.add(goose);
+            geese.add(goose);
         }
         // Player
         if (entity instanceof Player player) {
@@ -51,11 +69,46 @@ public class EntitiesHandler {
         }
     }
 
-    public Array<AEntity> getEntities() {
+    public void updateCategories() {
+        updateItemEntityCategory();
+        updateGooseCategory();
+
+        System.out.println(geese.size);
+    }
+
+    private void updateItemEntityCategory() {
+        ObjectSet<ItemEntity> itemEntities = new ObjectSet<>();
+
+        for (AEntity entity : entities) {
+            if (entity instanceof ItemEntity itemEntity) {
+                itemEntities.add(itemEntity);
+            }
+        }
+
+        this.itemEntities = itemEntities;
+    }
+
+    private void updateGooseCategory() {
+        ObjectSet<Goose> geese = new ObjectSet<>();
+
+        for (AEntity entity : entities) {
+            if (entity instanceof Goose goose) {
+                geese.add(goose);
+            }
+        }
+
+        this.geese = geese;
+    }
+
+    public ObjectSet<AEntity> getEntitiesSet() {
         return entities;
     }
 
-    public Array<ItemEntity> getItemEntities() {
+    public ObjectSet<ItemEntity> getItemEntitiesSet() {
         return itemEntities;
+    }
+
+    public ObjectSet<Goose> getGeeseSet() {
+        return geese;
     }
 }
