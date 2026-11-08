@@ -82,4 +82,8 @@ public class Goose extends CollectorEntity {
             move(direction, delta);
         }
     }
+
+    public void leaveMap() {
+        // TODO: implement
+    }
 }
