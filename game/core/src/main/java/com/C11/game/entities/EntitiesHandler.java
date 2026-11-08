@@ -3,18 +3,32 @@ package com.C11.game.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ObjectSet;
 
+/**
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+ */
 public class EntitiesHandler {
+    // All entities on the map
     private final ObjectSet<AEntity> entities = new ObjectSet<>();
 
+    // Categorised entity sets
     private ObjectSet<ItemEntity> itemEntities = new ObjectSet<>();
     private ObjectSet<Goose> geese = new ObjectSet<>();
 
     private Player player;
+    
 
+    /**
+     * Maintain entities on the map, including updating, drawing, and
+     * maintaining entities of specific types.
+     */
     public EntitiesHandler() {
 
     }
-
+    
+    /** 
+     * Updates all entities on the map. Called once per frame, subclasses decide movement and behaviour here.
+     * @param delta seconds since last frame 
+     */
     public void updateEntities(float delta) {
         // Update each entity        
         for (AEntity entity : entities) {
@@ -43,12 +57,23 @@ public class EntitiesHandler {
         }
     }
 
+    /** 
+     * Draw the entityTexture of each entity on the map using the shared spriteBatch.
+     * 
+     * @param batch the shared spriteBatch
+     */
     public void draw(SpriteBatch batch) {
         for (AEntity entity : entities) {
             entity.draw(batch);
         }
     }
 
+    /**
+     * Add entity instance to a set of all entities on the map.
+     * It is required for it be implemented and called only from the entity's constructor,
+     * to ensure it will be added to the live entity's set during its instantiation.
+     * @param entity
+     */
     public void add(AEntity entity) {
         entities.add(entity);
 
@@ -63,12 +88,16 @@ public class EntitiesHandler {
         }
         // Player
         if (entity instanceof Player player) {
-            if (this.player == null) return;
+            if (this.player != null) return;
 
             this.player = player;
         }
     }
 
+    /**
+     * Update all subcategories like {@link #itemEntities}, accessible using appropriate getter methods like {@link #getItemEntitiesSet()}.
+     * Only required when doing changes to the primary {@link #entities} set, accessible via {@link #getEntitiesSet()}.
+     */
     public void updateCategories() {
         updateItemEntityCategory();
         updateGooseCategory();
@@ -100,14 +129,26 @@ public class EntitiesHandler {
         this.geese = geese;
     }
 
+    /**
+     * Get set of all live entities on the map.
+     * @return {@type ObjectSet}
+     */
     public ObjectSet<AEntity> getEntitiesSet() {
         return entities;
     }
 
+    /**
+     * Get set of all live item entities on the map.
+     * @return {@type ObjectSet}
+     */
     public ObjectSet<ItemEntity> getItemEntitiesSet() {
         return itemEntities;
     }
 
+    /**
+     * Get set of all live geese entities on the map.
+     * @return {@type ObjectSet}
+     */
     public ObjectSet<Goose> getGeeseSet() {
         return geese;
     }
