@@ -15,7 +15,6 @@ public class EntitiesHandler {
     private ObjectSet<Goose> geese = new ObjectSet<>();
 
     private Player player;
-    
 
     /**
      * Maintain entities on the map, including updating, drawing, and
@@ -50,6 +49,7 @@ public class EntitiesHandler {
                     if (isInYBounds && isInXBounds) {
                         if (collector.isCollectionEnabled()) {
                             collector.collectItem(itemEntity);
+                            System.out.println();
                         }
                     }
                 }

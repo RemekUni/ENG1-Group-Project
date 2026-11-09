@@ -1,10 +1,10 @@
 package com.C11.game.entities;
 
+import com.C11.game.utils.GameState;
 import com.C11.game.world.GameMap;
 import com.C11.game.world.Item;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectSet;
 
 /**
  * Abstract base class for a collector entity at the given position. Inherits from {@link AEntity}.
@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.ObjectSet;
  */
 public abstract class ACollectorEntity extends AEntity {
     protected final Array<Item> inventory = new Array<>();
-    private int inventorySize = 2;
+    private final int MAX_INVENTORY_SIZE = 2;
 
     private boolean isCollectionEnabled;
 
@@ -39,12 +39,16 @@ public abstract class ACollectorEntity extends AEntity {
     }
 
     public void collectItem(ItemEntity itemEntity) {
+        if (inventory.size + 1 > MAX_INVENTORY_SIZE) return; // Make entity pickup items only the 
         if (!isCollectionEnabled) return; // safe check
 
         // Remove #ItemEntity from the render list. GC should then dispose it from memory as it will not be referenced anywhere
         itemEntity.collect();
         // Add item to entity's inventory
         inventory.add(itemEntity.getItem());
+
+        // Add items picked up stats
+        GameState.recordItemPickup();
 
         // dev/temp
         // for (Item item : inventory) {
@@ -80,11 +84,7 @@ public abstract class ACollectorEntity extends AEntity {
         inventory.removeValue(itemType, true);
     }
 
-    public int getInventorySize() {
-        return inventorySize;
-    }
-
-    public void setInventorySize(int inventorySize) {
-        this.inventorySize = inventorySize;
+    public Array<Item> getInventorySet() {
+        return inventory;
     }
 }

@@ -5,6 +5,7 @@ import com.C11.game.world.Assets;
 import com.C11.game.ui.TimerDisplay;
 import com.C11.game.utils.GameResult;
 import com.C11.game.utils.GameState;
+// import com.C11.game.utils.GameState;
 import com.C11.game.events.AbandonedSandwich;
 import com.C11.game.hitboxes.EventTrigger;
 import com.badlogic.gdx.Gdx;
@@ -42,7 +43,7 @@ import java.util.List;
 public class GameScreen extends ScreenAdapter {
     private final Main game;
     private final GameMap gameMap;
-    private final GameState gameState;
+    // private final GameState gameState;
 
     private boolean isPaused;
     private final PauseMenu pauseMenu;
@@ -94,7 +95,7 @@ public class GameScreen extends ScreenAdapter {
         // -- Game, assets, world initialisation --
         this.game = game;
         this.spriteBatch = game.getBatch();
-        this.gameState = new GameState();
+        // this.gameState = new GameState();
         gameMap = new GameMap("maps/campus.tmx");
         timerDisplay = new TimerDisplay(Assets.TIMER_FONT, GAME_LENGTH);
         timerDisplay.getTimer().start();
@@ -187,7 +188,7 @@ public class GameScreen extends ScreenAdapter {
         // goes through all events then records a gameState counter for them if they fired
         for (EventTrigger event : events) {
             if (event.overlaps(player.getHitbox()) && event.trigger()) {
-                gameState.recordEventTriggered();
+                GameState.recordEventTriggered();
             }
         }
 
@@ -205,7 +206,7 @@ public class GameScreen extends ScreenAdapter {
 
     // small helper to create GameResult snapshot and show the end screen. should be used whenever anything triggers the end of the game
     private void endGame() {
-        GameResult result = gameState.toResult(timerDisplay.getTimer().getTicks());
+        GameResult result = GameState.toResult(timerDisplay.getTimer().getTicks());
         game.showEndScreen(result);
     }
 
