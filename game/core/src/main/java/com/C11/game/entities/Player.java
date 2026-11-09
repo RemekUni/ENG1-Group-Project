@@ -106,5 +106,4 @@ public class Player extends ACollectorEntity{
     private void startAim() {
 
     }
-
 }

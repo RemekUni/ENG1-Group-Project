@@ -6,7 +6,7 @@ public final class Assets {
 
     public static final Texture PLAYER_TEXTURE = new Texture("sprites/tile_0098.png");
     public static final Texture GOOSE_TEXTURE = new Texture("sprites/duck.png");
-    public static final Texture ITEM_TEXTURE = new Texture("sprites/item-prototype.png");
+    public static final Texture ITEM_TEXTURE = new Texture("sprites/baguette.png");
     public static final Texture SANDWICH_TEXTURE = new Texture("sprites/sandwich.png");
     public static final Texture CAN_TEXTURE = new Texture("sprites/can.png");
 

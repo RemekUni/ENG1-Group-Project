@@ -18,7 +18,7 @@ public class EntitiesHandler {
 
     /**
      * Maintain entities on the map, including updating, drawing, and
-     * maintaining entities of specific types.
+     * interatacting entities of specific types.
      */
     public EntitiesHandler() {
 
@@ -96,7 +96,7 @@ public class EntitiesHandler {
 
     /**
      * Update all subcategories like {@link #itemEntities}, accessible using appropriate getter methods like {@link #getItemEntitiesSet()}.
-     * Only required when doing changes to the primary {@link #entities} set, accessible via {@link #getEntitiesSet()}.
+     * <b>Required</b> only when doing changes to the primary {@link #entities} set, accessible via {@link #getEntitiesSet()}.
      */
     public void updateCategories() {
         updateItemEntityCategory();

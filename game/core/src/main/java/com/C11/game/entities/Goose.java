@@ -2,7 +2,6 @@ package com.C11.game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.C11.game.world.GameMap;
 
 /**
