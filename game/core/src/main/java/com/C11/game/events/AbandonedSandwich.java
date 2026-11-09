@@ -1,6 +1,7 @@
 package com.C11.game.events;
 
-import com.C11.game.entities.Entity;
+import com.C11.game.entities.EntitiesHandler;
+import com.C11.game.entities.AEntity;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.Player;
 import com.C11.game.hitboxes.EventTrigger;
@@ -19,16 +20,14 @@ public class AbandonedSandwich extends EventTrigger {
     private final Player player;
     private final Texture gooseTexture;
     private final GameMap gameMap;
-    private final Array<Entity> entities;
-    private final Array<Goose> geese;
+    private final EntitiesHandler entitiesHandler;
 
-    public AbandonedSandwich(TextureRegion sandwichTexture, float startX, float startY, GameMap gameMap, float size, Player player, Texture gooseTexture, Array<Entity> entities, Array<Goose> geese) {
+    public AbandonedSandwich(TextureRegion sandwichTexture, float startX, float startY, GameMap gameMap, float size, Player player, Texture gooseTexture, EntitiesHandler entitiesHandler) {
         super(sandwichTexture, startX, startY, gameMap, size, true); //You can only do this event once
         this.player = player;
         this.gooseTexture = gooseTexture;
         this.gameMap = gameMap;
-        this.entities = entities;
-        this.geese = geese;
+        this.entitiesHandler = entitiesHandler;
     }
 
     /**
@@ -47,8 +46,7 @@ public class AbandonedSandwich extends EventTrigger {
             float spawnX = player.getPosition().x + (float) Math.cos(angle) * spawnRadius;
             float spawnY = player.getPosition().y + (float) Math.sin(angle) * spawnRadius;
 
-            Goose addGoose = new Goose(gooseTexture, spawnX, spawnY, gameMap, player, entities);
-            geese.add(addGoose);
+            new Goose(gooseTexture, spawnX, spawnY, gameMap, player, entitiesHandler);
         }
     }
 }
