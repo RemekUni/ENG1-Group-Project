@@ -70,9 +70,14 @@ class AbandonedSandwich {
 }
 
 class Can {
-    - PLayer player
-    
-    +Can(TextureRegion canTexture, float startX, float startY, GameMap gameMap, float size, Player player)
+    - TextureRegion canTexture
+    - float startX
+	- float startY
+	- GameMap gameMap
+	- float size
+	- Player player
+
+    + Can(TextureRegion canTexture, float startX, float startY,\n GameMap gameMap, float size, Player player)
     + void action()
 }
 
