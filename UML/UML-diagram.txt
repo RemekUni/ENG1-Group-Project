@@ -64,7 +64,8 @@ class AbandonedSandwich {
     - Array<Entity> entities
     - Array<Goose> geese
 
-    +AbandonedSandwich(TextureRegion sandwichTexture, float startX, float startY, GameMap gameMap, float size, Player player, Texture gooseTexture, Array<Entity> entities, Array<Goose> geese)
+    +AbandonedSandwich(TextureRegion sandwichTexture, float startX, float startY, GameMap gameMap,
+float size, Player player, Texture gooseTexture, Array<Entity> entities, Array<Goose> geese)
     +void action()
 
 }
