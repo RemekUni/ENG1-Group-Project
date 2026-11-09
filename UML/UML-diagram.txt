@@ -6,7 +6,7 @@ abstract class Rectangle
 
 class Main {
 	-SpriteBatch spritebatch
-	
+
 	+getBatch()
 	+create()
 	+dispose()
@@ -17,24 +17,24 @@ abstract class Entity {
 	-float size
 	-float speed
 	-Texture entityTexture
-	
+
 	-GameMap gameMap
 	-Rectangle bounds
-	
+
 	-float hitboxWidth
 	-float hitboxHeight
-	-float hitboxOffsetX 
-	
+	-float hitboxOffsetX
+
 	+Entity(Texture entityTexture, GameMap gameMap, float startX,\n float startY, float speed, float hitboxWidthScale, float hitboxHeightScale)
-	
+
 	~void move(Vector2 direction, float delta)
-	
+
 	+{abstract} void update(float delta)
-	
+
 	~boolean isColliding()
-	
+
 	+void draw(SpriteBatch batch)
-	
+
 	+Vector2 getPosition()
 	+float getCenterX()
 	+float getCenterY()
@@ -44,14 +44,36 @@ abstract class Entity {
 
 abstract class Hitbox {
 	+Hitbox(float x, float y,\n float width, float height)
-	
-	+void onHit()
 }
 
-class HiddenItem {
-	+HiddenItem(float x, float y,\n float width, float height)
-	
-	+void onHit()
+
+abstract class EventTrigger {
+	-boolean oneShot
+	-boolean triggered
+
+	+EventTrigger(TextureRegion texture, float startX, float startY, GameMap gameMap, float size, boolean oneShot)
+	+{abstract} void action()
+	+void trigger()
+	+boolean isComplete()
+}
+
+class AbandonedSandwich {
+    - Player player
+    - Texture gooseTexture
+    - GameMap gamemap
+    - Array<Entity> entities
+    - Array<Goose> geese
+
+    +AbandonedSandwich(TextureRegion sandwichTexture, float startX, float startY, GameMap gameMap, float size, Player player, Texture gooseTexture, Array<Entity> entities, Array<Goose> geese)
+    +void action()
+
+}
+
+class Can {
+    - PLayer player
+    
+    +Can(TextureRegion canTexture, float startX, float startY, GameMap gameMap, float size, Player player)
+    + void action()
 }
 
 class GameScreen {
@@ -61,31 +83,32 @@ class GameScreen {
 	-OrthographicCamera camera
 	-SpriteBatch spriteBatch
 	-Player player
-	-Goose goose
-	
+	-Array<Goose> geese
+	-AbandonedSandwich sandwich
+
 	-float worldWidth
 	-float worldHeight
-	
+
 	-{static} float VIEW_WIDTH
 	-{static} float VIEW_HEIGHT
-	
+
 	-Texture playerTexture
 	-Texture gooseTexture
-	
+
 	-boolean isPaused
-	
+
 	-PauseMenu pauseMenu
-	
+
 	+GameScreen(Main game)
-	
+
 	+void resize(int width, int height)
 	+void render(float delta)
-	
+
 	~void update(float delta)
 	~void pauseGame()
 	~void followPlayer()
 	~void draw()
-	
+
 	+void pause()
 	+void dispose()
 }
@@ -93,11 +116,11 @@ class GameScreen {
 class Player {
 	-Vector2 direction
 	-{static} float PLAYER_SPEED
-	-{static} float HITBOX_WIDTH_SCALE 
+	-{static} float HITBOX_WIDTH_SCALE
 	-{static} float HITBOX_HEIGHT_SCALE
-	
+
 	+Player(Texture playerTexture, float startX,\n float startY, GameMap gameMap)
-	
+
 	+void update(float delta)
 }
 
@@ -108,11 +131,11 @@ class Goose {
 	-{static} float HITBOX_HEIGHT_SCALE
 	-{static} float STOP_DISTANCE
 	-Entity target
-	
+
 	+Goose(Texture gooseTexture, float startX,\n float startY, GameMap gameMap, Entity target)
-	
+
 	+void update(float delta)
-	
+
 }
 
 class GameMap {
@@ -121,22 +144,22 @@ class GameMap {
 	-float unitScale
 	-float worldWidth
 	-float worldHeight
-	
+
 	-{static} String COLLISION_LAYER
-	
+
 	-Array<Rectangle> collisionRects
-	
+
 	+GameMap(String mapFilePath)
-	
+
 	~void loadCollisionRects()
 	~void addMapBoundary()
-	
+
 	+boolean isBlocked(Rectangle bounds)
-	
+
 	+float getWorldWidth()
 	+float getWorldHeight()
 	+float getUnitScale()
-	
+
 	+void render(OrthographicCamera camera)
 	+void dispose()
 }
@@ -144,17 +167,17 @@ class GameMap {
 class PauseMenu {
 	-Stage stage
 	-Skin skin
-	
+
 	-{static} float DIM_ALPHA
-	
+
 	-{static} float BUTTON_WIDTH_FRACTION
 	-{static} float BUTTON_PADDING
-	
+
 	-{static} float UI_WIDTH
 	-{static} float UI_HEIGHT
-	
+
 	+PauseMenu(Runnable onResume, Runnable onExit)
-	
+
 	+void render(float delta)
 	+void resize(int width, int height)
 	+void show()
@@ -167,23 +190,23 @@ class Timer {
 	-long length
 	-boolean playing
 	-int ticks
-	
+
 	+Timer(float tickLength)
-	
+
 	+void pause()
 	+void unpause()
-	
+
 	+void start()
 	+void stop()
-	
+
 	+boolean update()
-	
+
 	+void setLenth(float tickLength)
-	
+
 	+boolean isPlaying()
-	
+
 	+long getElapsedTime()
-	
+
 	+int getTicks()
 }
 
@@ -193,16 +216,14 @@ Main --> GameScreen : initalizes, sets as screen
 
 GameScreen --> Player : creates, loads texture
 GameScreen --> Goose : creates, loads texture
-GameScreen --> GameMap : loads from file,\nsets bounds 
+GameScreen --> GameMap : loads from file,\nsets bounds
 GameScreen --> PauseMenu : initializes, then starts paused
 
 Entity <|-- Player
 Entity <|-- Goose
-Entity ..> Rectangle
-Entity .. Hitbox : Hitbox class will be used for hitbox instead of Rectangle?
-
-Rectangle <|-- Hitbox
-Hitbox <|-- HiddenItem
+Hitbox <|-- EventTrigger
+EventTrigger <|-- AbandonedSandwich
+EventTrigger <|-- Can
 
 ScreenAdapter <|-- GameScreen
 
