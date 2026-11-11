@@ -5,6 +5,7 @@ import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 
 /**
  * Abstract base class for anything that moves on the map (like player or geese). Handles position, drawing, and collision-aware movement.
@@ -54,9 +55,14 @@ public abstract class AEntity {
 
         hitbox = Hitbox.forSprite(size, hitboxWidthScale, hitboxHeightScale, position);
 
+        // Check if the spawn location is clear, if not, move the entity by a small random float between -1 and 1
+        while (!isSpawnClear()) {
+            position.x += MathUtils.random(-1f, 1f);
+            position.y += MathUtils.random(-1f, 1f);
+        }
+
         // Add to Entities set
         entitiesHandler.add(this);
-        entitiesHandler.updateCategories();
     }
 
     /**
@@ -98,7 +104,17 @@ public abstract class AEntity {
     // Check for hitbox collisions on the map after first snapping the hitbox to its entity
     private boolean isColliding() {
         hitbox.follow(position);
+        for (AEntity entity : entitiesHandler.getCharactersSet()) {
+            if (entity != this && hitbox.overlaps(entity.getHitbox())) {
+                return true;
+            }
+        }   
         return gameMap.isBlocked(hitbox);
+    }
+
+    private boolean isSpawnClear() {
+        hitbox.follow(position);
+        return !gameMap.isBlocked(getHitbox());
     }
 
     /** 

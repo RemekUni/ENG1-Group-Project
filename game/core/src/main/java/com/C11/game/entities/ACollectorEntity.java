@@ -5,6 +5,7 @@ import com.C11.game.world.GameMap;
 import com.C11.game.world.Item;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 
 /**
  * Abstract base class for a collector entity at the given position. Inherits from {@link AEntity}.
