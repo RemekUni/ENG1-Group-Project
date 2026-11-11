@@ -7,6 +7,7 @@ import com.C11.game.screens.EndScreen;
 import com.C11.game.screens.GameScreen;
 import com.C11.game.screens.StartScreen;
 import com.C11.game.utils.GameResult;
+import com.C11.game.world.Assets;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -63,5 +64,6 @@ public class Main extends Game {
         if (getScreen() != null) getScreen().dispose();
         spriteBatch.dispose();
         skin.dispose();
+        Assets.dispose();
     }
 }
