@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 public class ItemEntity extends AEntity {
 
     // -- Item entity rewritable attributes --
-    public float PICKUP_DISTANCE = 0.1f;
+    public float PICKUP_DISTANCE = 1f;
     public static float IDLE_ANIMATION_SPEED = 0.1f;
 
     private final Item ITEM;
@@ -49,12 +49,12 @@ public class ItemEntity extends AEntity {
 
     public ACollectorEntity collectionCollisionDetection() {
         for (AEntity entity : entitiesHandler.getCharactersSet()) {
+            double iX = (double) this.getCenterX();
+            double iY = (double) this.getCenterY();
+
             if (entity instanceof ACollectorEntity collector) {
                 double cX = (double) entity.getCenterX();
                 double cY = (double) entity.getCenterY();
-
-                double iX = (double) this.getCenterX();
-                double iY = (double) this.getCenterY();
 
                 // Check if distance between centers is less than or equal to the pickup distance
                 boolean isInBounds = Math.sqrt(Math.pow(iX - cX, 2) + Math.pow(iY - cY, 2)) <= this.PICKUP_DISTANCE;
