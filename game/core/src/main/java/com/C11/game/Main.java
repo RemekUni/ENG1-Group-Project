@@ -38,11 +38,12 @@ public class Main extends Game {
     // helpers for cycling through the different screens. should grow larger once more screens added
 
     public void showStartScreen() {
-        switchScreen(new StartScreen(skin, () -> startGame(), () -> Gdx.app.exit()));
+        switchScreen(new StartScreen(skin, minutes -> startGame(minutes), () -> Gdx.app.exit()));
     }
 
-    public void startGame() {
-        switchScreen(new GameScreen(this));
+    public void startGame(int minutes) {
+        int seconds = minutes * 60;
+        switchScreen(new GameScreen(this, seconds));
     }
 
     public void showEndScreen(GameResult result) {

@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
@@ -45,6 +46,7 @@ public abstract class MenuScreen extends ScreenAdapter {
     private final Table root;
     private final Table buttons;
     private final Table body;
+    private final Table sliders;
     private final Table content;
 
     /**
@@ -61,6 +63,7 @@ public abstract class MenuScreen extends ScreenAdapter {
 
         root = new Table();
         body = new Table();
+        sliders = new Table();
         buttons = new Table();
         content = new Table();
 
@@ -74,6 +77,7 @@ public abstract class MenuScreen extends ScreenAdapter {
         // the button table will sit underneath the body table
         root.add(titleLabel).padBottom(TITLE_PADDING_BOT).padTop(TITLE_PADDING_TOP).row();
         content.add(body).padBottom(BODY_PADDING_BOT).row();
+        content.add(sliders).row();
         content.add(buttons).row();
         root.add(content).expandY();
     }
@@ -104,6 +108,24 @@ public abstract class MenuScreen extends ScreenAdapter {
     protected void addBodyLabel(String text) {
         Label label = new Label(text, skin);
         body.add(label).row();
+    }
+
+    protected Slider addSlider(float min, float max, float stepSize, boolean vertical, String sliderName) {
+        Slider slider = new Slider(min, max, stepSize, vertical, skin);
+        Label name = new Label(sliderName, skin);
+        Label value = new Label(String.valueOf((int) min), skin);
+        slider.setValue(min);
+        slider.addListener(new ChangeListener() {
+            @Override 
+            public void changed(ChangeEvent event, Actor actor) {
+                value.setText(String.valueOf((int) slider.getValue()));
+            }
+        });
+
+        sliders.add(name).row();
+        sliders.add(slider);
+        sliders.add(value);
+        return slider;
     }
 
     @Override 
