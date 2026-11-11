@@ -75,20 +75,21 @@ public abstract class AEntity {
      * 
      * @param direction vector direction for entity to move
      * @param delta time in seconds from last frame
+     * @param checkCollisions whether to check for collisions
      */
-    protected void move(Vector2 direction, float delta) {
+    protected void move(Vector2 direction, float delta, boolean checkCollisions) {
         direction.nor();
         
         float dx = direction.x * speed * delta;
         float dy = direction.y * speed * delta;
 
         position.x += dx;
-        if (isColliding()) {
+        if (checkCollisions && isColliding()) {
             position.x -=dx;
         }
 
         position.y += dy;
-        if (isColliding()) {
+        if (checkCollisions && isColliding()) {
             position.y -=dy;
         }
 

@@ -45,7 +45,6 @@ public class ItemEntity extends AEntity {
     public void collect() {
         entitiesHandler.removeEntity(this);
         System.out.println("Collected " + ITEM.getName() + "!");
-        System.out.println("ItemEntity set size: " + entitiesHandler.getItemCount());
     }
 
     public ACollectorEntity collectionCollisionDetection() {
@@ -81,20 +80,25 @@ public class ItemEntity extends AEntity {
 
     @Override
     public void update(float delta) {
-        // Idle animated position
-        idleAnimate(direction, delta);
-
-        // Animate the item by making use of #Entity.move()
-        move(direction, delta);
-
         // Check if any collectors are in range to collect the item
         ACollectorEntity foundCollector = collectionCollisionDetection();
         if (foundCollector != null) {
             foundCollector.collectItem(this);
         }
+        else {
+            // Idle animated position
+            idleAnimate(direction, delta);
+
+            // Animate the item by making use of #Entity.move()
+            move(direction, delta, false);
+        }
     }
 
     public Item getItem() {
         return ITEM;
+    }
+
+    public String toString() {
+        return ITEM.getName() + "@" + Integer.toHexString(hashCode());
     }
 }

@@ -24,4 +24,7 @@ public class Item {
         return entityTexture;
     }
 
+    public String toString() {
+        return name;
+    }
 }

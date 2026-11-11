@@ -75,7 +75,7 @@ public class Player extends ACollectorEntity{
            throwItem(0);
         }
 
-        move(direction, delta);
+        move(direction, delta, true);
     }
 
     public void activateSpeedBoost(float boostTime){
@@ -86,7 +86,7 @@ public class Player extends ACollectorEntity{
     public void throwItem(int inventoryIndex) {
         if (inventory.size == 0) return;
 
-        doThrowLogic(inventory.get(inventoryIndex));
+        //doThrowLogic(inventory.get(inventoryIndex));
     }
 
     public void throwItem(Item itemType) {
@@ -98,9 +98,9 @@ public class Player extends ACollectorEntity{
     private void doThrowLogic(Item itemType) {
         Vector2 throwVector = direction.scl(THROW_DISTANCE);
 
-        this.inventory.removeValue(itemType, true);
-        new ItemEntity(itemType, gameMap, this.getPosition().x + throwVector.x, this.getPosition().y + throwVector.y, entitiesHandler);
-        System.out.println("spawned item at " + (this.getPosition().x + throwVector.x) + ", " + (this.getPosition().y + throwVector.y) + ", player pos is: " + this.getPosition());
+        // this.inventory.removeValue(itemType, true);
+        // new ItemEntity(itemType, gameMap, this.getPosition().x + throwVector.x, this.getPosition().y + throwVector.y, entitiesHandler);
+        // System.out.println("spawned item at " + (this.getPosition().x + throwVector.x) + ", " + (this.getPosition().y + throwVector.y) + ", player pos is: " + this.getPosition());
     }
 
     private void startAim() {

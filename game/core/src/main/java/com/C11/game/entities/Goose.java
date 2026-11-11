@@ -46,7 +46,7 @@ public class Goose extends ACollectorEntity {
         direction.set(this.target.getCenterX(), this.target.getCenterY()).sub(getCenterX(), getCenterY());
 
         if (direction.len() >= STOP_DISTANCE) {
-            move(direction, delta);
+            move(direction, delta, true);
         }
     }
 }

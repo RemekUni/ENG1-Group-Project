@@ -68,6 +68,10 @@ public class EntitiesHandler {
             goose.update(delta);
         }
         for (ItemEntity item : itemEntities) {
+            if (item == null) {
+                System.out.println("NULL");
+                continue;
+            }
             item.update(delta);
         }
     }
