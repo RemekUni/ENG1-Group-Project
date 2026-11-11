@@ -48,7 +48,6 @@ public class GameScreen extends ScreenAdapter {
 
     private boolean isPaused;
     private final PauseMenu pauseMenu;
-    static private final int GAME_LENGTH = 30;
     private final TimerDisplay timerDisplay;
 
     private final Viewport viewport;
@@ -64,8 +63,6 @@ public class GameScreen extends ScreenAdapter {
     private final Player player;
 
     private final SpriteBatch spriteBatch;
-
-    
 
     /**
      * Minimum visible area in world units (tiles).
@@ -90,7 +87,7 @@ public class GameScreen extends ScreenAdapter {
      *
      * @param game game provides the shared batch
      */
-    public GameScreen(Main game) {
+    public GameScreen(Main game, int gameLengthSeconds) {
         // TODO: read spawn positions from the Tiled spawn layer and use them to
         // initialise entities
         
@@ -99,7 +96,7 @@ public class GameScreen extends ScreenAdapter {
         this.spriteBatch = game.getBatch();
         // this.gameState = new GameState();
         gameMap = new GameMap("maps/campus.tmx");
-        timerDisplay = new TimerDisplay(Assets.TIMER_FONT, GAME_LENGTH);
+        timerDisplay = new TimerDisplay(Assets.TIMER_FONT, gameLengthSeconds);
         timerDisplay.getTimer().start();
 
         // Load assets. Loaded once and then shared by entities. Disposed in #dispose().
