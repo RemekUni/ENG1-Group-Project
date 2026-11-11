@@ -216,14 +216,42 @@ class Timer {
 	+int getTicks()
 }
 
+class TimerDisplay {
+	-Timer timer
+	-BitmapFont font
+	-int initialTime
+
+	+TimerDisplay(String fontFile, int initialTime)
+
+	+Timer getTimer()
+	+int getInitialTime()
+
+	+void draw()
+
+	+void dispose()
+
+}
+
+abstract class FontGenerator {
+	-{static} FreeTypeFontGenerator generator
+	-{static} FreeTypeFontParameter parameter
+
+	+{static} generateBitmapFont(String path, int size, Color colour)
+
+}
+
 Game <|-- Main
 Main --> SpriteBatch : creates
 Main --> GameScreen : initalizes, sets as screen
+
+TimerDisplay --> Timer
+TimerDisplay --> FontGenerator
 
 GameScreen --> Player : creates, loads texture
 GameScreen --> Goose : creates, loads texture
 GameScreen --> GameMap : loads from file,\nsets bounds
 GameScreen --> PauseMenu : initializes, then starts paused
+GameScreen --> TimerDisplay : initalizes
 
 Entity <|-- Player
 Entity <|-- Goose
@@ -236,9 +264,8 @@ ScreenAdapter <|-- GameScreen
 Disposable <|.. GameMap
 Disposable <|.. PauseMenu
 
-hide empty members
 
-remove Timer
+hide empty members
 
 remove Rectangle
 remove Game
