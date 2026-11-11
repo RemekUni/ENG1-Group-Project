@@ -28,46 +28,18 @@ public class EntitiesHandler {
     public EntitiesHandler() {
 
     }
-    
+
     /** 
-     * Updates all entities on the map. Called once per frame, subclasses decide movement and behaviour here.
+     * Update all entities on the map.
      * @param delta seconds since last frame 
      */
-    // public void updateEntities(float delta) {
-    //     // Update each entity        
-    //     for (AEntity entity : entities) {
-    //         entity.update(delta);
-
-    //         // Make collectors collect items
-    //         if (entity instanceof ACollectorEntity collector) {
-    //             float cX = entity.getPosition().x;
-    //             float cY = entity.getPosition().y;
-
-    //             for (ItemEntity itemEntity : itemEntities) {
-    //                 float iX = itemEntity.getPosition().x;
-    //                 float iY = itemEntity.getPosition().y;
-
-    //                 boolean isInXBounds = iX >= cX - itemEntity.PICKUP_DISTANCE && iX <= cX + entity.getHitbox().getWidth() + itemEntity.PICKUP_DISTANCE;
-    //                 boolean isInYBounds = iY >= cY - itemEntity.PICKUP_DISTANCE && iY <= cY + entity.getHitbox().getHeight() + itemEntity.PICKUP_DISTANCE;
-
-    //                 // Run through all collectors until catching the first entity that is inbounds
-    //                 if (isInYBounds && isInXBounds) {
-    //                     if (collector.isCollectionEnabled()) {
-    //                         collector.collectItem(itemEntity);
-    //                         System.out.println();
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
     public void updateEntities(float delta) {
         player.update(delta);
         for (AEntity goose : geese) {
             goose.update(delta);
         }
         for (ItemEntity item : itemEntities) {
+            // For an unknown reason, the item entity is sometimes null, so this check is required to prevent a crash
             if (item == null) {
                 System.out.println("NULL");
                 continue;
@@ -135,41 +107,6 @@ public class EntitiesHandler {
         }
         // Player not included as it is a singleton and should not be removed
     }
-
-    /**
-     * Update all subcategories like {@link #itemEntities}, accessible using appropriate getter methods like {@link #getItemEntitiesSet()}.
-     * <b>Required</b> only when doing changes to the primary {@link #entities} set, accessible via {@link #getEntitiesSet()}.
-     */
-    // public void updateCategories() {
-    //     updateItemEntityCategory();
-    //     updateGooseCategory();
-
-    //     System.out.println(geese.size);
-    // }
-
-    // private void updateItemEntityCategory() {
-    //     ObjectSet<ItemEntity> itemEntities = new ObjectSet<>();
-
-    //     for (AEntity entity : entities) {
-    //         if (entity instanceof ItemEntity itemEntity) {
-    //             itemEntities.add(itemEntity);
-    //         }
-    //     }
-
-    //     this.itemEntities = itemEntities;
-    // }
-
-    // private void updateGooseCategory() {
-    //     ObjectSet<Goose> geese = new ObjectSet<>();
-
-    //     for (AEntity entity : entities) {
-    //         if (entity instanceof Goose goose) {
-    //             geese.add(goose);
-    //         }
-    //     }
-
-    //     this.geese = geese;
-    // }
 
     /**
      * Get set of all live entities on the map.

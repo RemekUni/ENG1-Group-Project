@@ -59,8 +59,8 @@ public class Goose extends ACollectorEntity {
 
     @Override
     public void update(float delta) {
-        boolean collide = true;
-        // If leavingMap is true, this will make it move left instead of towards the target, and remove it from the game when it leaves the map
+        boolean collide = true; // When the goose is leaving the map, it will not collide with anything
+        // If leavingMap is true, this will make it move left instead of towards the target
         if (leavingMap) {
             collide = false;
             direction.set(-100, 0);
@@ -86,6 +86,9 @@ public class Goose extends ACollectorEntity {
         setTarget(this);
     }
 
+    /**
+     * Makes the goose leave the map with no collision checks
+     */
     public void leaveMap() {
         leavingMap = true;
     }
