@@ -9,6 +9,7 @@ public final class Assets {
     public static final Texture ITEM_TEXTURE = new Texture("sprites/baguette.png");
     public static final Texture SANDWICH_TEXTURE = new Texture("sprites/sandwich.png");
     public static final Texture CAN_TEXTURE = new Texture("sprites/can.png");
+    public static final Texture BUTTON_TEXTURE = new Texture("sprites/button.png");
 
     // public static final String PICKUP = "sounds/.wav";
     // public static final String GAME_OVER = "sounds/.wav";

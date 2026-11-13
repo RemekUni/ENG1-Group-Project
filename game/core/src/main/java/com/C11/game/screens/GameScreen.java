@@ -125,7 +125,12 @@ public class GameScreen extends ScreenAdapter {
         new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 - 10, worldHeight / 2, gameMap, player, entitiesHandler);
         final Goose goose2 = new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 + 10, worldHeight / 2, gameMap, player, entitiesHandler);
         goose2.enableCollection();
-       
+        final Goose goose3 = new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 + 5, worldHeight / 2, gameMap, entitiesHandler);
+
+        // TEMP: button to make the stationary goose just created leave the map
+        TextureRegion singleButtonTexture = new TextureRegion(Assets.BUTTON_TEXTURE);
+        LeaveMap leaveMapEvent = new LeaveMap(singleButtonTexture, worldWidth / 2 + 3, worldHeight / 2, gameMap, 1.5f, true, goose3);
+        events.add(leaveMapEvent);
 
         //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
         int sandwichWidth = Assets.SANDWICH_TEXTURE.getWidth() /2;

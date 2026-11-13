@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 public class ItemEntity extends AEntity {
 
     // -- Item entity rewritable attributes --
-    public float PICKUP_DISTANCE = 0.1f;
+    public float PICKUP_DISTANCE = 1f;
     public static float IDLE_ANIMATION_SPEED = 0.1f;
 
     private final Item ITEM;
@@ -43,8 +43,31 @@ public class ItemEntity extends AEntity {
     }
 
     public void collect() {
-        entitiesHandler.getEntitiesSet().remove(this);
-        entitiesHandler.updateCategories();
+        entitiesHandler.removeEntity(this);
+        System.out.println("Collected " + ITEM.getName() + "!");
+    }
+
+    public ACollectorEntity collectionCollisionDetection() {
+        for (AEntity entity : entitiesHandler.getCharactersSet()) {
+            double iX = (double) this.getCenterX();
+            double iY = (double) this.getCenterY();
+
+            if (entity instanceof ACollectorEntity collector) {
+                double cX = (double) entity.getCenterX();
+                double cY = (double) entity.getCenterY();
+
+                // Check if distance between centers is less than or equal to the pickup distance
+                boolean isInBounds = Math.sqrt(Math.pow(iX - cX, 2) + Math.pow(iY - cY, 2)) <= this.PICKUP_DISTANCE;
+
+                // Run through all collectors until catching the first entity that is inbounds
+                if (isInBounds) {
+                    if (collector.isCollectionEnabled()) {
+                        return collector;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     // Simple sin item animation
@@ -57,14 +80,25 @@ public class ItemEntity extends AEntity {
 
     @Override
     public void update(float delta) {
-        // Idle animated position
-        idleAnimate(direction, delta);
+        // Check if any collectors are in range to collect the item
+        ACollectorEntity foundCollector = collectionCollisionDetection();
+        if (foundCollector != null) {
+            foundCollector.collectItem(this);
+        }
+        else {
+            // Idle animated position
+            idleAnimate(direction, delta);
 
-        // Animate the item by making use of #Entity.move()
-        move(direction, delta);
+            // Animate the item by making use of #Entity.move()
+            move(direction, delta, false);
+        }
     }
 
     public Item getItem() {
         return ITEM;
+    }
+
+    public String toString() {
+        return ITEM.getName() + "@" + Integer.toHexString(hashCode());
     }
 }
