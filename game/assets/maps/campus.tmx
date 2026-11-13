@@ -219,7 +219,7 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="sandwiches">
-  <object id="91" x="80" y="384">
+  <object id="91" x="150" y="384">
    <point/>
   </object>
  </objectgroup>
