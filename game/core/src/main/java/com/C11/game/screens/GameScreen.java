@@ -290,7 +290,6 @@ public class GameScreen extends ScreenAdapter {
         gameMap.dispose();
         pauseMenu.dispose();
         timerDisplay.dispose();
-        Assets.dispose();
     }
 
 }
