@@ -73,7 +73,7 @@ public class GameScreen extends ScreenAdapter {
 
     // private final Texture playerTexture;
     // private final Texture gooseTexture;
-    // private final Texture itemTexture1; 
+    // private final Texture itemTexture1;
     // private final Texture sandwichTexture;
 
     // Hidden events on the map, checked every frame in update()
@@ -90,7 +90,7 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(Main game, int gameLengthSeconds) {
         // TODO: read spawn positions from the Tiled spawn layer and use them to
         // initialise entities
-        
+
         // -- Game, assets, world initialisation --
         this.game = game;
         this.spriteBatch = game.getBatch();
@@ -114,13 +114,14 @@ public class GameScreen extends ScreenAdapter {
 
         // Viewport
         viewport = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, camera);
-        viewportText = new ExtendViewport(worldWidth * 20, worldHeight * 20, cameraText);
+        int viewport_scale = 20;  // Text viewport must be larger than the usual viewport to ensure that text is a reasonable size and resolution.
+        viewportText = new ExtendViewport(worldWidth * viewport_scale, worldHeight * viewport_scale, cameraText);
 
         // -- Spawn entities --
         // Spawn player
         player = new Player(Assets.PLAYER_TEXTURE, worldWidth / 2, worldHeight / 2, gameMap, entitiesHandler);
         player.enableCollection();
-        
+
         // Spawn *2* geese
         new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 - 10, worldHeight / 2, gameMap, player, entitiesHandler);
         final Goose goose2 = new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 + 10, worldHeight / 2, gameMap, player, entitiesHandler);
@@ -136,7 +137,7 @@ public class GameScreen extends ScreenAdapter {
         int sandwichWidth = Assets.SANDWICH_TEXTURE.getWidth() /2;
         int sandwichHeight = Assets.SANDWICH_TEXTURE.getHeight();
         TextureRegion singleSandwichTexture = new TextureRegion(Assets.SANDWICH_TEXTURE, 0 ,0 , sandwichWidth, sandwichHeight);
-        
+
         //Spawn in the sandwiches
         for (Vector2 position : gameMap.getSandwichPositions()){
             AbandonedSandwich sandwich = new AbandonedSandwich(singleSandwichTexture, position.x, position.y, gameMap, 1.5f, player, Assets.GOOSE_TEXTURE, entitiesHandler);
@@ -155,7 +156,7 @@ public class GameScreen extends ScreenAdapter {
         for (int i = 0; i < baguetteCount; i++) {
             int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) worldWidth);
             int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
-            //TODO rename all referances to "item" to bagguette 
+            //TODO rename all referances to "item" to bagguette
 
             ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, randomX, randomY, entitiesHandler);
         }
@@ -167,7 +168,7 @@ public class GameScreen extends ScreenAdapter {
 
     // pauses at the start of the game as required
     /** @req FR_PAUSE */
-    @Override 
+    @Override
     public void show() {
         pauseGame();
     }
