@@ -24,4 +24,7 @@ public class Item {
         return texture;
     }
 
+    public String toString() {
+        return name;
+    }
 }

@@ -1,5 +1,4 @@
 {
-BitmapFont: { default-font: { file: default.fnt } },
 Color: {
 	green: { a: 1, b: 0, g: 1, r: 0 },
 	white: { a: 1, b: 1, g: 1, r: 1 },
@@ -45,7 +44,8 @@ SliderStyle: {
 	default-vertical: { parent: default-vertical }
 },
 LabelStyle: {
-	default: { font: default-font, fontColor: white }
+	default: { font: default-font, fontColor: white },
+	title: { font: title-font, fontColor: white}
 },
 TextFieldStyle: {
 	default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }

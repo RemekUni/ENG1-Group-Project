@@ -10,6 +10,7 @@ public final class Assets {
     public static final Texture ITEM_TEXTURE = new Texture("sprites/baguette.png");
     public static final Texture SANDWICH_TEXTURE = new Texture("sprites/sandwich.png");
     public static final Texture CAN_TEXTURE = new Texture("sprites/can.png");
+    public static final Texture BUTTON_TEXTURE = new Texture("sprites/button.png");
 
     // UI
     public static final Texture SLOT_SELECTED_TEXTURE = new Texture("ui/slot-selected.png");

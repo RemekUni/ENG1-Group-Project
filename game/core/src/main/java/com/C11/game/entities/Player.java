@@ -92,7 +92,7 @@ public class Player extends ACollectorEntity{
             }
         }
 
-        move(direction, delta);
+        move(direction, delta, true);
     }
 
     public void activateSpeedBoost(float boostTime){
@@ -110,8 +110,6 @@ public class Player extends ACollectorEntity{
     // public void throwItem(int index) {
     //     if (inventory.size == 0) return;
 
-    //     doThrowLogic(inventory.get(index));
-    // }
 
     // public void throwItem(Item itemType) {
     //     if (inventory.size == 0) return;

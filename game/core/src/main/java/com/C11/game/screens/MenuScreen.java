@@ -1,5 +1,8 @@
 package com.C11.game.screens;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -28,14 +31,12 @@ public abstract class MenuScreen extends ScreenAdapter {
     private final Skin skin;
 
     // fraction of the root table's width
-    private static final float BUTTON_WIDTH_FRACTION = 0.3f;
+    private static final float BUTTON_WIDTH_FRACTION = 0.4f;
     // in UI viewport units, not world units
     private static final float BUTTON_PADDING = 10f;
 
     private static final float TITLE_PADDING_BOT = 30f;
     private static final float TITLE_PADDING_TOP = 10f;
-
-    private static final float TITLE_SCALE = 10f;
 
     private static final float BODY_PADDING_BOT = 10f;
 
@@ -70,8 +71,7 @@ public abstract class MenuScreen extends ScreenAdapter {
         root.setFillParent(true);
         stage.addActor(root);
 
-        Label titleLabel = new Label(title, skin);
-        titleLabel.setFontScale(TITLE_SCALE);
+        Label titleLabel = new Label(title, skin, "title");
 
         // root is the main table for the entire screen with body and button tables inside it
         // the button table will sit underneath the body table
@@ -94,6 +94,31 @@ public abstract class MenuScreen extends ScreenAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 onClick.run();
+            }
+        });
+
+        buttons.add(button).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
+    }
+
+    /**
+     * helper for adding a button that cycles through the fixed set of options passed into it on each click
+     * 
+     * @param currentCycleOption text shown before the current option
+     * @param options the options that the button can cycle through
+     * @param initial the option selected when the screen opens
+     * @param onChange called with the selected option after every click
+     */
+    protected <Options> void addCycleButton(String currentCycleOption, Options[] options, Options initial, Consumer<Options> onChange) {
+        int[] index = {Arrays.asList(options).indexOf(initial)};
+
+        TextButton button = new TextButton(currentCycleOption + ": " + options[index[0]], skin);
+        button.addListener(new ChangeListener() {
+            @Override 
+            public void changed(ChangeEvent event, Actor actor) {
+                index[0] = (index[0] + 1) % options.length;
+                Options selected = options[index[0]];
+                button.setText(currentCycleOption + ": " + selected);
+                onChange.accept(selected);
             }
         });
 

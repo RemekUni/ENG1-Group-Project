@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
@@ -68,6 +69,8 @@ public class GameScreen extends ScreenAdapter {
 
     private final SpriteBatch spriteBatch;
 
+    private final Skin skin;
+
     /**
      * Minimum visible area in world units (tiles).
      * ExtendViewport may show more in the visible area on non 16:9 screens.
@@ -77,7 +80,7 @@ public class GameScreen extends ScreenAdapter {
 
     // private final Texture playerTexture;
     // private final Texture gooseTexture;
-    // private final Texture itemTexture1; 
+    // private final Texture itemTexture1;
     // private final Texture sandwichTexture;
 
     // Hidden events on the map, checked every frame in update()
@@ -94,10 +97,11 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(Main game, int gameLengthSeconds) {
         // TODO: read spawn positions from the Tiled spawn layer and use them to
         // initialise entities
-        
+
         // -- Game, assets, world initialisation --
         this.game = game;
         this.spriteBatch = game.getBatch();
+        this.skin = game.getSkin();
         // this.gameState = new GameState();
         gameMap = new GameMap("maps/campus.tmx");
         timerDisplay = new TimerDisplay(Assets.TIMER_FONT, gameLengthSeconds);
@@ -118,24 +122,30 @@ public class GameScreen extends ScreenAdapter {
 
         // Viewport
         viewport = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, camera);
-        viewportText = new ExtendViewport(worldWidth * 20, worldHeight * 20, cameraText);
+        int viewport_scale = 20;  // Text viewport must be larger than the usual viewport to ensure that text is a reasonable size and resolution.
+        viewportText = new ExtendViewport(worldWidth * viewport_scale, worldHeight * viewport_scale, cameraText);
 
         // -- Spawn entities --
         // Spawn player
         player = new Player(Assets.PLAYER_TEXTURE, worldWidth / 2, worldHeight / 2, gameMap, entitiesHandler);
         player.enableCollection();
-        
+
         // Spawn *2* geese
         new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 - 10, worldHeight / 2, gameMap, player, entitiesHandler);
         final Goose goose2 = new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 + 10, worldHeight / 2, gameMap, player, entitiesHandler);
         goose2.enableCollection();
-       
+        final Goose goose3 = new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 + 5, worldHeight / 2, gameMap, entitiesHandler);
+
+        // TEMP: button to make the stationary goose just created leave the map
+        TextureRegion singleButtonTexture = new TextureRegion(Assets.BUTTON_TEXTURE);
+        LeaveMap leaveMapEvent = new LeaveMap(singleButtonTexture, worldWidth / 2 + 3, worldHeight / 2, gameMap, 1.5f, true, goose3);
+        events.add(leaveMapEvent);
 
         //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
         int sandwichWidth = Assets.SANDWICH_TEXTURE.getWidth() /2;
         int sandwichHeight = Assets.SANDWICH_TEXTURE.getHeight();
         TextureRegion singleSandwichTexture = new TextureRegion(Assets.SANDWICH_TEXTURE, 0 ,0 , sandwichWidth, sandwichHeight);
-        
+
         //Spawn in the sandwiches
         for (Vector2 position : gameMap.getSandwichPositions()){
             AbandonedSandwich sandwich = new AbandonedSandwich(singleSandwichTexture, position.x, position.y, gameMap, 1.5f, player, Assets.GOOSE_TEXTURE, entitiesHandler);
@@ -154,7 +164,7 @@ public class GameScreen extends ScreenAdapter {
         for (int i = 0; i < baguetteCount; i++) {
             int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) worldWidth);
             int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
-            //TODO rename all referances to "item" to bagguette 
+            //TODO rename all referances to "item" to bagguette
 
             ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, randomX, randomY, entitiesHandler);
         }
@@ -162,13 +172,13 @@ public class GameScreen extends ScreenAdapter {
 
         System.out.println(player.getMaxInventorySize());
 
-        pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
         hud = new HUD(player);
+        pauseMenu = new PauseMenu(skin, () -> resumeGame(), () -> Gdx.app.exit());
     }
 
     // pauses at the start of the game as required
     /** @req FR_PAUSE */
-    @Override 
+    @Override
     public void show() {
         pauseGame();
     }
@@ -301,7 +311,6 @@ public class GameScreen extends ScreenAdapter {
         gameMap.dispose();
         pauseMenu.dispose();
         timerDisplay.dispose();
-        Assets.dispose();
     }
 
 }

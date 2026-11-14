@@ -5,6 +5,8 @@ import com.C11.game.world.GameMap;
 import com.C11.game.world.Item;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Abstract base class for a collector entity at the given position. Inherits from {@link AEntity}.
@@ -12,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public abstract class ACollectorEntity extends AEntity {
-    protected final Array<Item> inventory = new Array<>();
+    protected final ObjectMap<String, ObjectSet<ItemEntity>> inventory = new ObjectMap<>();
     private final int MAX_INVENTORY_SIZE = 2;
 
     private boolean isCollectionEnabled;
@@ -38,13 +40,23 @@ public abstract class ACollectorEntity extends AEntity {
     }
 
     public void collectItem(ItemEntity itemEntity) {
-        if (inventory.size + 1 > MAX_INVENTORY_SIZE) return; // Make entity pickup items only the 
         if (!isCollectionEnabled) return; // safe check
 
         // Remove #ItemEntity from the render list. GC should then dispose it from memory as it will not be referenced anywhere
         itemEntity.collect();
-        // Add item to entity's inventory
-        inventory.add(itemEntity.getItem());
+        // Check to see if the item type is unique and there is space in the inventory
+        if (!inventory.containsKey(itemEntity.getItem().getName())) {
+            if (inventory.size < MAX_INVENTORY_SIZE) {
+                inventory.put(itemEntity.getItem().getName(), new ObjectSet<>());
+            } 
+            else {
+                System.out.println("Inventory full! Cannot collect " + itemEntity.getItem().getName() + "!");
+                return;
+            }
+        }
+
+        inventory.get(itemEntity.getItem().getName()).add(itemEntity);
+        System.out.println(inventory);
 
         // Add items picked up stats
         GameState.recordItemPickup();
@@ -78,12 +90,13 @@ public abstract class ACollectorEntity extends AEntity {
         this.isCollectionEnabled = false;
     }
 
-    public void throwItem(Item itemType) {
+    public void throwItem(ItemEntity item) {
+        Item itemType = item.getItem();
         new ItemEntity(itemType, gameMap, this.getPosition().x, this.getPosition().y, entitiesHandler);
-        inventory.removeValue(itemType, true);
+        inventory.get(itemType.getName()).remove(item);
     }
 
-    public Array<Item> getInventory() {
+    public ObjectMap<String, ObjectSet<ItemEntity>> getInventory() {
         return inventory;
     }
 

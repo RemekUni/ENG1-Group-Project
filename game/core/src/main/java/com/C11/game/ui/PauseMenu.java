@@ -10,10 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  * PauseMenu is an overlay that is drawn on top of the paused game, not a separate screen.
@@ -40,28 +36,21 @@ public class PauseMenu implements Disposable {
     private static final float UI_WIDTH = 1280f;
     private static final float UI_HEIGHT = 720f;
 
-    private final Pixmap pixmap;
-
     /**
      * Loads skins (assets for the pause menu) and sets up the stage (holds actors and has a viewport).
      * It creates a table template that the buttons get put on and listeners defined for each button.
      * 
+     * @param skin the shared skin created and disposed by Main
      * @param onResume runs when the resume button is pressed
      * @param onExit runs when the exit game button is pressed
      */
-    public PauseMenu(Runnable onResume, Runnable onExit) {
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+    public PauseMenu(Skin skin, Runnable onResume, Runnable onExit) {
+        this.skin = skin;
         stage = new Stage(new ExtendViewport(UI_WIDTH, UI_HEIGHT));
-
-        pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("dim", new Texture(pixmap));
-        pixmap.dispose();
 
         Table root = new Table();
         root.setFillParent(true);
-        root.setBackground(skin.newDrawable("dim", 0f, 0f, 0f, DIM_ALPHA));
+        root.setBackground(skin.newDrawable("white", 0f, 0f, 0f, DIM_ALPHA));
         stage.addActor(root);
 
         TextButton resumeButton = new TextButton("Resume", skin);
@@ -125,7 +114,6 @@ public class PauseMenu implements Disposable {
     @Override 
     public void dispose() {
         stage.dispose();
-        skin.dispose();
     }
     
 }
