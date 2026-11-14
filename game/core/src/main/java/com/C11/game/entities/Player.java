@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.C11.game.ui.Inventory;
 import com.C11.game.world.GameMap;
 import com.C11.game.world.Item;
 
@@ -71,8 +72,24 @@ public class Player extends ACollectorEntity{
             direction.y += 1;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.T)) {
-           throwItem(0);
+        if (Gdx.input.isKeyPressed(Keys.F)) {
+           useItem();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Keys.NUM_1)) {
+            if (Inventory.isSlotSelected() && Inventory.getSelectedSlotIndex() == 0) {
+                Inventory.unselectSlot();
+            } else {
+                Inventory.selectSlot(0);
+            }
+
+        }
+        if (Gdx.input.isKeyJustPressed(Keys.NUM_2)) {
+           if (Inventory.isSlotSelected() && Inventory.getSelectedSlotIndex() == 1) {
+                Inventory.unselectSlot();
+            } else {
+                Inventory.selectSlot(1);
+            }
         }
 
         move(direction, delta);
@@ -83,27 +100,34 @@ public class Player extends ACollectorEntity{
         boostTimer += boostTime; // += allows for stacking
     }
 
-    public void throwItem(int inventoryIndex) {
-        if (inventory.size == 0) return;
-
-        doThrowLogic(inventory.get(inventoryIndex));
+    public void useItem() {
+        if (Inventory.getSelectedSlotIndex() != -1) {
+            if (Inventory.getSelectedSlotIndex() < inventory.size)
+                inventory.removeIndex(Inventory.getSelectedSlotIndex());
+        }
     }
 
-    public void throwItem(Item itemType) {
-        if (inventory.size == 0) return;
+    // public void throwItem(int index) {
+    //     if (inventory.size == 0) return;
 
-        doThrowLogic(itemType);
-    }
+    //     doThrowLogic(inventory.get(index));
+    // }
 
-    private void doThrowLogic(Item itemType) {
-        Vector2 throwVector = direction.scl(THROW_DISTANCE);
+    // public void throwItem(Item itemType) {
+    //     if (inventory.size == 0) return;
 
-        this.inventory.removeValue(itemType, true);
-        new ItemEntity(itemType, gameMap, this.getPosition().x + throwVector.x, this.getPosition().y + throwVector.y, entitiesHandler);
-        System.out.println("spawned item at " + (this.getPosition().x + throwVector.x) + ", " + (this.getPosition().y + throwVector.y) + ", player pos is: " + this.getPosition());
-    }
+    //     doThrowLogic(itemType);
+    // }
 
-    private void startAim() {
+    // private void doThrowLogic(Item itemType) {
+    //     Vector2 throwVector = direction.scl(THROW_DISTANCE);
 
-    }
+    //     this.inventory.removeValue(itemType, true);
+    //     new ItemEntity(itemType, gameMap, this.getPosition().x + throwVector.x, this.getPosition().y + throwVector.y, entitiesHandler);
+    //     System.out.println("spawned item at " + (this.getPosition().x + throwVector.x) + ", " + (this.getPosition().y + throwVector.y) + ", player pos is: " + this.getPosition());
+    // }
+
+    // private void startAim() {
+
+    // }
 }

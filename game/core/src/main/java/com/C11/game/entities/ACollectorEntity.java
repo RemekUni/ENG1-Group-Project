@@ -19,7 +19,6 @@ public abstract class ACollectorEntity extends AEntity {
 
     private GameMap gameMap;
 
-
     /**
      * Spawn a collector entity at the specified world position with item collection <b>disabled</b> by default - enable with {@link #enableCollection(Array)}.
      * @param entityTexture sprite texture (shared), not disposed by Entity
@@ -84,7 +83,11 @@ public abstract class ACollectorEntity extends AEntity {
         inventory.removeValue(itemType, true);
     }
 
-    public Array<Item> getInventorySet() {
+    public Array<Item> getInventory() {
         return inventory;
+    }
+
+    public int getMaxInventorySize() {
+        return MAX_INVENTORY_SIZE;
     }
 }

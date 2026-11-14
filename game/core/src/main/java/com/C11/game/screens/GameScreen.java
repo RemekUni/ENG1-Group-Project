@@ -17,6 +17,8 @@ import com.C11.game.entities.EntitiesHandler;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.ItemEntity;
 import com.C11.game.entities.Player;
+import com.C11.game.ui.HUD;
+import com.C11.game.ui.Inventory;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
 import com.C11.game.world.Item;
@@ -48,6 +50,8 @@ public class GameScreen extends ScreenAdapter {
 
     private boolean isPaused;
     private final PauseMenu pauseMenu;
+    private HUD hud;
+    
     private final TimerDisplay timerDisplay;
 
     private final Viewport viewport;
@@ -156,8 +160,10 @@ public class GameScreen extends ScreenAdapter {
         }
         // ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, player.getPosition().x, player.getPosition().y + 4, entitiesHandler);
 
+        System.out.println(player.getMaxInventorySize());
 
         pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
+        hud = new HUD(player);
     }
 
     // pauses at the start of the game as required
@@ -173,6 +179,7 @@ public class GameScreen extends ScreenAdapter {
         viewport.update(width, height, false);
         viewportText.update(width, height, false);
         followPlayer();
+        hud.resize(width, height);
         pauseMenu.resize(width, height);
     }
 
@@ -191,10 +198,14 @@ public class GameScreen extends ScreenAdapter {
         if (isPaused)
             pauseMenu.render(delta);
 
+        hud.render(delta);
+
+
     }
 
     private void update(float delta){
         entitiesHandler.updateEntities(delta);
+
 
         // iterates through all events then records a gameState counter for them if they fired
         for (EventTrigger event : events) {

@@ -102,7 +102,7 @@ public class EntitiesHandler {
         updateItemEntityCategory();
         updateGooseCategory();
 
-        System.out.println(geese.size);
+        // System.out.println(geese.size);
     }
 
     private void updateItemEntityCategory() {

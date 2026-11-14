@@ -37,7 +37,7 @@ public class ItemEntity extends AEntity {
      *
      */
     public ItemEntity(Item itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler) {
-        super(itemType.getEntityTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
+        super(itemType.getTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
 
         this.ITEM = itemType;
     }

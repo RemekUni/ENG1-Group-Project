@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  */
 public class Main extends Game {
     private SpriteBatch spriteBatch;
-    private Skin skin;
+    private static Skin skin;
 
     /**
      * Returns the shared spriteBatch
@@ -32,7 +32,6 @@ public class Main extends Game {
         spriteBatch = new SpriteBatch();
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         showStartScreen();
-        
     }
 
     // helpers for cycling through the different screens. should grow larger once more screens added
@@ -63,5 +62,9 @@ public class Main extends Game {
         if (getScreen() != null) getScreen().dispose();
         spriteBatch.dispose();
         skin.dispose();
+    }
+
+    public static Skin getSkin() {
+        return skin;
     }
 }
