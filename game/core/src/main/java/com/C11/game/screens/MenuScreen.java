@@ -28,14 +28,12 @@ public abstract class MenuScreen extends ScreenAdapter {
     private final Skin skin;
 
     // fraction of the root table's width
-    private static final float BUTTON_WIDTH_FRACTION = 0.3f;
+    private static final float BUTTON_WIDTH_FRACTION = 0.4f;
     // in UI viewport units, not world units
     private static final float BUTTON_PADDING = 10f;
 
     private static final float TITLE_PADDING_BOT = 30f;
     private static final float TITLE_PADDING_TOP = 10f;
-
-    private static final float TITLE_SCALE = 10f;
 
     private static final float BODY_PADDING_BOT = 10f;
 
@@ -70,8 +68,7 @@ public abstract class MenuScreen extends ScreenAdapter {
         root.setFillParent(true);
         stage.addActor(root);
 
-        Label titleLabel = new Label(title, skin);
-        titleLabel.setFontScale(TITLE_SCALE);
+        Label titleLabel = new Label(title, skin, "title");
 
         // root is the main table for the entire screen with body and button tables inside it
         // the button table will sit underneath the body table

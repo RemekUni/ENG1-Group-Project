@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
@@ -64,6 +65,8 @@ public class GameScreen extends ScreenAdapter {
 
     private final SpriteBatch spriteBatch;
 
+    private final Skin skin;
+
     /**
      * Minimum visible area in world units (tiles).
      * ExtendViewport may show more in the visible area on non 16:9 screens.
@@ -94,6 +97,7 @@ public class GameScreen extends ScreenAdapter {
         // -- Game, assets, world initialisation --
         this.game = game;
         this.spriteBatch = game.getBatch();
+        this.skin = game.getSkin();
         // this.gameState = new GameState();
         gameMap = new GameMap("maps/campus.tmx");
         timerDisplay = new TimerDisplay(Assets.TIMER_FONT, gameLengthSeconds);
@@ -163,7 +167,7 @@ public class GameScreen extends ScreenAdapter {
         // ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, player.getPosition().x, player.getPosition().y + 4, entitiesHandler);
 
 
-        pauseMenu = new PauseMenu(() -> resumeGame(), () -> Gdx.app.exit());
+        pauseMenu = new PauseMenu(skin, () -> resumeGame(), () -> Gdx.app.exit());
     }
 
     // pauses at the start of the game as required
