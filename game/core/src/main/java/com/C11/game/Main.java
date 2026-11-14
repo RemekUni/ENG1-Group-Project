@@ -6,9 +6,13 @@ import com.badlogic.gdx.Screen;
 import com.C11.game.screens.EndScreen;
 import com.C11.game.screens.GameScreen;
 import com.C11.game.screens.StartScreen;
+import com.C11.game.utils.FontGenerator;
 import com.C11.game.utils.GameResult;
 import com.C11.game.world.Assets;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
@@ -18,6 +22,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class Main extends Game {
     private SpriteBatch spriteBatch;
     private Skin skin;
+    private static final int TITLE_FONT_SIZE = 96;
+    // this is for all the font that goes underneath the title
+    private static final int REGULAR_FONT_SIZE = 48;
 
     /**
      * Returns the shared spriteBatch
@@ -28,10 +35,25 @@ public class Main extends Game {
         return spriteBatch;
     }
 
+    /**
+     * Returns the shared skin
+     * 
+     * @return the shared skin, owned and disposed by Main
+     */
+    public Skin getSkin() {
+        return skin;
+    }
+
     @Override
     public void create() {
         spriteBatch = new SpriteBatch();
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        BitmapFont font = FontGenerator.generateBitmapFont(Assets.TIMER_FONT, REGULAR_FONT_SIZE, Color.WHITE);
+        BitmapFont titleFont = FontGenerator.generateBitmapFont(Assets.TIMER_FONT, TITLE_FONT_SIZE, Color.WHITE);
+        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas"));
+        skin = new Skin(textureAtlas);
+        skin.add("default-font", font, BitmapFont.class);
+        skin.add("title-font", titleFont, BitmapFont.class);
+        skin.load(Gdx.files.internal("ui/uiskin.json"));
         showStartScreen();
         
     }
