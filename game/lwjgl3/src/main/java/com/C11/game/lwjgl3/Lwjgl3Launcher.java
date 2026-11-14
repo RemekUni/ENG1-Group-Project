@@ -29,6 +29,8 @@ public class Lwjgl3Launcher {
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
+        // remove the ability for the player to manually resize the window
+        configuration.setResizable(false);
         configuration.setWindowedMode(Lwjgl3ApplicationConfiguration.getDisplayMode().width, Lwjgl3ApplicationConfiguration.getDisplayMode().height);
         // configuration.setWindowedMode(427, 240);
         configuration.setDecorated(true);

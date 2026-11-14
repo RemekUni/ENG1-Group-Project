@@ -1,5 +1,8 @@
 package com.C11.game.screens;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -91,6 +94,31 @@ public abstract class MenuScreen extends ScreenAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 onClick.run();
+            }
+        });
+
+        buttons.add(button).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
+    }
+
+    /**
+     * helper for adding a button that cycles through the fixed set of options passed into it on each click
+     * 
+     * @param currentCycleOption text shown before the current option
+     * @param options the options that the button can cycle through
+     * @param initial the option selected when the screen opens
+     * @param onChange called with the selected option after every click
+     */
+    protected <Options> void addCycleButton(String currentCycleOption, Options[] options, Options initial, Consumer<Options> onChange) {
+        int[] index = {Arrays.asList(options).indexOf(initial)};
+
+        TextButton button = new TextButton(currentCycleOption + ": " + options[index[0]], skin);
+        button.addListener(new ChangeListener() {
+            @Override 
+            public void changed(ChangeEvent event, Actor actor) {
+                index[0] = (index[0] + 1) % options.length;
+                Options selected = options[index[0]];
+                button.setText(currentCycleOption + ": " + selected);
+                onChange.accept(selected);
             }
         });
 
