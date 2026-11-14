@@ -2,6 +2,8 @@ package com.C11.game.screens;
 
 import java.util.function.IntConsumer;
 
+import com.C11.game.settings.Settings;
+import com.C11.game.settings.WindowMode;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -26,14 +28,18 @@ public class StartScreen extends MenuScreen{
      * @param onStart runnable for 'Start Game' button
      * @param onExit runnable for 'Exit Game' button
      */
-    public StartScreen(Skin skin, IntConsumer onStart, Runnable onExit) {
+    public StartScreen(Skin skin, Settings settings, IntConsumer onStart, Runnable onExit) {
         super(skin, TITLE, BG_COLOR);
 
-        Slider timeSlider = addSlider(1, 5, 1, false, "Game Time (minutes)");
+        Slider timeSlider = addSlider(MIN_GAME_MINUTES, MAX_GAME_MINUTES, GAME_MINUTES_STEP, false, "Game Time (minutes)");
 
         addButton("Start Game", () -> {
             int minutes = (int) timeSlider.getValue();
             onStart.accept(minutes);
+        });
+        addCycleButton("Display", WindowMode.values(), settings.getWindowMode(), mode -> {
+            mode.apply();
+            settings.setWindowMode(mode);
         });
         addButton("Exit Game", onExit);
     }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.C11.game.screens.EndScreen;
 import com.C11.game.screens.GameScreen;
 import com.C11.game.screens.StartScreen;
+import com.C11.game.settings.Settings;
 import com.C11.game.utils.FontGenerator;
 import com.C11.game.utils.GameResult;
 import com.C11.game.world.Assets;
@@ -25,6 +26,8 @@ public class Main extends Game {
     private static final int TITLE_FONT_SIZE = 96;
     // this is for all the font that goes underneath the title
     private static final int REGULAR_FONT_SIZE = 48;
+
+    private Settings settings;
 
     /**
      * Returns the shared spriteBatch
@@ -54,6 +57,10 @@ public class Main extends Game {
         skin.add("default-font", font, BitmapFont.class);
         skin.add("title-font", titleFont, BitmapFont.class);
         skin.load(Gdx.files.internal("ui/uiskin.json"));
+
+        settings = new Settings(Gdx.app.getPreferences(Settings.PREFS_NAME));
+        settings.applySaved();
+
         showStartScreen();
         
     }
@@ -61,7 +68,7 @@ public class Main extends Game {
     // helpers for cycling through the different screens. should grow larger once more screens added
 
     public void showStartScreen() {
-        switchScreen(new StartScreen(skin, minutes -> startGame(minutes), () -> Gdx.app.exit()));
+        switchScreen(new StartScreen(skin, settings, minutes -> startGame(minutes), () -> Gdx.app.exit()));
     }
 
     public void startGame(int minutes) {
