@@ -231,4 +231,8 @@ public class GameMap implements Disposable {
     public Array<SimplifiedMapObject> getSpawnObjects() {
         return getMapObjects(SPAWN_LAYER);
     }
+
+    public Array<Vector2> getWaveSpawnPositions(String layerName) {
+        return getObjectPositions(layerName);
+    }
 }
