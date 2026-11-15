@@ -1,11 +1,11 @@
 package com.C11.game.utils;
 
+import com.C11.game.Config;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.C11.game.Config;
 
 /**
  * Uses the gdx-freetype library to quickly and easily generate Bitmap fonts using .ttf files.

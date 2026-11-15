@@ -2,6 +2,7 @@ package com.C11.game.screens;
 
 import java.util.function.IntConsumer;
 
+import com.C11.game.Config;
 import com.C11.game.settings.Settings;
 import com.C11.game.settings.WindowMode;
 import com.badlogic.gdx.graphics.Color;
@@ -17,10 +18,6 @@ public class StartScreen extends MenuScreen{
     private static final String TITLE = "Start Menu";
     private static final Color BG_COLOR = Color.BLACK;
     
-    private static final int MIN_GAME_MINUTES = 1;
-    private static final int MAX_GAME_MINUTES = 5;
-    private static final int GAME_MINUTES_STEP = 1;
-
     /**
      * Main constructor for the start screen that contains a title and two buttons
      * 
@@ -31,7 +28,7 @@ public class StartScreen extends MenuScreen{
     public StartScreen(Skin skin, Settings settings, IntConsumer onStart, Runnable onExit) {
         super(skin, TITLE, BG_COLOR);
 
-        Slider timeSlider = addSlider(MIN_GAME_MINUTES, MAX_GAME_MINUTES, GAME_MINUTES_STEP, false, "Game Time (minutes)");
+        Slider timeSlider = addSlider(Config.MIN_GAME_MINUTES, Config.MAX_GAME_MINUTES, Config.GAME_MINUTES_STEP, false, "Game Time (minutes)");
 
         addButton("Start Game", () -> {
             int minutes = (int) timeSlider.getValue();

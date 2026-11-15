@@ -2,11 +2,12 @@ package com.C11.game.entities;
 
 import java.util.Random;
 
+import com.C11.game.Config;
 import com.C11.game.world.GameMap;
 import com.C11.game.inventory.Item;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.C11.game.Config;
+
 
 /**
  * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link AEntity}.

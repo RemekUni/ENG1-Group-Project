@@ -1,5 +1,6 @@
 package com.C11.game.ui;
 
+import com.C11.game.Config;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,18 +24,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 public class PauseMenu implements Disposable {
     private final Stage stage;
 
-    // the value for how much the pause screen dims the paused game (0 = no dim, 1 = fully black)
-    private static final float DIM_ALPHA = 0.5f;
-
-    // fraction of the root table's width
-    private static final float BUTTON_WIDTH_FRACTION = 0.3f;
-    // in UI viewport units, not world units
-    private static final float BUTTON_PADDING = 10f;
-
-    // matches game view's aspect ratio
-    private static final float UI_WIDTH = 1280f;
-    private static final float UI_HEIGHT = 720f;
-
     /**
      * Loads skins (assets for the pause menu) and sets up the stage (holds actors and has a viewport).
      * It creates a table template that the buttons get put on and listeners defined for each button.
@@ -44,11 +33,11 @@ public class PauseMenu implements Disposable {
      * @param onExit runs when the exit game button is pressed
      */
     public PauseMenu(Skin skin, Runnable onResume, Runnable onExit) {
-        stage = new Stage(new ExtendViewport(UI_WIDTH, UI_HEIGHT));
+        stage = new Stage(new ExtendViewport(Config.UI_WIDTH, Config.UI_HEIGHT));
 
         Table root = new Table();
         root.setFillParent(true);
-        root.setBackground(skin.newDrawable("white", 0f, 0f, 0f, DIM_ALPHA));
+        root.setBackground(skin.newDrawable("white", 0f, 0f, 0f, Config.PAUSE_DIM_ALPHA));
         stage.addActor(root);
 
         TextButton resumeButton = new TextButton("Resume", skin);
@@ -66,8 +55,8 @@ public class PauseMenu implements Disposable {
                 onExit.run();
             }
         });
-        root.add(resumeButton).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
-        root.add(exitButton).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
+        root.add(resumeButton).width(Value.percentWidth(Config.PAUSE_BUTTON_WIDTH_FRACTION, root)).pad(Config.BUTTON_PADDING).row();
+        root.add(exitButton).width(Value.percentWidth(Config.PAUSE_BUTTON_WIDTH_FRACTION, root)).pad(Config.BUTTON_PADDING).row();
     }
 
     /**
