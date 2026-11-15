@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.C11.game.ui.Inventory;
+import com.C11.game.ui.Hotbar;
 import com.C11.game.world.GameMap;
 import com.C11.game.world.Item;
 
@@ -15,8 +15,10 @@ import com.C11.game.world.Item;
  *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
-public class Player extends ACollectorEntity{
+public class Player extends AEntity{
     private final Vector2 direction = new Vector2();
+
+    // public static final int MAX_INVENTORY_SIZE = 2;
 
     // tiles per second
     private static final float PLAYER_SPEED = 4f;
@@ -72,25 +74,9 @@ public class Player extends ACollectorEntity{
             direction.y += 1;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.F)) {
-           useItem();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Keys.NUM_1)) {
-            if (Inventory.isSlotSelected() && Inventory.getSelectedSlotIndex() == 0) {
-                Inventory.unselectSlot();
-            } else {
-                Inventory.selectSlot(0);
-            }
-
-        }
-        if (Gdx.input.isKeyJustPressed(Keys.NUM_2)) {
-           if (Inventory.isSlotSelected() && Inventory.getSelectedSlotIndex() == 1) {
-                Inventory.unselectSlot();
-            } else {
-                Inventory.selectSlot(1);
-            }
-        }
+        // if (Gdx.input.isKeyPressed(Keys.F)) {
+        //    useItem();
+        // }
 
         move(direction, delta, true);
     }
@@ -100,12 +86,12 @@ public class Player extends ACollectorEntity{
         boostTimer += boostTime; // += allows for stacking
     }
 
-    public void useItem() {
-        if (Inventory.getSelectedSlotIndex() != -1) {
-            if (Inventory.getSelectedSlotIndex() < inventory.size)
-                inventory.removeIndex(Inventory.getSelectedSlotIndex());
-        }
-    }
+    // public void useItem() {
+    //     if (Hotbar.getSelectedSlotIndex() != -1) {
+    //         if (Hotbar.getSelectedSlotIndex() < inventory.size)
+    //             inventory.removeIndex(Hotbar.getSelectedSlotIndex());
+    //     }
+    // }
 
     // public void throwItem(int index) {
     //     if (inventory.size == 0) return;

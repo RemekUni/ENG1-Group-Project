@@ -2,9 +2,14 @@ package com.C11.game.entities;
 
 import com.C11.game.hitboxes.Hitbox;
 import com.C11.game.world.GameMap;
+import com.C11.game.world.GameState;
+import com.C11.game.world.Inventory;
+import com.C11.game.world.Item;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.math.MathUtils;
 
 /**
@@ -15,19 +20,28 @@ import com.badlogic.gdx.math.MathUtils;
  * @req UR_BOUNDARIES
  * 
  * @author Dorian Kerzan (rvl546@york.ac.uk)
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public abstract class AEntity {
-    private final Vector2 position;
-    // private final Vector2 direction = new Vector2();
+    private static final long PICKUP_COOLDOWN_MS = 1000;
 
-    private float size;
-    private float speed;
+    // Texture
     private Texture entityTexture;
 
-    private final GameMap gameMap;
-
+    // -- Attributes --
+    private final Vector2 position;
+    private float size;
+    private float speed;
     private final Hitbox hitbox;
+    private boolean isCollectionEnabled;
+    private long pickupBlockedUntil = 0;
 
+    // Inventory
+    private Inventory inventory;
+    protected Array<Item> inventoryContainer;
+
+    // -- Handlers--
+    private final GameMap gameMap;
     protected EntitiesHandler entitiesHandler;
 
     /**
@@ -40,12 +54,15 @@ public abstract class AEntity {
      * @param speed movement speed in tiles per second
      * @param hitboxWidthScale hitbox width as a fraction of the sprite width (centered)
      * @param hitboxHeightScale same as width, but for height (bottom-aligned)
-     * @param entitiesArray reference to dynamic array of all entities
+     * @param entitiesHandler handler that tracks all entities
      */
     public AEntity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
         this.entityTexture = entityTexture;
-        this.gameMap = gameMap;
+        // -- Attributes --
         this.speed = speed;
+        this.isCollectionEnabled = false;
+
+        this.gameMap = gameMap;
         this.entitiesHandler = entitiesHandler;
 
         position = new Vector2(startX, startY);
@@ -116,6 +133,70 @@ public abstract class AEntity {
     private boolean isSpawnClear() {
         hitbox.follow(position);
         return !gameMap.isBlocked(getHitbox());
+    }
+
+    public void collectItem(ItemEntity itemEntity) {
+        if (!isCollectionEnabled || TimeUtils.millis() < pickupBlockedUntil) return; // safe check
+
+        // Inventory full: leave the item in the world
+        if (inventoryContainer.size >= inventory.MAX_INVENTORY_SIZE) {
+            System.out.println("Inventory full! Cannot collect " + itemEntity.getItem().getName() + "!");
+            return;
+        }
+
+        // Remove #ItemEntity from the render list. GC should then dispose it from memory as it will not be referenced anywhere
+        itemEntity.collect();
+        inventoryContainer.add(itemEntity.getItem());
+
+        System.out.println(inventoryContainer);
+
+        // Add items picked up stats
+        GameState.recordItemPickup();
+
+        // dev/temp
+        // for (Item item : inventory) {
+        //     System.out.println(this + " | " + item.getName() + " | " + item.getEntityTexture());
+        // }
+    }
+
+    public boolean isCollectionEnabled() {
+        return isCollectionEnabled;
+    }
+
+    /**
+     * Enable item collection. Creates the inventory on first call.
+     */
+    public void enableCollection() {
+        if (inventory == null) {
+            this.inventory = new Inventory();
+            this.inventoryContainer = this.inventory.getContainer();
+        }
+        this.isCollectionEnabled = true;
+    }
+
+    /**
+     * Disable item collection.
+     * Call {@link #enableCollection()} to re-enable collection.
+     */
+    public void disableCollection() {
+        this.isCollectionEnabled = false;
+    }
+
+    /**
+     * Drops an item from the inventory into the world at this entity's position.
+     * Pickup is blocked for a short cooldown so the item is not instantly re-collected.
+     *
+     * @param item the inventory item to throw, ignored if null or not in the inventory
+     */
+    public void throwItem(Item item) {
+        if (!isCollectionEnabled || item == null || !inventoryContainer.removeValue(item, true)) return;
+        new ItemEntity(item, gameMap, this.getPosition().x, this.getPosition().y, entitiesHandler);
+        pickupBlockedUntil = TimeUtils.millis() + PICKUP_COOLDOWN_MS;
+    }
+
+    /** @return the inventory, or null if {@link #enableCollection()} was never called */
+    public Inventory getInventory() {
+        return inventory;
     }
 
     /** 

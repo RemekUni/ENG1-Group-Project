@@ -1,4 +1,4 @@
-package com.C11.game.utils;
+package com.C11.game.world;
 
 /**
  * This class is responsible for storing data during gameplay.

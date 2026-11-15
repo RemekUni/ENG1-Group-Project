@@ -4,8 +4,6 @@ import com.C11.game.world.Assets;
 // import com.C11.game.utils.GameState;
 import com.C11.game.events.*;
 import com.C11.game.ui.TimerDisplay;
-import com.C11.game.utils.GameResult;
-import com.C11.game.utils.GameState;
 import com.C11.game.hitboxes.EventTrigger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -18,9 +16,11 @@ import com.C11.game.entities.Goose;
 import com.C11.game.entities.ItemEntity;
 import com.C11.game.entities.Player;
 import com.C11.game.ui.HUD;
-import com.C11.game.ui.Inventory;
+import com.C11.game.ui.Hotbar;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
+import com.C11.game.world.GameResult;
+import com.C11.game.world.GameState;
 import com.C11.game.world.Item;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -170,9 +170,7 @@ public class GameScreen extends ScreenAdapter {
         }
         // ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, player.getPosition().x, player.getPosition().y + 4, entitiesHandler);
 
-        System.out.println(player.getMaxInventorySize());
-
-        hud = new HUD(player);
+        hud = new HUD(player.getInventory());
         pauseMenu = new PauseMenu(skin, () -> resumeGame(), () -> Gdx.app.exit());
     }
 
@@ -180,6 +178,8 @@ public class GameScreen extends ScreenAdapter {
     /** @req FR_PAUSE */
     @Override
     public void show() {
+        
+
         pauseGame();
     }
 

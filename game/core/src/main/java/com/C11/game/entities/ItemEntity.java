@@ -47,12 +47,12 @@ public class ItemEntity extends AEntity {
         System.out.println("Collected " + ITEM.getName() + "!");
     }
 
-    public ACollectorEntity collectionCollisionDetection() {
+    public AEntity collectionCollisionDetection() {
         for (AEntity entity : entitiesHandler.getCharactersSet()) {
             double iX = (double) this.getCenterX();
             double iY = (double) this.getCenterY();
 
-            if (entity instanceof ACollectorEntity collector) {
+            if (entity.isCollectionEnabled()) {
                 double cX = (double) entity.getCenterX();
                 double cY = (double) entity.getCenterY();
 
@@ -61,9 +61,7 @@ public class ItemEntity extends AEntity {
 
                 // Run through all collectors until catching the first entity that is inbounds
                 if (isInBounds) {
-                    if (collector.isCollectionEnabled()) {
-                        return collector;
-                    }
+                    return entity;
                 }
             }
         }
@@ -81,7 +79,7 @@ public class ItemEntity extends AEntity {
     @Override
     public void update(float delta) {
         // Check if any collectors are in range to collect the item
-        ACollectorEntity foundCollector = collectionCollisionDetection();
+        AEntity foundCollector = collectionCollisionDetection();
         if (foundCollector != null) {
             foundCollector.collectItem(this);
         }

@@ -9,7 +9,7 @@ import com.C11.game.world.GameMap;
  *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
-public class Goose extends ACollectorEntity {
+public class Goose extends AEntity {
     private final Vector2 direction = new Vector2();
 
     // tiles per second
