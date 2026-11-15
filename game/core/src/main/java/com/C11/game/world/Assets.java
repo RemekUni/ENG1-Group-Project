@@ -15,6 +15,7 @@ public final class Assets {
     // UI
     public static final Texture SLOT_SELECTED_TEXTURE = new Texture("ui/slot-selected.png");
     public static final Texture SLOT_UNSELECTED_TEXTURE = new Texture("ui/slot-unselected.png");
+    public static final Texture PAUSE_ICON = new Texture("ui/pause-icon.png");
 
 
     // public static final String PICKUP = "sounds/.wav";
@@ -40,5 +41,6 @@ public final class Assets {
         BUTTON_TEXTURE.dispose();
         SLOT_SELECTED_TEXTURE.dispose();
         SLOT_UNSELECTED_TEXTURE.dispose();
+        PAUSE_ICON.dispose();
     }
 }
