@@ -7,7 +7,7 @@ public final class Assets {
     // Game assets
     public static final Texture PLAYER_TEXTURE = new Texture("sprites/tile_0098.png");
     public static final Texture GOOSE_TEXTURE = new Texture("sprites/duck.png");
-    public static final Texture ITEM_TEXTURE = new Texture("sprites/baguette.png");
+    public static final Texture BAGUETTE_TEXTURE = new Texture("sprites/baguette.png");
     public static final Texture SANDWICH_TEXTURE = new Texture("sprites/sandwich.png");
     public static final Texture CAN_TEXTURE = new Texture("sprites/can.png");
     public static final Texture BUTTON_TEXTURE = new Texture("sprites/button.png");
@@ -34,7 +34,11 @@ public final class Assets {
     public static void dispose() {
         PLAYER_TEXTURE.dispose();
         GOOSE_TEXTURE.dispose();
-        ITEM_TEXTURE.dispose();
+        BAGUETTE_TEXTURE.dispose();
         SANDWICH_TEXTURE.dispose();
+        CAN_TEXTURE.dispose();
+        BUTTON_TEXTURE.dispose();
+        SLOT_SELECTED_TEXTURE.dispose();
+        SLOT_UNSELECTED_TEXTURE.dispose();
     }
 }

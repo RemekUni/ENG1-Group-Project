@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="102">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="152">
  <tileset firstgid="1" source="tilemap.tsx"/>
  <layer id="1" name="Grass" width="60" height="40">
   <data encoding="csv">
@@ -270,6 +270,158 @@
    <point/>
   </object>
   <object id="101" name="goose" x="608" y="320">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="baguettes">
+  <object id="102" x="272" y="144">
+   <point/>
+  </object>
+  <object id="103" x="48" y="160">
+   <point/>
+  </object>
+  <object id="104" x="160" y="112">
+   <point/>
+  </object>
+  <object id="105" x="208" y="336">
+   <point/>
+  </object>
+  <object id="106" x="80" y="368">
+   <point/>
+  </object>
+  <object id="107" x="112" y="496">
+   <point/>
+  </object>
+  <object id="108" x="304" y="592">
+   <point/>
+  </object>
+  <object id="109" x="304" y="416">
+   <point/>
+  </object>
+  <object id="110" x="464" y="224">
+   <point/>
+  </object>
+  <object id="111" x="368" y="176">
+   <point/>
+  </object>
+  <object id="112" x="432" y="96">
+   <point/>
+  </object>
+  <object id="113" x="560" y="32">
+   <point/>
+  </object>
+  <object id="114" x="576" y="160">
+   <point/>
+  </object>
+  <object id="115" x="656" y="224">
+   <point/>
+  </object>
+  <object id="116" x="528" y="336">
+   <point/>
+  </object>
+  <object id="117" x="784" y="320">
+   <point/>
+  </object>
+  <object id="118" x="736" y="464">
+   <point/>
+  </object>
+  <object id="119" x="848" y="544">
+   <point/>
+  </object>
+  <object id="120" x="912" y="608">
+   <point/>
+  </object>
+  <object id="121" x="720" y="608">
+   <point/>
+  </object>
+  <object id="122" x="832" y="368">
+   <point/>
+  </object>
+  <object id="123" x="832" y="256">
+   <point/>
+  </object>
+  <object id="124" x="784" y="192">
+   <point/>
+  </object>
+  <object id="125" x="896" y="112">
+   <point/>
+  </object>
+  <object id="126" x="640" y="96">
+   <point/>
+  </object>
+  <object id="127" x="288" y="208">
+   <point/>
+  </object>
+  <object id="128" x="176" y="176">
+   <point/>
+  </object>
+  <object id="129" x="224" y="432">
+   <point/>
+  </object>
+  <object id="130" x="176" y="480">
+   <point/>
+  </object>
+  <object id="131" x="304" y="512">
+   <point/>
+  </object>
+  <object id="132" x="304" y="352">
+   <point/>
+  </object>
+  <object id="133" x="416" y="240">
+   <point/>
+  </object>
+  <object id="134" x="416" y="128">
+   <point/>
+  </object>
+  <object id="135" x="672" y="32">
+   <point/>
+  </object>
+  <object id="136" x="704" y="192">
+   <point/>
+  </object>
+  <object id="137" x="736" y="256">
+   <point/>
+  </object>
+  <object id="138" x="912" y="176">
+   <point/>
+  </object>
+  <object id="139" x="816" y="560">
+   <point/>
+  </object>
+  <object id="140" x="512" y="624">
+   <point/>
+  </object>
+  <object id="141" x="592" y="544">
+   <point/>
+  </object>
+  <object id="142" x="80" y="608">
+   <point/>
+  </object>
+  <object id="143" x="32" y="496">
+   <point/>
+  </object>
+  <object id="144" x="96" y="208">
+   <point/>
+  </object>
+  <object id="145" x="528" y="208">
+   <point/>
+  </object>
+  <object id="146" x="432" y="336">
+   <point/>
+  </object>
+  <object id="147" x="544" y="256">
+   <point/>
+  </object>
+  <object id="148" x="688" y="128">
+   <point/>
+  </object>
+  <object id="149" x="416" y="544">
+   <point/>
+  </object>
+  <object id="150" x="928" y="480">
+   <point/>
+  </object>
+  <object id="151" x="928" y="352">
    <point/>
   </object>
  </objectgroup>

@@ -37,15 +37,6 @@ public class GameMap implements Disposable {
     private float worldWidth;
     private float worldHeight;
 
-    /**
-     * Name of the Tiled object layer that contains all collision rectangles.
-     * Must match the object layer's name in Tiled
-     */
-    private static final String COLLISION_LAYER = "collision";
-    private static final String SANDWICH_LAYER = "sandwiches";
-    private static final String CAN_LAYER = "cans";
-    private static final String SPAWN_LAYER = "spawns";
-
     private final Array<Rectangle> collisionRects;
 
     /** 
@@ -60,9 +51,9 @@ public class GameMap implements Disposable {
     public GameMap(String mapFilePath) {
         map = new TmxMapLoader().load(mapFilePath);
 
-        // -- Fix tiling edges caused by float imprecisions by using Nearest Neighbour Filtering on the texture during the runtime (in case of edge boundaries shifted it will use that neighbouring pixels)
-        // UPD: Was not tested yet - may not work if tile bounds match the texture dimensions rather than extending by 1
-        // UPD2: TODO: Tile bounds do indeed need to be increased
+        // Nearest filtering stops lines appearing between tiles
+        // tileset was also extruded by 1 pixel
+        // IMPORTANT: if you use a different tileset, extrude it too to remove the visual glitches
         TiledMapTileSet tileset = map.getTileSets().getTileSet(0);
 
         for (TiledMapTile tile : tileset) {
@@ -90,8 +81,11 @@ public class GameMap implements Disposable {
     // Tiled stores rectangles in pixels; scale to world units. The y-axis flip is already done by TmxMapLoader
     /** @req FR_MAP_COLLISION */
     private void loadCollisionRects() {
-        // TODO: add in a null check for layers
         MapLayer layer = map.getLayers().get(Config.COLLISION_LAYER);
+        if (layer == null){
+            throw new IllegalStateException("Map layer " + Config.COLLISION_LAYER +" was not found.");
+        }
+
         for (RectangleMapObject object : layer.getObjects().getByType(RectangleMapObject.class)) {
             Rectangle r = object.getRectangle();
             collisionRects.add(new Rectangle(
@@ -230,10 +224,25 @@ public class GameMap implements Disposable {
      * @return Array<SimplifiedMapObject> objects
      */
     public Array<SimplifiedMapObject> getSpawnObjects() {
-        return getMapObjects(SPAWN_LAYER);
+        return getMapObjects(Config.SPAWN_LAYER);
     }
 
+    /**
+     * Returns all Vector2 positions from a wave layer
+     * 
+     * @param layerName name of wave layer e.g "wave1", "wave2"...
+     * @return Array<Vector2> positions
+     */
     public Array<Vector2> getWaveSpawnPositions(String layerName) {
         return getObjectPositions(layerName);
+    }
+
+    /**
+     * Returns Vector2 positions of all baguettes
+     * 
+     * @return Array<Vector2> positions
+     */
+    public Array<Vector2> getBaguettePositions() {
+        return getObjectPositions(Config.BAGUETTE_LAYER);
     }
 }
