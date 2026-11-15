@@ -1,7 +1,7 @@
 package com.C11.game.events;
 
+import com.C11.game.Config;
 import com.C11.game.entities.Player;
-import com.C11.game.hitboxes.EventTrigger;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -11,8 +11,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author james (hjp562@york.ac.uk)
  */
 public class Can extends EventTrigger {
-    private static final float BOOST_DURATION = 30f;
-
     private final Player player;
 
     /**
@@ -30,10 +28,10 @@ public class Can extends EventTrigger {
     }
 
     /**
-     * Adds BOOST_DURATION to player's timer, and increase their boost
+     * Adds CAN_BOOST_DURATION to player's timer, and increase their boost
      */
     @Override
     public void action() {
-        player.activateSpeedBoost(BOOST_DURATION);
+        player.activateSpeedBoost(Config.CAN_BOOST_DURATION);
     }
 }

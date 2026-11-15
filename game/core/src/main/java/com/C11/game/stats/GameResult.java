@@ -1,4 +1,4 @@
-package com.C11.game.world;
+package com.C11.game.stats;
 
 /**
  * Game results and stats class for creating snapshots after each run of the game

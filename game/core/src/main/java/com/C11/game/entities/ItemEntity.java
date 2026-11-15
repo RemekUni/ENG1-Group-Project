@@ -3,7 +3,7 @@ package com.C11.game.entities;
 import java.util.Random;
 
 import com.C11.game.world.GameMap;
-import com.C11.game.world.Item;
+import com.C11.game.inventory.Item;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -72,7 +72,7 @@ public class ItemEntity extends AEntity {
     private void idleAnimate(Vector2 pos, float delta) {
         lifetime += delta;
         final float periodFrequency = 1.5f;
-
+        
         direction.y = MathUtils.sin((lifetime + ANIMATION_RANDOM_SHIFT) * periodFrequency);
     }
 

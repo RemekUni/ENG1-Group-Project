@@ -1,10 +1,10 @@
 package com.C11.game.events;
 
+import com.C11.game.Config;
 import com.C11.game.entities.EntitiesHandler;
 import com.C11.game.entities.AEntity;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.Player;
-import com.C11.game.hitboxes.EventTrigger;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -37,14 +37,11 @@ public class AbandonedSandwich extends EventTrigger {
     @Override
     public void action() {
 
-        int numGeese = 8;
-        float spawnRadius = 10f; //How far from the player they will spawn
-
-        for (int i = 0; i <= numGeese; i++) {
+        for (int i = 0; i <= Config.SANDWICH_GEESE_COUNT; i++) {
             //Spawn the geese in a ring around the player
-            double angle = (2 * Math.PI / numGeese) * i;
-            float spawnX = player.getPosition().x + (float) Math.cos(angle) * spawnRadius;
-            float spawnY = player.getPosition().y + (float) Math.sin(angle) * spawnRadius;
+            double angle = (2 * Math.PI / Config.SANDWICH_GEESE_COUNT) * i;
+            float spawnX = player.getPosition().x + (float) Math.cos(angle) * Config.SANDWICH_SPAWN_RADIUS;
+            float spawnY = player.getPosition().y + (float) Math.sin(angle) * Config.SANDWICH_SPAWN_RADIUS;
 
             new Goose(gooseTexture, spawnX, spawnY, gameMap, player, entitiesHandler);
         }

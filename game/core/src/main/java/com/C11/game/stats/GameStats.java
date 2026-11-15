@@ -1,10 +1,10 @@
-package com.C11.game.world;
+package com.C11.game.stats;
 
 /**
  * This class is responsible for storing data during gameplay.
  * To be called on whenever a counter needs to go up
  */
-public class GameState {
+public class GameStats {
     private static int eventsTriggered;
     private static int itemsUsed;
     private static int itemsPickedUp;
@@ -13,7 +13,7 @@ public class GameState {
      * Resets all counters to 0. Should be used when a new game starts.
      * Becomes imperitive once multiple games start getting run within the same session
      */
-    public GameState() {
+    public static void reset() {
         eventsTriggered = 0;
         itemsUsed = 0;
         itemsPickedUp = 0;

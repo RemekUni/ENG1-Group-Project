@@ -1,8 +1,9 @@
 package com.C11.game.ui;
 
+import com.C11.game.Config;
 import com.C11.game.world.Assets;
-import com.C11.game.world.Inventory;
-import com.C11.game.world.Item;
+import com.C11.game.inventory.Inventory;
+import com.C11.game.inventory.Item;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -23,7 +24,7 @@ public class Hotbar extends Table {
     public Hotbar(Inventory inventory) {
         this.inventory = inventory;
 
-        int count = inventory.MAX_INVENTORY_SIZE;
+        int count = Config.MAX_INVENTORY_SIZE;
         slots = new Array<>(count);
 
         top().right(); // anchor children to the top-right of the root table

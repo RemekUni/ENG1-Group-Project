@@ -1,4 +1,4 @@
-package com.C11.game.world;
+package com.C11.game.inventory;
 
 import com.badlogic.gdx.graphics.Texture;
 

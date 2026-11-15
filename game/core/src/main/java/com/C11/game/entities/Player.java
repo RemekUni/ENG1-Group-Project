@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.C11.game.ui.Hotbar;
 import com.C11.game.world.GameMap;
-import com.C11.game.world.Item;
 
 /**
  * The player-controlled sprite. Moves with WASD.
@@ -74,10 +73,6 @@ public class Player extends AEntity{
             direction.y += 1;
         }
 
-        // if (Gdx.input.isKeyPressed(Keys.F)) {
-        //    useItem();
-        // }
-
         move(direction, delta, true);
     }
 
@@ -85,33 +80,4 @@ public class Player extends AEntity{
         setSpeed(BOOSTED_SPEED);
         boostTimer += boostTime; // += allows for stacking
     }
-
-    // public void useItem() {
-    //     if (Hotbar.getSelectedSlotIndex() != -1) {
-    //         if (Hotbar.getSelectedSlotIndex() < inventory.size)
-    //             inventory.removeIndex(Hotbar.getSelectedSlotIndex());
-    //     }
-    // }
-
-    // public void throwItem(int index) {
-    //     if (inventory.size == 0) return;
-
-
-    // public void throwItem(Item itemType) {
-    //     if (inventory.size == 0) return;
-
-    //     doThrowLogic(itemType);
-    // }
-
-    // private void doThrowLogic(Item itemType) {
-    //     Vector2 throwVector = direction.scl(THROW_DISTANCE);
-
-    //     this.inventory.removeValue(itemType, true);
-    //     new ItemEntity(itemType, gameMap, this.getPosition().x + throwVector.x, this.getPosition().y + throwVector.y, entitiesHandler);
-    //     System.out.println("spawned item at " + (this.getPosition().x + throwVector.x) + ", " + (this.getPosition().y + throwVector.y) + ", player pos is: " + this.getPosition());
-    // }
-
-    // private void startAim() {
-
-    // }
 }

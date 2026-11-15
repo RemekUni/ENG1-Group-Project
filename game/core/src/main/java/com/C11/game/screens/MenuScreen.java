@@ -3,6 +3,7 @@ package com.C11.game.screens;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+import com.C11.game.Config;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;

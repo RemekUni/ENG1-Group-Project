@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
  */
 public class PauseMenu implements Disposable {
     private final Stage stage;
-    private final Skin skin;
 
     // the value for how much the pause screen dims the paused game (0 = no dim, 1 = fully black)
     private static final float DIM_ALPHA = 0.5f;
@@ -45,7 +44,6 @@ public class PauseMenu implements Disposable {
      * @param onExit runs when the exit game button is pressed
      */
     public PauseMenu(Skin skin, Runnable onResume, Runnable onExit) {
-        this.skin = skin;
         stage = new Stage(new ExtendViewport(UI_WIDTH, UI_HEIGHT));
 
         Table root = new Table();

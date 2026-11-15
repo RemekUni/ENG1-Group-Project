@@ -1,10 +1,11 @@
 package com.C11.game.entities;
 
+import com.C11.game.Config;
 import com.C11.game.hitboxes.Hitbox;
 import com.C11.game.world.GameMap;
-import com.C11.game.world.GameState;
-import com.C11.game.world.Inventory;
-import com.C11.game.world.Item;
+import com.C11.game.stats.GameStats;
+import com.C11.game.inventory.Inventory;
+import com.C11.game.inventory.Item;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -139,7 +140,7 @@ public abstract class AEntity {
         if (!isCollectionEnabled || TimeUtils.millis() < pickupBlockedUntil) return; // safe check
 
         // Inventory full: leave the item in the world
-        if (inventoryContainer.size >= inventory.MAX_INVENTORY_SIZE) {
+        if (inventoryContainer.size >= Config.MAX_INVENTORY_SIZE) {
             System.out.println("Inventory full! Cannot collect " + itemEntity.getItem().getName() + "!");
             return;
         }
@@ -151,7 +152,7 @@ public abstract class AEntity {
         System.out.println(inventoryContainer);
 
         // Add items picked up stats
-        GameState.recordItemPickup();
+        GameStats.recordItemPickup();
 
         // dev/temp
         // for (Item item : inventory) {
@@ -192,6 +193,12 @@ public abstract class AEntity {
         if (!isCollectionEnabled || item == null || !inventoryContainer.removeValue(item, true)) return;
         new ItemEntity(item, gameMap, this.getPosition().x, this.getPosition().y, entitiesHandler);
         pickupBlockedUntil = TimeUtils.millis() + PICKUP_COOLDOWN_MS;
+    }
+
+    public void useItem(int index) {
+        if (!isCollectionEnabled || index < 0 || index >= inventoryContainer.size) return;
+        inventoryContainer.removeIndex(index);
+        GameStats.recordItemUsed();
     }
 
     /** @return the inventory, or null if {@link #enableCollection()} was never called */

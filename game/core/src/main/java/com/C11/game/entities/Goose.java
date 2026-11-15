@@ -2,6 +2,7 @@ package com.C11.game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.C11.game.Config;
 import com.C11.game.world.GameMap;
 
 /**
@@ -11,16 +12,6 @@ import com.C11.game.world.GameMap;
  */
 public class Goose extends AEntity {
     private final Vector2 direction = new Vector2();
-
-    // tiles per second
-    private static final float GOOSE_SPEED = 3f;
-
-    // same as player
-    private static final float HITBOX_WIDTH_SCALE = 1f / 1.5f;
-    private static final float HITBOX_HEIGHT_SCALE = 0.5f;
-
-    /** Centre to centre distance, in tiles, at which the goose will stop approaching its target */
-    private static final float STOP_DISTANCE = 1.5f;
 
     private boolean leavingMap = false;
 
@@ -39,7 +30,7 @@ public class Goose extends AEntity {
      * @param entitiesArray reference to dynamic array of all entities
      */
     public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, AEntity target, EntitiesHandler entitiesHandler) {
-        super(gooseTexture, gameMap, startX, startY, GOOSE_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesHandler);
+        super(gooseTexture, gameMap, startX, startY, Config.GOOSE_SPEED, Config.HITBOX_WIDTH_SCALE, Config.HITBOX_HEIGHT_SCALE, entitiesHandler);
         this.target = target;
     }
 
@@ -53,7 +44,7 @@ public class Goose extends AEntity {
      * @param entitiesArray reference to dynamic array of all entities
      */
     public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, EntitiesHandler entitiesHandler) {
-        super(gooseTexture, gameMap, startX, startY, GOOSE_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesHandler);
+        super(gooseTexture, gameMap, startX, startY, Config.GOOSE_SPEED, Config.HITBOX_WIDTH_SCALE, Config.HITBOX_HEIGHT_SCALE, entitiesHandler);
         this.target = this;
     }
 
@@ -73,7 +64,7 @@ public class Goose extends AEntity {
             direction.set(this.target.getCenterX(), this.target.getCenterY()).sub(getCenterX(), getCenterY());
         }
         
-        if (direction.len() >= STOP_DISTANCE) {
+        if (direction.len() >= Config.GOOSE_STOP_DISTANCE) {
             move(direction, delta, collide);
         }
     }

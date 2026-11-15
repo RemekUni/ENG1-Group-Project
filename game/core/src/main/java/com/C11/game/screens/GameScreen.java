@@ -1,16 +1,16 @@
 package com.C11.game.screens;
 
 import com.C11.game.world.Assets;
-// import com.C11.game.utils.GameState;
 import com.C11.game.events.*;
 import com.C11.game.ui.TimerDisplay;
-import com.C11.game.hitboxes.EventTrigger;
+import com.C11.game.Config;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.C11.game.Main;
+import com.C11.game.HUDController;
 import com.C11.game.entities.EntitiesHandler;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.ItemEntity;
@@ -19,9 +19,9 @@ import com.C11.game.ui.HUD;
 import com.C11.game.ui.Hotbar;
 import com.C11.game.ui.PauseMenu;
 import com.C11.game.world.GameMap;
-import com.C11.game.world.GameResult;
-import com.C11.game.world.GameState;
-import com.C11.game.world.Item;
+import com.C11.game.stats.GameResult;
+import com.C11.game.stats.GameStats;
+import com.C11.game.inventory.Item;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -47,7 +47,6 @@ import java.util.List;
 public class GameScreen extends ScreenAdapter {
     private final Main game;
     private final GameMap gameMap;
-    // private final GameState gameState;
 
     private boolean isPaused;
     private final PauseMenu pauseMenu;
@@ -66,6 +65,7 @@ public class GameScreen extends ScreenAdapter {
     private EntitiesHandler entitiesHandler = new EntitiesHandler();
 
     private final Player player;
+    private final HUDController playerController;
 
     private final SpriteBatch spriteBatch;
 
@@ -102,7 +102,7 @@ public class GameScreen extends ScreenAdapter {
         this.game = game;
         this.spriteBatch = game.getBatch();
         this.skin = game.getSkin();
-        // this.gameState = new GameState();
+        GameStats.reset();
         gameMap = new GameMap("maps/campus.tmx");
         timerDisplay = new TimerDisplay(Assets.TIMER_FONT, gameLengthSeconds);
         timerDisplay.getTimer().start();
@@ -170,7 +170,9 @@ public class GameScreen extends ScreenAdapter {
         }
         // ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, player.getPosition().x, player.getPosition().y + 4, entitiesHandler);
 
-        hud = new HUD(player.getInventory());
+        Hotbar hotbar = new Hotbar(player.getInventory());
+        hud = new HUD(hotbar);
+        playerController = new HUDController(player, hotbar);
         pauseMenu = new PauseMenu(skin, () -> resumeGame(), () -> Gdx.app.exit());
     }
 
@@ -220,7 +222,7 @@ public class GameScreen extends ScreenAdapter {
         // iterates through all events then records a gameState counter for them if they fired
         for (EventTrigger event : events) {
             if (event.overlaps(player.getHitbox()) && event.trigger()) {
-                GameState.recordEventTriggered();
+                GameStats.recordEventTriggered();
             }
         }
 
@@ -238,7 +240,7 @@ public class GameScreen extends ScreenAdapter {
 
     // small helper to create GameResult snapshot and show the end screen. should be used whenever anything triggers the end of the game
     private void endGame() {
-        GameResult result = GameState.toResult(timerDisplay.getTimer().getTicks());
+        GameResult result = GameStats.toResult(timerDisplay.getTimer().getTicks());
         game.showEndScreen(result);
     }
 
@@ -253,6 +255,7 @@ public class GameScreen extends ScreenAdapter {
         isPaused = false;
         timerDisplay.getTimer().unpause();
         pauseMenu.hide();
+        Gdx.input.setInputProcessor(playerController);
     }
 
     private void followPlayer() {
@@ -296,7 +299,7 @@ public class GameScreen extends ScreenAdapter {
 
         spriteBatch.begin();
 
-        timerDisplay.draw(spriteBatch, worldWidth / 2 - 100, worldHeight / 2 + 350);
+        timerDisplay.draw(spriteBatch, worldWidth / 2 + Config.TIMER_OFFSET_X, worldHeight / 2 + Config.TIMER_OFFSET_Y);
 
         spriteBatch.end();
     }
