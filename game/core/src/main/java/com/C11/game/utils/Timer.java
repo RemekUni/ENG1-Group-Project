@@ -7,7 +7,8 @@ import com.badlogic.gdx.utils.TimeUtils;
  * A Timer which returns true on update() when the set time has elapsed. Will repeat
  * until specifically stopped.
  *
- * @req FR_TIMER, FR_PAUSE
+ * @req FR_TIMER
+ * @req FR_PAUSE
  *
  * @author Paul Turner (sfn544@york.ac.uk)
  */

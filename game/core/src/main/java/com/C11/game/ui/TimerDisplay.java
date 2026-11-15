@@ -1,5 +1,6 @@
 package com.C11.game.ui;
 
+import com.C11.game.Config;
 import com.C11.game.utils.FontGenerator;
 import com.C11.game.utils.Timer;
 import com.badlogic.gdx.graphics.Color;
@@ -24,8 +25,8 @@ public class TimerDisplay implements Disposable {
      * @param initialTime
      */
     public TimerDisplay(String fontFile, int initialTime) {
-        timer = new Timer(1f);
-        font = FontGenerator.generateBitmapFont(fontFile, 48, Color.WHITE);
+        timer = new Timer(Config.TIMER_TICK_SECONDS);
+        font = FontGenerator.generateBitmapFont(fontFile, Config.TIMER_FONT_SIZE, Color.WHITE);
         this.initialTime = initialTime;
     }
 
@@ -39,9 +40,9 @@ public class TimerDisplay implements Disposable {
 
     /**
      * Draws the remaining time on the timer before the ticks attribute equals the initialTime attribute.
-     * @param batch
-     * @param x
-     * @param y
+     * @param batch the sprite batch to draw the timer display to
+     * @param x x location
+     * @param y y location
      */
     public void draw(SpriteBatch batch, float x, float y) {
         String displayTime = Integer.toString(initialTime - timer.getTicks());

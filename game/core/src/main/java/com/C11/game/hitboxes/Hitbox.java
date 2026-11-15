@@ -7,8 +7,9 @@ import com.badlogic.gdx.math.Vector2;
  * A Hitbox class that creates a rectangle around an area on the map and the sprite that
  * can be used to trigger events in the Trigger Class or for collisions.
  * It extends the Rectangle Class as the required "overlaps()" method is already defined.
- * 
- * @req FR_MAP_COLLISION FR_TRIGGER_EVENT
+ *
+ * @req FR_MAP_COLLISION
+ * @req FR_TRIGGER_EVENT
  *
  * @author kieranmckenna (gnv523@york.ac.uk)
  */
@@ -17,10 +18,10 @@ public class Hitbox extends Rectangle {
     private final float offsetY;
     private final float width;
     private final float height;
-    
+
     /**
      * Main Hitbox constructor for actually creating the hitbox rectangle
-     * 
+     *
      * @param width the width of the hitbox
      * @param height the height of the hitbox
      * @param offsetX the horizontal distance from position to the hitbox's bottom left corner (in world units)
@@ -39,7 +40,7 @@ public class Hitbox extends Rectangle {
      * This constructor is used for calculating width and height from scales and forces 0 offset.
      * This constructor should be used for things like trigger zones and hidden events where the hitbox does not need
      * offsets because these are fixed zones on the map where the position is the corner, so they have no owner to offset from.
-     * 
+     *
      * @param widthScale horizontal scale of the hitbox.
      * @param heightScale vertical scale of the hitbox.
      * @param position the location of the hitbox in the map.
@@ -53,12 +54,12 @@ public class Hitbox extends Rectangle {
      * This method for hitboxes is for sprites that have scaled down sizes for hitboxes and require an
      * offset to center align the hitbox along the x-axis, with no 'y' offset as we want it bottom aligned to the feet
      * of the sprite.
-     * 
+     *
      * @param size the size of the sprite in world units
      * @param widthScale horizontal scale of the hitbox.
      * @param heightScale vertical scale of the hitbox.
      * @param position the bottom left position of the sprite
-     * 
+     *
      * @return the entity's hitbox to be used for collisions and keeping the hitbox on its owner.
      */
     public static Hitbox forSprite(float size, float widthScale, float heightScale, Vector2 position) {
@@ -70,7 +71,7 @@ public class Hitbox extends Rectangle {
 
     /**
      * Follow method for sticking a hitbox on a moving object like entities
-     * 
+     *
      * @param position the owner's current position
      */
     public void follow(Vector2 position) {

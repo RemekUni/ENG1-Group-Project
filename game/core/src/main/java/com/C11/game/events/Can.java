@@ -8,18 +8,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 /**
  * This event causes the player's speed to increase for a set amount of time
  *
+ * @req FR_POSITIVE_EVENT
+ *
  * @author james (hjp562@york.ac.uk)
  */
 public class Can extends EventTrigger {
     private final Player player;
 
     /**
-     * Create a can at the specified coordinates 
+     * Create a can at the specified coordinates
      * @param canTexture texture of the can
-     * @param startX 
-     * @param startY 
-     * @param gameMap 
-     * @param size size of can in world units 
+     * @param startX
+     * @param startY
+     * @param gameMap
+     * @param size size of can in world units
      * @param player
      */
     public Can(TextureRegion canTexture, float startX, float startY, GameMap gameMap, float size, Player player) {

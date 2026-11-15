@@ -5,9 +5,8 @@ import com.C11.game.events.*;
 import com.C11.game.ui.TimerDisplay;
 import com.C11.game.Config;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 import com.C11.game.Main;
 import com.C11.game.HUDController;
@@ -44,6 +43,9 @@ import java.util.List;
  *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  * @author james (hjp562@york.ac.uk)
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+ * @author ethandavis128 (xxb522@york.ac.uk)
+ * @author Paul Turner (sfn544@york.ac.uk)
  */
 public class GameScreen extends ScreenAdapter {
     private final Main game;
@@ -67,6 +69,7 @@ public class GameScreen extends ScreenAdapter {
 
     private final Player player;
     private final HUDController playerController;
+    private final InputMultiplexer gameplayInput;
 
     private final SpriteBatch spriteBatch;
 
@@ -86,7 +89,6 @@ public class GameScreen extends ScreenAdapter {
 
     // Hidden events on the map, checked every frame in update()
     private final List<EventTrigger> events = new ArrayList<>();
-    private int eventsTriggered = 0;
 
     private boolean wave1 = true;
     private boolean wave2 = true;
@@ -184,20 +186,14 @@ public class GameScreen extends ScreenAdapter {
             events.add(can);
         }
 
-        // temp/dev (TODO: remove/refactor)
-        int baguetteCount = 50;
-        for (int i = 0; i < baguetteCount; i++) {
-            int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) worldWidth);
-            int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
-            //TODO rename all referances to "item" to bagguette
-
-            ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, randomX, randomY, entitiesHandler);
+        for (Vector2 position : gameMap.getBaguettePositions()) {
+            new ItemEntity(new Item("baguette", Assets.BAGUETTE_TEXTURE), gameMap, position.x, position.y, entitiesHandler);
         }
-        // ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, player.getPosition().x, player.getPosition().y + 4, entitiesHandler);
 
         Hotbar hotbar = new Hotbar(player.getInventory());
-        hud = new HUD(hotbar);
+        hud = new HUD(hotbar, () -> pauseGame());
         playerController = new HUDController(player, hotbar);
+        gameplayInput = new InputMultiplexer(hud, playerController);
         pauseMenu = new PauseMenu(skin, () -> resumeGame(), () -> Gdx.app.exit());
     }
 
@@ -292,14 +288,16 @@ public class GameScreen extends ScreenAdapter {
     private void pauseGame() {
         isPaused = true;
         timerDisplay.getTimer().pause();
+        hud.setPauseButtonVisible(false);
         pauseMenu.show();
     }
 
     private void resumeGame() {
         isPaused = false;
         timerDisplay.getTimer().unpause();
+        hud.setPauseButtonVisible(true);
         pauseMenu.hide();
-        Gdx.input.setInputProcessor(playerController);
+        Gdx.input.setInputProcessor(gameplayInput);
     }
 
     private void followPlayer() {
