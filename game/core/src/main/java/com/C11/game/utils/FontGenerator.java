@@ -1,5 +1,6 @@
 package com.C11.game.utils;
 
+import com.C11.game.Config;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 public abstract class FontGenerator {
     private static FreeTypeFontGenerator generator;
     private static FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-    private static final float OVERSAMPLE = 3f;
 
     /**
      * @param path the file path of the font file
@@ -25,13 +25,13 @@ public abstract class FontGenerator {
     public static BitmapFont generateBitmapFont(String path, int size, Color colour) {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/" + path));
         parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
-        parameter.size = Math.round(size * OVERSAMPLE);
+        parameter.size = Math.round(size * Config.FONT_OVERSAMPLE);
         parameter.color = colour;
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.MipMapLinearLinear;
         parameter.genMipMaps = true;
         BitmapFont font = generator.generateFont(parameter);
-        font.getData().setScale(1f / OVERSAMPLE);
+        font.getData().setScale(1f / Config.FONT_OVERSAMPLE);
         generator.dispose();
         return font;
     }

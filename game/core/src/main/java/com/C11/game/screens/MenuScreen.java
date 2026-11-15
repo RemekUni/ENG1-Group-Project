@@ -31,20 +31,6 @@ public abstract class MenuScreen extends ScreenAdapter {
     private final Color bgColor;
     private final Skin skin;
 
-    // fraction of the root table's width
-    private static final float BUTTON_WIDTH_FRACTION = 0.4f;
-    // in UI viewport units, not world units
-    private static final float BUTTON_PADDING = 10f;
-
-    private static final float TITLE_PADDING_BOT = 30f;
-    private static final float TITLE_PADDING_TOP = 10f;
-
-    private static final float BODY_PADDING_BOT = 10f;
-
-    // matches game view's aspect ratio
-    private static final float UI_WIDTH = 1280f;
-    private static final float UI_HEIGHT = 720f;
-
     private final Table root;
     private final Table buttons;
     private final Table body;
@@ -59,7 +45,7 @@ public abstract class MenuScreen extends ScreenAdapter {
      * @param color background colour of the screen
      */
     protected MenuScreen(Skin skin, String title, Color color) {
-        stage = new Stage(new ExtendViewport(UI_WIDTH, UI_HEIGHT));
+        stage = new Stage(new ExtendViewport(Config.UI_WIDTH, Config.UI_HEIGHT));
         bgColor = color;
         this.skin = skin;
 
@@ -76,8 +62,8 @@ public abstract class MenuScreen extends ScreenAdapter {
 
         // root is the main table for the entire screen with body and button tables inside it
         // the button table will sit underneath the body table
-        root.add(titleLabel).padBottom(TITLE_PADDING_BOT).padTop(TITLE_PADDING_TOP).row();
-        content.add(body).padBottom(BODY_PADDING_BOT).row();
+        root.add(titleLabel).padBottom(Config.TITLE_PADDING_BOTTOM).padTop(Config.TITLE_PADDING_TOP).row();
+        content.add(body).padBottom(Config.BODY_PADDING_BOTTOM).row();
         content.add(sliders).row();
         content.add(buttons).row();
         root.add(content).expandY();
@@ -98,7 +84,7 @@ public abstract class MenuScreen extends ScreenAdapter {
             }
         });
 
-        buttons.add(button).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
+        buttons.add(button).width(Value.percentWidth(Config.MENU_BUTTON_WIDTH_FRACTION, root)).pad(Config.BUTTON_PADDING).row();
     }
 
     /**
@@ -123,7 +109,7 @@ public abstract class MenuScreen extends ScreenAdapter {
             }
         });
 
-        buttons.add(button).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
+        buttons.add(button).width(Value.percentWidth(Config.MENU_BUTTON_WIDTH_FRACTION, root)).pad(Config.BUTTON_PADDING).row();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.C11.game.entities;
 
+import com.C11.game.Config;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,17 +20,8 @@ public class Player extends AEntity{
 
     // public static final int MAX_INVENTORY_SIZE = 2;
 
-    // tiles per second
-    private static final float PLAYER_SPEED = 4f;
 
-    private static final float THROW_DISTANCE = 1f;
-    private static final float BOOSTED_SPEED = 7f;
     private float boostTimer = 0f;
-
-    // Hitbox covers lower half of the sprite and is 2/3 of its width.
-    // This lets the player get between 1 tile spaces more easily and looks better when approaching collision objects such as buildings and trees.
-    private static final float HITBOX_WIDTH_SCALE = 1f / 1.5f;
-    private static final float HITBOX_HEIGHT_SCALE = 0.5f;
 
     private GameMap gameMap;
 
@@ -42,7 +34,7 @@ public class Player extends AEntity{
      * @param gameMap map used for collision checks
      */
     public Player(Texture playerTexture, float startX, float startY, GameMap gameMap, EntitiesHandler entitiesHandler) {
-        super(playerTexture, gameMap, startX, startY, PLAYER_SPEED, HITBOX_WIDTH_SCALE, HITBOX_HEIGHT_SCALE, entitiesHandler);
+        super(playerTexture, gameMap, startX, startY, Config.PLAYER_SPEED, Config.HITBOX_WIDTH_SCALE, Config.HITBOX_HEIGHT_SCALE, entitiesHandler);
         this.gameMap = gameMap;
     }
 
@@ -54,7 +46,7 @@ public class Player extends AEntity{
             boostTimer-=delta;
 
             if (boostTimer <=0){
-                setSpeed(PLAYER_SPEED); //remove the speed increase once the boost has expired 
+                setSpeed(Config.PLAYER_SPEED); //remove the speed increase once the boost has expired
             }
         }
 
@@ -77,7 +69,7 @@ public class Player extends AEntity{
     }
 
     public void activateSpeedBoost(float boostTime){
-        setSpeed(BOOSTED_SPEED);
+        setSpeed(Config.PLAYER_BOOSTED_SPEED);
         boostTimer += boostTime; // += allows for stacking
     }
 }
