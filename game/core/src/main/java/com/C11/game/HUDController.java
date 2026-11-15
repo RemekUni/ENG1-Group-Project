@@ -5,7 +5,11 @@ import com.C11.game.ui.Hotbar;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
-/* Class for all things HUD controlling. Will finish in the morning. */
+/**
+ * Controls input for the HUD elements
+ *
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+ */
 public class HUDController extends InputAdapter {
     private final Player player;
     private final Hotbar hotbar;
