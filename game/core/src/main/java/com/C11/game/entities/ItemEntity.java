@@ -2,77 +2,99 @@ package com.C11.game.entities;
 
 import java.util.Random;
 
-import com.C11.game.ItemType;
+import com.C11.game.Config;
 import com.C11.game.world.GameMap;
+import com.C11.game.inventory.Item;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 
-// TODO: Make own abstract class for items that will inherit from Entity
-public class ItemEntity extends Entity {
+/**
+ * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link AEntity}.
+ * This is for the baguette item ONLY for now.
+ *
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+ */
+public class ItemEntity extends AEntity {
+
+    private final Item ITEM;
 
     private float lifetime = 0f;
 
-    private final Vector2 direction = new Vector2();
+    private final Vector2 direction = new Vector2(0, 0);
 
-    // Entity can pick up items in 1 unit distance
-    private static final float PICKUP_DISTANCE = 0.5f;
-    
-    private static final float IDLE_ANIMATION_SPEED = 0.1f;
-    private final float animationRandomShift = new Random().nextFloat(2);
+    private final float ANIMATION_RANDOM_SHIFT = new Random().nextFloat(2);
 
-    private Array<Entity> collectorEntities;
-    private Array<ItemEntity> itemsArray;
+    /**
+     * Spawn an item of the specified type at the specified world position.
+     * @param itemType item type.
+     * @param gameMap map, used for collision checks
+     * @param x starting 'x' position of entity's bottom-left corner, in world units
+     * @param y starting 'y' position of entity's bottom-left corner, in world units
+     * @param entitiesArray reference to dynamic array of all entities
+     *
+     */
+    public ItemEntity(Item itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler) {
+        super(itemType.getTexture(), gameMap, x, y, Config.ITEM_IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
 
-
-    // collectorEntities should be an ArrayList to allow for a variable number of entities during the runtime
-    public ItemEntity(ItemType itemType, float x, float y, GameMap gameMap, Array<Entity> collectorEntities, Array<ItemEntity> itemsArray) {
-        // TODO: Resolve redundant gameMap bounds logic
-        super(itemType.getEntityTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0);
-
-        this.collectorEntities = collectorEntities;
-        this.itemsArray = itemsArray;
+        this.ITEM = itemType;
     }
 
-    private void idleAnimate(Vector2 pos, float delta) {
-        lifetime += delta;
-        final float periodFrequency = 1.5f;
-
-        direction.y = MathUtils.sin((lifetime + animationRandomShift) * periodFrequency); 
+    public void collect() {
+        entitiesHandler.removeEntity(this);
+        System.out.println("Collected " + ITEM.getName() + "!");
     }
 
-    private boolean isCollidingEntity() {
-        for (Entity entity : collectorEntities) {
-            float x = this.getPosition().x;
-            float entityX = entity.getPosition().x;
+    public AEntity collectionCollisionDetection() {
+        for (AEntity entity : entitiesHandler.getCharactersSet()) {
+            double iX = (double) this.getCenterX();
+            double iY = (double) this.getCenterY();
 
-            float y = this.getPosition().y;
-            float entityY = entity.getPosition().y;
+            if (entity.isCollectionEnabled()) {
+                double cX = (double) entity.getCenterX();
+                double cY = (double) entity.getCenterY();
 
-            boolean isInXBounds = x >= entityX - PICKUP_DISTANCE && x <= entityX + entity.getHitbox().getWidth() + PICKUP_DISTANCE;
-            boolean isInYBounds = y >= entityY - PICKUP_DISTANCE && y <= entityY + entity.getHitbox().getHeight() + PICKUP_DISTANCE;
+                // Check if distance between centers is less than or equal to the pickup distance
+                boolean isInBounds = Math.sqrt(Math.pow(iX - cX, 2) + Math.pow(iY - cY, 2)) <= Config.ITEM_PICKUP_DISTANCE;
 
-            if (isInYBounds && isInXBounds) {
-                return isInXBounds && isInYBounds;
+                // Run through all collectors until catching the first entity that is inbounds
+                if (isInBounds) {
+                    return entity;
+                }
             }
         }
-
-        return false;
+        return null;
     }
 
+    // Simple sin item animation
+    private void idleAnimate(Vector2 pos, float delta) {
+        lifetime += delta;
+
+        
+        direction.y = MathUtils.sin((lifetime + ANIMATION_RANDOM_SHIFT) * Config.ITEM_IDLE_ANIMATION_FREQUENCY);
+    }
 
     @Override
     public void update(float delta) {
-        direction.set(0, 0);
+        // Check if any collectors are in range to collect the item
+        AEntity foundCollector = collectionCollisionDetection();
+        if (foundCollector != null) {
+            foundCollector.collectItem(this);
+        }
+        else {
+            // Idle animated position
+            idleAnimate(direction, delta);
 
-        // Idle animated position
-        idleAnimate(direction, delta);
+            // Animate the item by making use of #Entity.move()
+            move(direction, delta, false);
+        }
+    }
 
-        boolean pickupItem = isCollidingEntity();
-        // Delete item entity from the reference list. GC should then dispose it from memory as it will not be referenced anywhere
-        if (pickupItem) itemsArray.removeValue(this, true);
+    public Item getItem() {
+        return ITEM;
+    }
 
-        move(direction, delta);
+    public String toString() {
+        return ITEM.getName() + "@" + Integer.toHexString(hashCode());
     }
 }

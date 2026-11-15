@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="81">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="152">
  <tileset firstgid="1" source="tilemap.tsx"/>
- <layer id="1" name="Tile Layer 1" width="60" height="40">
+ <layer id="1" name="Grass" width="60" height="40">
   <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,13,14,15,1,1,1,1,1,1,1,1,1,2,2,1,1,1,2,2,2,2,1,1,1,1,1,13,14,15,1,1,1,1,1,2,1,1,1,2,2,1,1,
 1,1,1,1,2,2,1,1,1,1,1,1,1,1,2,1,2,1,25,26,27,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,25,26,27,1,1,1,1,1,1,2,44,1,1,2,1,1,
@@ -45,7 +45,7 @@
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,37,38,39,1,2,1,1,1,2,1,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,37,38,39,1,1,1,1,1,1,1,1,1,1,1,1,1
 </data>
  </layer>
- <layer id="2" name="Tile Layer 2" width="60" height="40">
+ <layer id="2" name="Structures" width="60" height="40">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,53,54,55,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,49,50,51,52,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,65,66,67,68,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,61,62,63,64,0,0,0,0,0,0,0,0,0,
@@ -89,7 +89,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="Tile Layer 3" width="60" height="40">
+ <layer id="3" name="Trees" width="60" height="40">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,
@@ -200,5 +200,229 @@
   <object id="78" x="464" y="32" width="16" height="16"/>
   <object id="79" x="496" y="80" width="16" height="16"/>
   <object id="80" x="352" y="96" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="5" name="cans">
+  <object id="86" x="544" y="96">
+   <point/>
+  </object>
+  <object id="87" x="128" y="272">
+   <point/>
+  </object>
+  <object id="88" x="496" y="496">
+   <point/>
+  </object>
+  <object id="89" x="864" y="416">
+   <point/>
+  </object>
+  <object id="90" x="848" y="80">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="sandwiches">
+  <object id="91" x="150" y="384">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="spawns">
+  <object id="92" name="player" x="48" y="320">
+   <point/>
+  </object>
+  <object id="93" name="goose" x="336" y="320">
+   <properties>
+    <property name="itemCollection" type="bool" value="false"/>
+    <property name="leaveMap" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="94" name="goose" x="272" y="48">
+   <properties>
+    <property name="itemCollection" type="bool" value="true"/>
+    <property name="leaveMap" type="bool" value="false"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="95" name="goose" x="224" y="592">
+   <properties>
+    <property name="itemCollection" type="bool" value="false"/>
+    <property name="leaveMap" type="bool" value="false"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="wave1">
+  <object id="96" name="goose" x="496" y="144">
+   <point/>
+  </object>
+  <object id="97" name="goose" x="720" y="384">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="wave2">
+  <object id="98" name="goose" x="752" y="160">
+   <point/>
+  </object>
+  <object id="99" name="goose" x="752" y="560">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="10" name="wave3">
+  <object id="100" name="goose" x="160" y="320">
+   <point/>
+  </object>
+  <object id="101" name="goose" x="608" y="320">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="baguettes">
+  <object id="102" x="272" y="144">
+   <point/>
+  </object>
+  <object id="103" x="48" y="160">
+   <point/>
+  </object>
+  <object id="104" x="160" y="112">
+   <point/>
+  </object>
+  <object id="105" x="208" y="336">
+   <point/>
+  </object>
+  <object id="106" x="80" y="368">
+   <point/>
+  </object>
+  <object id="107" x="112" y="496">
+   <point/>
+  </object>
+  <object id="108" x="304" y="592">
+   <point/>
+  </object>
+  <object id="109" x="304" y="416">
+   <point/>
+  </object>
+  <object id="110" x="464" y="224">
+   <point/>
+  </object>
+  <object id="111" x="368" y="176">
+   <point/>
+  </object>
+  <object id="112" x="432" y="96">
+   <point/>
+  </object>
+  <object id="113" x="560" y="32">
+   <point/>
+  </object>
+  <object id="114" x="576" y="160">
+   <point/>
+  </object>
+  <object id="115" x="656" y="224">
+   <point/>
+  </object>
+  <object id="116" x="528" y="336">
+   <point/>
+  </object>
+  <object id="117" x="784" y="320">
+   <point/>
+  </object>
+  <object id="118" x="736" y="464">
+   <point/>
+  </object>
+  <object id="119" x="848" y="544">
+   <point/>
+  </object>
+  <object id="120" x="912" y="608">
+   <point/>
+  </object>
+  <object id="121" x="720" y="608">
+   <point/>
+  </object>
+  <object id="122" x="832" y="368">
+   <point/>
+  </object>
+  <object id="123" x="832" y="256">
+   <point/>
+  </object>
+  <object id="124" x="784" y="192">
+   <point/>
+  </object>
+  <object id="125" x="896" y="112">
+   <point/>
+  </object>
+  <object id="126" x="640" y="96">
+   <point/>
+  </object>
+  <object id="127" x="288" y="208">
+   <point/>
+  </object>
+  <object id="128" x="176" y="176">
+   <point/>
+  </object>
+  <object id="129" x="224" y="432">
+   <point/>
+  </object>
+  <object id="130" x="176" y="480">
+   <point/>
+  </object>
+  <object id="131" x="304" y="512">
+   <point/>
+  </object>
+  <object id="132" x="304" y="352">
+   <point/>
+  </object>
+  <object id="133" x="416" y="240">
+   <point/>
+  </object>
+  <object id="134" x="416" y="128">
+   <point/>
+  </object>
+  <object id="135" x="672" y="32">
+   <point/>
+  </object>
+  <object id="136" x="704" y="192">
+   <point/>
+  </object>
+  <object id="137" x="736" y="256">
+   <point/>
+  </object>
+  <object id="138" x="912" y="176">
+   <point/>
+  </object>
+  <object id="139" x="816" y="560">
+   <point/>
+  </object>
+  <object id="140" x="512" y="624">
+   <point/>
+  </object>
+  <object id="141" x="592" y="544">
+   <point/>
+  </object>
+  <object id="142" x="80" y="608">
+   <point/>
+  </object>
+  <object id="143" x="32" y="496">
+   <point/>
+  </object>
+  <object id="144" x="96" y="208">
+   <point/>
+  </object>
+  <object id="145" x="528" y="208">
+   <point/>
+  </object>
+  <object id="146" x="432" y="336">
+   <point/>
+  </object>
+  <object id="147" x="544" y="256">
+   <point/>
+  </object>
+  <object id="148" x="688" y="128">
+   <point/>
+  </object>
+  <object id="149" x="416" y="544">
+   <point/>
+  </object>
+  <object id="150" x="928" y="480">
+   <point/>
+  </object>
+  <object id="151" x="928" y="352">
+   <point/>
+  </object>
  </objectgroup>
 </map>
