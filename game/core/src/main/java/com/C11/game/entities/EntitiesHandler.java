@@ -66,7 +66,7 @@ public class EntitiesHandler {
      * to ensure it will be added to the live entity's set during its instantiation.
      * @param entity
      */
-    public void add(AEntity entity) {
+    public void addEntity(AEntity entity) {
         entities.add(entity);
 
         // -- Categorise entities --

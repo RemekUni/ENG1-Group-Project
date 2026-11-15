@@ -22,6 +22,8 @@ import com.C11.game.world.GameMap;
 import com.C11.game.stats.GameResult;
 import com.C11.game.stats.GameStats;
 import com.C11.game.inventory.Item;
+import com.C11.game.world.Item;
+import com.C11.game.world.SimplifiedMapObject;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -30,7 +32,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input.Keys;
@@ -87,6 +88,11 @@ public class GameScreen extends ScreenAdapter {
     private final List<EventTrigger> events = new ArrayList<>();
     private int eventsTriggered = 0;
 
+    private boolean wave1 = true;
+    private boolean wave2 = true;
+    private boolean wave3 = true;
+
+
     /**
      * Loads map and textures.
      * Sets up the camera and viewport.
@@ -95,9 +101,6 @@ public class GameScreen extends ScreenAdapter {
      * @param game game provides the shared batch
      */
     public GameScreen(Main game, int gameLengthSeconds) {
-        // TODO: read spawn positions from the Tiled spawn layer and use them to
-        // initialise entities
-
         // -- Game, assets, world initialisation --
         this.game = game;
         this.spriteBatch = game.getBatch();
@@ -126,20 +129,42 @@ public class GameScreen extends ScreenAdapter {
         viewportText = new ExtendViewport(worldWidth * viewport_scale, worldHeight * viewport_scale, cameraText);
 
         // -- Spawn entities --
+        SimplifiedMapObject playerObject = null;
+        for (SimplifiedMapObject mapObject : gameMap.getSpawnObjects()) {
+            if ("player".equals(mapObject.name())) {
+                playerObject = mapObject;
+                break;
+            }
+        }
+
+        if (playerObject == null) {
+            throw new IllegalStateException("Player spawn was not found.");
+        }
+
         // Spawn player
-        player = new Player(Assets.PLAYER_TEXTURE, worldWidth / 2, worldHeight / 2, gameMap, entitiesHandler);
+        player = new Player(Assets.PLAYER_TEXTURE, playerObject.position().x, playerObject.position().y, gameMap, entitiesHandler);
         player.enableCollection();
 
-        // Spawn *2* geese
-        new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 - 10, worldHeight / 2, gameMap, player, entitiesHandler);
-        final Goose goose2 = new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 + 10, worldHeight / 2, gameMap, player, entitiesHandler);
-        goose2.enableCollection();
-        final Goose goose3 = new Goose(Assets.GOOSE_TEXTURE, worldWidth / 2 + 5, worldHeight / 2, gameMap, entitiesHandler);
-
-        // TEMP: button to make the stationary goose just created leave the map
-        TextureRegion singleButtonTexture = new TextureRegion(Assets.BUTTON_TEXTURE);
-        LeaveMap leaveMapEvent = new LeaveMap(singleButtonTexture, worldWidth / 2 + 3, worldHeight / 2, gameMap, 1.5f, true, goose3);
-        events.add(leaveMapEvent);
+        for (SimplifiedMapObject mapObject : gameMap.getSpawnObjects()) {
+            // Spawn geese
+            if ("goose".equals(mapObject.name())) {
+                Goose goose;
+                boolean leaveMap = mapObject.properties().get("leaveMap", false, Boolean.class);
+                boolean itemCollection = mapObject.properties().get("itemCollection", false, Boolean.class);
+                if (leaveMap) {
+                    goose = new Goose(Assets.GOOSE_TEXTURE, mapObject.position().x, mapObject.position().y, gameMap, entitiesHandler);
+                    // TEMP: button to make the stationary goose just created leave the map
+                    TextureRegion singleButtonTexture = new TextureRegion(Assets.BUTTON_TEXTURE);
+                    LeaveMap leaveMapEvent = new LeaveMap(singleButtonTexture, mapObject.position().x - 3, mapObject.position().y, gameMap, 1.5f, true, goose);
+                    events.add(leaveMapEvent);
+                } else {
+                    goose = new Goose(Assets.GOOSE_TEXTURE, mapObject.position().x, mapObject.position().y, gameMap, player, entitiesHandler);
+                }
+                if (itemCollection) {
+                    goose.enableCollection();
+                }
+            }
+        }
 
         //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
         int sandwichWidth = Assets.SANDWICH_TEXTURE.getWidth() /2;
@@ -228,11 +253,30 @@ public class GameScreen extends ScreenAdapter {
 
 
         if (timerDisplay.getTimer().update()) {
+            if (timerDisplay.getTimer().getTicks() == 10 && wave1) {
+                wave1 = false;
+                for (Vector2 position : gameMap.getWaveSpawnPositions("wave1")) {
+                    new Goose(Assets.GOOSE_TEXTURE, position.x, position.y, gameMap, player, entitiesHandler);
+                }
+            }
+            if (timerDisplay.getTimer().getTicks() == 20 && wave2) {
+                wave2 = false;
+                for (Vector2 position : gameMap.getWaveSpawnPositions("wave2")) {
+                    new Goose(Assets.GOOSE_TEXTURE, position.x, position.y, gameMap, player, entitiesHandler);
+                }
+            }
+            if (timerDisplay.getTimer().getTicks() == 30 && wave3) {
+                wave3 = false;
+                for (Vector2 position : gameMap.getWaveSpawnPositions("wave3")) {
+                    new Goose(Assets.GOOSE_TEXTURE, position.x, position.y, gameMap, player, entitiesHandler);
+                }
+            }
             if (timerDisplay.getTimer().getTicks() == timerDisplay.getInitialTime()) {
                 timerDisplay.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
                 System.out.println("TIMER OVER TIMER OVER");
                 endGame();
             }
+
         }
 
         followPlayer();

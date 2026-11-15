@@ -80,7 +80,7 @@ public abstract class AEntity {
         }
 
         // Add to Entities set
-        entitiesHandler.add(this);
+        entitiesHandler.addEntity(this);
     }
 
     /**
