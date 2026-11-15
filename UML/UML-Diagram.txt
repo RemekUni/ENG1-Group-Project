@@ -1,0 +1,416 @@
+@startuml
+interface Game
+interface ScreenAdapter
+
+abstract class Rectangle
+
+class Main {
+	-SpriteBatch spritebatch
+	-Skin skin
+	-{static} int TITLE_FONT_SIZE
+	-{static} int REGULAR_FONT_SIZE
+	-Settings settings
+
+	+void create()
+	+void showStartScreen()
+	+void startGame(int minutes)
+	+void showEndScreen(GameResult result)
+	-void switchScreen(Screen next)
+	+dispose()
+}
+
+abstract class AEntity {
+	-{static} long PICKUP_COOLDOWN_MS
+	-Vector2 position
+	-float size
+	-float speed
+	-Texture entityTexture
+	-Hitbox hitbox
+	
+	-boolean isCollectionEnabled
+	-long pickupBlockedUntil
+	
+	-Inventory inventory
+	#Array<Item> inventoryContainer
+
+	-GameMap gameMap
+	#EntitiesHandler entitiesHandler
+
+	#void move(Vector2 direction, float delta)
+
+	+{abstract} void update(float delta)
+
+	-boolean isColliding()
+	-boolean isSpawnClear()
+	
+	+void collectItem(ItemEntity itemEntity)
+	+boolean isCollectionEnabled()
+	+void enableCollection()
+	+void disableCollection()
+	
+	+void throwItem(Item item)
+	+void useItem(int index)
+
+	+void draw(SpriteBatch batch)
+}
+
+class EntitiesHandler {
+	-ObjectSet<AEntity> entities
+	-ObjectSet<ItemEntity> itemEntities
+	-ObjectSet<Goose> geese
+	-ObjectSet<AEntity> characters
+	
+	-Player player
+	
+	-int itemCount
+	-int gooseCount
+	
+	+void updateEntities(float delta)
+	
+	+void draw()
+	
+	+void addEntity()
+	+void removeEntity()
+}
+
+class Player {
+	-Vector2 direction
+	-{static} float PLAYER_SPEED
+	-{static} float THROW_DISTANCE
+	-{static} float BOOSTED_SPEED
+	-float boostTimer
+	-{static} float HITBOX_WIDTH_SCALE
+	-{static} float HITBOX_HEIGHT_SCALE
+	
+	-GameMap gameMap
+
+	+void update(float delta)
+	
+	+void activateSpeedBoost(float boostTime)
+	
+	+void throwItem(int inventoryIndex)
+	+void throwItem(Item itemType)
+	~void doThrowLogic(Item itemType)
+	~void startAim()
+}
+note right of Player::gameMap
+	unused in class methods?
+end note
+note right of Player::startAim
+	unimplemented
+end note
+
+class Goose {
+	-Vector2 direction
+	-{static} float GOOSE_SPEED
+	-{static} float HITBOX_WIDTH_SCALE
+	-{static} float HITBOX_HEIGHT_SCALE
+	-{static} float STOP_DISTANCE
+	-boolean leavingMap
+	-AEntity target
+
+	+void update(float delta)
+	+void setStationary()
+	+void leaveMap()
+
+}
+
+class Inventory {
+	-Array<Item> inventory
+}
+
+class ItemEntity {
+	+float PICKUP_DISTANCE
+	+{static} float IDLE_ANIMATION_SPEED
+	-Item ITEM
+	-float lifetime
+	-Vector2 direction
+	-float ANIMATION_RANDOM_SHIFT
+	
+	+void collect()
+	+ACollectorEntity collectionCollisionDetection()
+	-void idleAnimate(Vector2 pos, float delta)
+	+void update(float delta)
+}
+
+class Hitbox {
+	-float offsetX
+	-float offsetY
+	-float width
+	-float height
+	
+	+{static} Hitbox forSprite(float size, float widthScale, float heightScale, Vector2 position)
+	+void follow(Vector2 position)
+}
+
+
+abstract class EventTrigger {
+	~boolean oneShot
+	~boolean triggered
+	~Vector2 position
+	~float size
+	~TextureRegion texture
+
+	+{abstract} void action()
+	+boolean trigger()
+	+boolean isComplete()
+	+void draw(SpriteBatch batch)
+}
+
+class AbandonedSandwich {
+   	-Player player
+    	-Texture gooseTexture
+    	-GameMap gamemap
+    	-EntitiesHandler entitiesHandler
+
+    	+void action()
+}
+
+class Can {
+    	-{static} float BOOST_DURATION
+    	-Player player
+    	
+    	+void action()
+}
+
+class LeaveMap {
+	-Goose targetGoose
+	
+	+void action()
+}
+
+class GameScreen {
+	-Main game
+	-GameMap gameMap
+	-boolean isPaused
+	-PauseMenu pauseMenu
+	-TimerDisplay timerDisplay
+	-Viewport viewport
+	-Viewport viewportText
+	-OrthographicCamera camera
+	-OrthographicCamera cameraText
+	
+	-float worldWidth
+	-float worldHeight
+	
+	-EntitiesHandler entitiesHandler
+	
+	-Player player
+	
+	-SpriteBatch spriteBatch
+
+	{static} float VIEW_WIDTH
+	{static} float VIEW_HEIGHT
+
+	-List<EventTrigger> events
+	-int eventsTriggered
+	
+	+void show()
+
+	+void resize(int width, int height)
+	+void render(float delta)
+
+	-void update(float delta)
+	-void endGame()
+	-void pauseGame()
+	-void resumeGame()
+	-void followPlayer()
+	-void draw()
+
+	+void pause()
+	+void dispose()
+}
+note left of GameScreen::eventsTriggered
+	unused?
+end note
+
+abstract class MenuScreen {
+	-Stage stage
+	-Color bgColor
+	-Skin skin
+	
+	-{static} float BUTTON_WIDTH_FRACTION
+	-{static} float BUTTON_PADDING
+	-{static} float TITLE_PADDING_BOT
+	-{static} float TITLE_PADDING_TOP
+	-{static} float TITLE_SCALE
+	-{static} float BODY_PADDING_BOT
+	-{static} float UI_WIDTH
+	-{static} float UI_HEIGHT
+	
+	-Table root
+	-Table buttons
+	-Table body
+	-Table sliders
+	-Table content
+	
+	+void show()
+	+void hide()
+}
+
+class StartScreen {
+	-{static} String TITLE
+	-{static} Color BG_COLOR
+	-{static} int MIN_GAME_MINUTES
+	-{static} int MAX_GAME_MINUTES
+	-{static} int GAME_MINUTES_STEP
+}
+
+class EndScreen {
+	-{static} String TITLE
+	-{static} Color BG_COLOR
+}
+
+class GameMap {
+	-TiledMap map
+	-OrthogonalTiledMapRenderer mapRenderer
+	-float unitScale
+	-float worldWidth
+	-float worldHeight
+
+	-{static} String COLLISION_LAYER
+	-{static} String SANDWICH_LAYER
+	-{static} String CAN_LAYER
+
+	-Array<Rectangle> collisionRects
+
+	-void loadCollisionRects()
+	-void addMapBoundary()
+
+	+boolean isBlocked(Rectangle bounds)
+
+	+void render(OrthographicCamera camera)
+	+void dispose()
+	
+	-Array<Vector2> getObjectPositions(String layerName)
+	+Array<Vector2> getSandwichPositions()
+	+Array<Vector2> getCanPositions()
+}
+
+class Item {
+	-String name
+	-Texture entityTexture
+}
+
+class PauseMenu {
+	-Stage stage
+	-Skin skin
+
+	-{static} float DIM_ALPHA
+
+	-{static} float BUTTON_WIDTH_FRACTION
+	-{static} float BUTTON_PADDING
+
+	-{static} float UI_WIDTH
+	-{static} float UI_HEIGHT
+	
+	-Pixmap pixmap
+
+	+void render(float delta)
+	+void resize(int width, int height)
+	+void show()
+	+void hide()
+	+void dispose()
+}
+
+class Timer {
+	-long startTime
+	-long currentTime
+	-long length
+	-boolean playing
+	-int ticks
+
+	+void pause()
+	+void unpause()
+
+	+void start()
+	+void stop()
+
+	+boolean update()
+
+	+boolean isPlaying()
+}
+
+class TimerDisplay {
+	-Timer timer
+	-BitmapFont font
+	-int initialTime
+	
+	+void draw(SpriteBatch batch, float x, float y)
+	+void dispose()
+}
+
+abstract class FontGenerator {
+	-{static} FreeTypeFontGenerator generator
+	-{static} FreeTypeFontParameter parameter
+
+	+{static} generateBitmapFont(String path, int size, Color colour)
+}
+
+class GameResult {
+	-int eventsTriggered
+	-int itemsUsed
+	-int timeElapsed
+	-int itemsPickedUP
+}
+
+class GameState {
+	-{static} int eventsTriggered
+	-{static} int itemsUsed
+	-{static} int itemsPickedUp
+	
+	+{static} void recordEventTriggered()
+	+{static} void recordItemUsed()
+	+{static} void recordItemPickup()
+	+{static} GameResult toResult(int elapsedSeconds)
+}
+
+Game <|-- Main
+Main --> SpriteBatch : creates
+Main --> GameScreen : initalizes, sets as screen
+Main --> MenuScreen
+
+EndScreen --> GameResult
+GameResult - GameState
+
+TimerDisplay --> Timer
+FontGenerator <-- TimerDisplay 
+Main --> FontGenerator
+
+GameScreen --> GameMap : loads from file,\nsets bounds
+GameScreen --> PauseMenu : initializes, then starts paused
+GameScreen --> EntitiesHandler : creates
+GameScreen --> Player : creates, loads texture
+GameScreen --> Goose : creates, loads texture
+EntitiesHandler <-- Player : handles entity interactions
+EntitiesHandler <-- Goose : handles entity interactions
+GameScreen --> TimerDisplay : initalizes
+
+AEntity <|-- Player
+AEntity <|-- Goose
+AEntity <|-- ItemEntity
+Inventory *-- AEntity
+Hitbox *-- AEntity
+Item *-- ItemEntity
+Hitbox <|-- EventTrigger
+EventTrigger <|-- AbandonedSandwich
+EventTrigger <|-- Can
+EventTrigger <|-- LeaveMap
+
+MenuScreen <|-- EndScreen
+MenuScreen <|-- StartScreen
+ScreenAdapter <|-- MenuScreen
+ScreenAdapter <|-- GameScreen
+
+Disposable <|.. GameMap
+Disposable <|.. PauseMenu
+
+
+hide empty members
+
+remove Rectangle
+remove Game
+remove ScreenAdapter
+remove Disposable
+remove SpriteBatch
+@enduml
