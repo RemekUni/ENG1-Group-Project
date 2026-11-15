@@ -10,6 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * UI representation of the player's inventory in the form of a hotbar.
+ *
+ * @req FR_INVENTORY
+ * @req FR_ITEMS
+ *
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+ */
+
 public class Hotbar extends Table {
 
     private static final int NONE = -1;
@@ -71,6 +80,14 @@ public class Hotbar extends Table {
         return (selected != NONE && selected < items.size) ? items.get(selected) : null;
     }
 
+    /**
+     * Represents a single slot in the hotbar
+     *
+     * @req FR_ITEMS
+     * @req FR_INVENTORY
+     *
+     * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+     */
     private class Slot extends Actor {
         private final int index;
         private Texture background = Assets.SLOT_UNSELECTED_TEXTURE;

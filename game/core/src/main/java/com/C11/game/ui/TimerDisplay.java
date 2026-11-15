@@ -40,9 +40,9 @@ public class TimerDisplay implements Disposable {
 
     /**
      * Draws the remaining time on the timer before the ticks attribute equals the initialTime attribute.
-     * @param batch
-     * @param x
-     * @param y
+     * @param batch the sprite batch to draw the timer display to
+     * @param x x location
+     * @param y y location
      */
     public void draw(SpriteBatch batch, float x, float y) {
         String displayTime = Integer.toString(initialTime - timer.getTicks());

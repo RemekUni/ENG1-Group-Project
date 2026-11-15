@@ -9,7 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-
+/**
+ * HUD in which to put buttons used during gameplay
+ *
+ * @author Dorian Kerzan (rvl546@york.ac.uk)
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+ */
 public class HUD extends Stage {
     private ImageButton pauseButton;
 
@@ -29,9 +34,9 @@ public class HUD extends Stage {
 
     /**
      * private helper to create the pause button
-     * 
+     *
      * @req FR_PAUSE
-     * 
+     *
      * @param onPause runnable on click
      * @return ImageButton pause button
      */
@@ -48,7 +53,7 @@ public class HUD extends Stage {
 
     /**
      * sets the visibility of the pause button
-     * 
+     *
      * @param visible true (show), false (hide)
      */
     public void setPauseButtonVisible(boolean visible) {
