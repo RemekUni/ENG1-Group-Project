@@ -22,7 +22,7 @@ import com.C11.game.world.GameMap;
 import com.C11.game.stats.GameResult;
 import com.C11.game.stats.GameStats;
 import com.C11.game.inventory.Item;
-import com.C11.game.world.Item;
+
 import com.C11.game.world.SimplifiedMapObject;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -52,7 +52,7 @@ public class GameScreen extends ScreenAdapter {
     private boolean isPaused;
     private final PauseMenu pauseMenu;
     private HUD hud;
-    
+
     private final TimerDisplay timerDisplay;
 
     private final Viewport viewport;
@@ -205,7 +205,7 @@ public class GameScreen extends ScreenAdapter {
     /** @req FR_PAUSE */
     @Override
     public void show() {
-        
+
 
         pauseGame();
     }
