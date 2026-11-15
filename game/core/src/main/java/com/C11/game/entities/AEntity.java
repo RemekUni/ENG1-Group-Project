@@ -7,6 +7,7 @@ import com.C11.game.stats.GameStats;
 import com.C11.game.inventory.Inventory;
 import com.C11.game.inventory.Item;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -27,7 +28,7 @@ public abstract class AEntity extends EventTrigger {
     private static final long PICKUP_COOLDOWN_MS = 1000;
 
     // Texture
-    private Texture entityTexture;
+    private TextureRegion entityTexture;
 
     // -- Attributes --
     private float speed;
@@ -55,9 +56,17 @@ public abstract class AEntity extends EventTrigger {
      * @param hitboxHeightScale same as width, but for height (bottom-aligned)
      * @param entitiesHandler handler that tracks all entities
      */
-    public AEntity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
-        // This is assuming all entities are square. will need to be changed if we add non-square entities
-        super(startX, startY, entityTexture.getWidth() * gameMap.getUnitScale(), hitboxWidthScale, hitboxHeightScale, false);
+    public AEntity(TextureRegion entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
+        this(entityTexture, gameMap, startX, startY, speed, hitboxWidthScale, hitboxHeightScale, entitiesHandler, 1f);
+    }
+
+    /**
+     * Same as the constructor above, with a configurable size.
+     *
+     * @param size sprite size in world units (entities are square)
+     */
+    public AEntity(TextureRegion entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler, float size) {
+        super(startX, startY, size, hitboxWidthScale, hitboxHeightScale, false);
         this.entityTexture = entityTexture;
         // -- Attributes --
         this.speed = speed;
@@ -245,10 +254,14 @@ public abstract class AEntity extends EventTrigger {
 
     public void setTriggerAction(Runnable runnable) {
         this.triggerAction = runnable;
+        this.oneShot = true;
+        setTriggerEnabled(true);
     }
 
     @Override 
     public void action() {
-        this.triggerAction.run();
+        if (triggerAction != null) {
+            triggerAction.run();
+        }
     }
 }

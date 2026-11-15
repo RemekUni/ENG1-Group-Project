@@ -1,6 +1,7 @@
 package com.C11.game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.C11.game.Config;
 import com.C11.game.world.GameMap;
@@ -30,7 +31,7 @@ public class Goose extends AEntity {
      * @param entitiesArray reference to dynamic array of all entities
      */
     public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, AEntity target, EntitiesHandler entitiesHandler) {
-        super(gooseTexture, gameMap, startX, startY, Config.GOOSE_SPEED, Config.HITBOX_WIDTH_SCALE, Config.HITBOX_HEIGHT_SCALE, entitiesHandler);
+        super(new TextureRegion(gooseTexture), gameMap, startX, startY, Config.GOOSE_SPEED, Config.HITBOX_WIDTH_SCALE, Config.HITBOX_HEIGHT_SCALE, entitiesHandler);
         this.target = target;
     }
 
@@ -44,7 +45,7 @@ public class Goose extends AEntity {
      * @param entitiesArray reference to dynamic array of all entities
      */
     public Goose(Texture gooseTexture, float startX, float startY, GameMap gameMap, EntitiesHandler entitiesHandler) {
-        super(gooseTexture, gameMap, startX, startY, Config.GOOSE_SPEED, Config.HITBOX_WIDTH_SCALE, Config.HITBOX_HEIGHT_SCALE, entitiesHandler);
+        super(new TextureRegion(gooseTexture), gameMap, startX, startY, Config.GOOSE_SPEED, Config.HITBOX_WIDTH_SCALE, Config.HITBOX_HEIGHT_SCALE, entitiesHandler);
         this.target = this;
     }
 

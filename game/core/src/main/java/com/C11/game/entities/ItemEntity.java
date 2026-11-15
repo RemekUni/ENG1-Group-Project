@@ -37,7 +37,15 @@ public class ItemEntity extends AEntity {
      *
      */
     public ItemEntity(Item itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler) {
-        super(itemType.getTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
+        this(itemType, gameMap, x, y, entitiesHandler, 1f);
+    }
+
+    /**
+     * Same as above, with a configurable size.
+     * @param size sprite size in world units
+     */
+    public ItemEntity(Item itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler, float size) {
+        super(itemType.getTextureRegion(), gameMap, x, y, IDLE_ANIMATION_SPEED, 1f, 1f, entitiesHandler, size);
 
         this.ITEM = itemType;
     }
@@ -79,7 +87,7 @@ public class ItemEntity extends AEntity {
     @Override
     public void update(float delta) {
         // Check if any collectors are in range to collect the item
-        AEntity foundCollector = collectionCollisionDetection();
+        AEntity foundCollector = isTriggerEnabled() ? null : collectionCollisionDetection();
         if (foundCollector != null) {
             foundCollector.collectItem(this);
         }

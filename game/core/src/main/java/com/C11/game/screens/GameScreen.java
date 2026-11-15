@@ -189,7 +189,7 @@ public class GameScreen extends ScreenAdapter {
             int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) worldWidth);
             int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
 
-            new ItemEntity(new Item("baguette", Assets.BAGUETTE_TEXTURE), gameMap, randomX, randomY, entitiesHandler);
+            new ItemEntity(Assets.BAGUETTE_ITEM, gameMap, randomX, randomY, entitiesHandler);
         }
         // ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, player.getPosition().x, player.getPosition().y + 4, entitiesHandler);
 
@@ -252,6 +252,9 @@ public class GameScreen extends ScreenAdapter {
         for (AEntity entity : entitiesHandler.getEntitiesSet().iterator().toArray()) {
             if (entity != player && entity.isTriggerEnabled() && entity.getHitbox().overlaps(player.getHitbox()) && entity.trigger()) {
                 GameStats.recordEventTriggered();
+                if (entity.isComplete()) {
+                    entitiesHandler.removeEntity(entity);
+                }
             }
         }
 

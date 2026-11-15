@@ -30,10 +30,7 @@ public final class Assets {
     public static final Item CAN_ITEM = new Item("Can", CAN_TEXTURE);
 
 
-    static int sandwichWidth = Assets.SPOILED_SANDWICH_TEXTURE.getWidth() /2;
-    static int sandwichHeight = Assets.SPOILED_SANDWICH_TEXTURE.getHeight();
-    static TextureRegion singleSandwichTexture = new TextureRegion(Assets.SPOILED_SANDWICH_TEXTURE, 0 ,0 , sandwichWidth, sandwichHeight);
-    public static final Item SPOILED_SANDWICH_ITEM = new Item("Spoiled Sandwich", singleSandwichTexture);
+    public static final Item SPOILED_SANDWICH_ITEM = new Item("Spoiled Sandwich", new TextureRegion(SPOILED_SANDWICH_TEXTURE, 0, 0, SPOILED_SANDWICH_TEXTURE.getWidth() / 2, SPOILED_SANDWICH_TEXTURE.getHeight()));
 
 
     // public static final String PICKUP = "sounds/.wav";

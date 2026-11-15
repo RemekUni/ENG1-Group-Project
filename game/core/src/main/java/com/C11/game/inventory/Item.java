@@ -10,24 +10,23 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Item {
 
     private String name;
-    private Texture texture;
+    private TextureRegion textureRegion;
 
     public Item(String name, Texture texture) {
-        this.name = name;
-        this.texture = texture;
+        this(name, new TextureRegion(texture));
     }
 
     public Item(String name, TextureRegion textureRegion) {
         this.name = name;
-        this.texture = textureRegion.getTexture();
+        this.textureRegion = textureRegion;
     }
 
     public String getName() {
         return name;
     }
 
-    public Texture getTexture() {
-        return texture;
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
     }
 
     public String toString() {

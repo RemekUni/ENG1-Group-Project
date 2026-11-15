@@ -90,7 +90,7 @@ public class Hotbar extends Table {
 
             Array<Item> items = inventory.getContainer();
             if (index < items.size) {
-                batch.draw(items.get(index).getTexture(), getX(), getY(), getWidth(), getHeight());
+                batch.draw(items.get(index).getTextureRegion(), getX(), getY(), getWidth(), getHeight());
             }
         }
     }
