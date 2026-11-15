@@ -83,6 +83,11 @@ public class GameScreen extends ScreenAdapter {
     private final List<EventTrigger> events = new ArrayList<>();
     private int eventsTriggered = 0;
 
+    private boolean wave1 = true;
+    private boolean wave2 = true;
+    private boolean wave3 = true;
+
+
     /**
      * Loads map and textures.
      * Sets up the camera and viewport.
@@ -234,11 +239,30 @@ public class GameScreen extends ScreenAdapter {
 
 
         if (timerDisplay.getTimer().update()) {
+            if (timerDisplay.getTimer().getTicks() == 10 && wave1) {
+                wave1 = false;
+                for (Vector2 position : gameMap.getWaveSpawnPositions("wave1")) {
+                    new Goose(Assets.GOOSE_TEXTURE, position.x, position.y, gameMap, player, entitiesHandler);
+                }
+            }
+            if (timerDisplay.getTimer().getTicks() == 20 && wave2) {
+                wave2 = false;
+                for (Vector2 position : gameMap.getWaveSpawnPositions("wave2")) {
+                    new Goose(Assets.GOOSE_TEXTURE, position.x, position.y, gameMap, player, entitiesHandler);
+                }
+            }
+            if (timerDisplay.getTimer().getTicks() == 30 && wave3) {
+                wave3 = false;
+                for (Vector2 position : gameMap.getWaveSpawnPositions("wave3")) {
+                    new Goose(Assets.GOOSE_TEXTURE, position.x, position.y, gameMap, player, entitiesHandler);
+                }
+            }
             if (timerDisplay.getTimer().getTicks() == timerDisplay.getInitialTime()) {
                 timerDisplay.getTimer().pause();  // Call pause() instead of stop() because stop() resets the tick counter and therefore resets the timer display; this is purely an aesthetic thing!
                 System.out.println("TIMER OVER TIMER OVER");
                 endGame();
             }
+
         }
 
         followPlayer();
