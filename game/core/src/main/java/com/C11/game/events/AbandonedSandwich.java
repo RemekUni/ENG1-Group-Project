@@ -14,7 +14,10 @@ import com.badlogic.gdx.utils.Array;
  * An event where the player collects an abandoned sandwich and increases number of geese chasing.
  * The method will new geese to follow the player.
  *
+ * @req FR_NEGATIVE_EVENT
+ *
  * @author kieranmckenna (gnv523@york.ac.uk)
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public class AbandonedSandwich extends EventTrigger {
     private final Player player;

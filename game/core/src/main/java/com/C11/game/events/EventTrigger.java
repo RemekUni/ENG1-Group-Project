@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector2;
  * The Trigger class extends the hitbox class which defines the size and position of the boxes.
  * It provides the framework to add actions to each event/item
  *
+ * @req FR_TRIGGER_EVENT
+ *
  * @author kieranmckenna (gnv523@york.ac.uk)
  */
 public abstract class EventTrigger extends Hitbox {
