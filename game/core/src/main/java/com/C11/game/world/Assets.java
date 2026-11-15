@@ -2,6 +2,9 @@ package com.C11.game.world;
 
 import com.badlogic.gdx.graphics.Texture;
 
+/**
+ * Dumping point for all assets used!
+ */
 public final class Assets {
 
     // Game assets
@@ -21,10 +24,10 @@ public final class Assets {
     // public static final String PICKUP = "sounds/.wav";
     // public static final String GAME_OVER = "sounds/.wav";
 
-    // public static final Array<Sound> GOOSE1 = 
-    // public static final Array<Sound> GOOSE2 = 
-    // public static final Array<Sound> GOOSE3 = 
-    // public static final Array<Sound> GOOSE4 = 
+    // public static final Array<Sound> GOOSE1 =
+    // public static final Array<Sound> GOOSE2 =
+    // public static final Array<Sound> GOOSE3 =
+    // public static final Array<Sound> GOOSE4 =
     // public static final Array<Sound> GOOSE5 =
     // public static final Array<Sound> GOOSE6 =
     // public static final Array<Sound> GOOSE7 =

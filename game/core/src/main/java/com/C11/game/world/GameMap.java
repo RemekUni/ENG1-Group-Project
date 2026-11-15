@@ -23,11 +23,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
  * Loads a Tiled (.tmx) map and gets what the game needs from it: size, unit scale, rendering and collisions.
  * Everything outside this class works in 'world units', where 1 unit = 1 tile.
  * Other classes should not access the TiledMap or layer names directly
- * 
- * @req UR_MAP UR_BOUNDARIES FR_MAP_TEXTURE FR_MAP_BOUNDARY
- * 
+ *
+ * @req UR_MAP UR_BOUNDARIES
+ * @req FR_MAP_TEXTURE
+ * @req FR_MAP_BOUNDARY
+ *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
- * 
+ *
  * @author James (hjp562@york.ac.uk) - getObjectPositions only
  */
 public class GameMap implements Disposable {
@@ -39,13 +41,13 @@ public class GameMap implements Disposable {
 
     private final Array<Rectangle> collisionRects;
 
-    /** 
+    /**
      * Loads the map file using the mapFilePath param.
      * Gets the collision rectangles, world width/height, and unit scale from the map file.
      * Creates the map renderer and adds map boundaries.
-     * 
+     *
      * @req FR_MAP_TEXTURE
-     * 
+     *
      * @param mapFilePath path relative to the assets folder, e.g. "maps/campus.tmx"
      */
     public GameMap(String mapFilePath) {
@@ -78,8 +80,11 @@ public class GameMap implements Disposable {
         addMapBoundary();
     }
 
-    // Tiled stores rectangles in pixels; scale to world units. The y-axis flip is already done by TmxMapLoader
-    /** @req FR_MAP_COLLISION */
+    /**
+     * Tiled stores rectangles in pixels; scale to world units. The y-axis flip is already done by TmxMapLoader
+     *
+     * @req FR_MAP_COLLISION
+     */
     private void loadCollisionRects() {
         MapLayer layer = map.getLayers().get(Config.COLLISION_LAYER);
         if (layer == null){
@@ -96,8 +101,11 @@ public class GameMap implements Disposable {
         }
     }
 
-    // Four 1 tile thick walls around the map, creating a boundary at the map edges so nothing can leave it
-    /** @req FR_MAP_BOUNDARY */
+    /**
+     * Four 1 tile thick walls around the map, creating a boundary at the map edges so nothing can leave it
+     *
+     * @req FR_MAP_BOUNDARY
+     */
     private void addMapBoundary() {
         collisionRects.add(new Rectangle(-1, 0, 1, worldHeight));
         collisionRects.add(new Rectangle(worldWidth, 0, 1, worldHeight));
@@ -107,7 +115,7 @@ public class GameMap implements Disposable {
 
     /**
      * Returns whether the given area overlaps with a collision rectangle or map boundary.
-     * 
+     *
      * @param bounds area in world units.
      * @return true if blocked
      */
@@ -120,7 +128,7 @@ public class GameMap implements Disposable {
         return false;
     }
 
-    /** 
+    /**
      * @return world width in tiles (e.g. 60 tiles wide)
      */
     public float getWorldWidth() {
@@ -141,11 +149,11 @@ public class GameMap implements Disposable {
         return unitScale;
     }
 
-    /** 
-     * Draws the visible part of the map using the camera's view 
-     * 
+    /**
+     * Draws the visible part of the map using the camera's view
+     *
      * @req FR_MAP_TEXTURE
-     * 
+     *
      * @param camera the camera whose view decides what part of the map is drawn
      */
     public void render(OrthographicCamera camera) {
@@ -153,7 +161,7 @@ public class GameMap implements Disposable {
         mapRenderer.render();
     }
 
-    @Override 
+    @Override
     public void dispose() {
         map.dispose();
         mapRenderer.dispose();
@@ -162,7 +170,7 @@ public class GameMap implements Disposable {
     /**
      * Returns the positions of objects from a given layer of the tmx
      * @param layerName the name of the layer in campus.tmx
-     * @return 
+     * @return
      */
     private Array<Vector2> getObjectPositions(String layerName){
         Array<Vector2> positions = new Array<>();
@@ -181,7 +189,7 @@ public class GameMap implements Disposable {
 
     /**
      * private getter for collecting map objects from a layer and returning them in a specialised record
-     * 
+     *
      * @param layerName the name of the layer
      * @return Array<SimplifiedMapObject> returns the specialised record of all the map objects in the layer
      */
@@ -201,7 +209,7 @@ public class GameMap implements Disposable {
 
         return mapObjects;
     }
-    
+
     /**
      * Returns the positions of sandwiches, as specified in the tmx
      * @return Array<Vector2> positions
@@ -209,7 +217,7 @@ public class GameMap implements Disposable {
     public Array<Vector2> getSandwichPositions(){
         return getObjectPositions(Config.SANDWICH_LAYER);
     }
-    
+
     /**
      * Returns the positions of cans, as specified in the tmx
      * @return Array<Vector2> positions
@@ -220,7 +228,7 @@ public class GameMap implements Disposable {
 
     /**
      * Returns all the objects from the spawn layer
-     * 
+     *
      * @return Array<SimplifiedMapObject> objects
      */
     public Array<SimplifiedMapObject> getSpawnObjects() {
@@ -229,7 +237,7 @@ public class GameMap implements Disposable {
 
     /**
      * Returns all Vector2 positions from a wave layer
-     * 
+     *
      * @param layerName name of wave layer e.g "wave1", "wave2"...
      * @return Array<Vector2> positions
      */
@@ -239,7 +247,7 @@ public class GameMap implements Disposable {
 
     /**
      * Returns Vector2 positions of all baguettes
-     * 
+     *
      * @return Array<Vector2> positions
      */
     public Array<Vector2> getBaguettePositions() {
