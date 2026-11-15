@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
  * Base template for static screens, which owns its own stage.
  * Tables are used for designing the layout where you can add buttons, titles, bodies etc.
  * When shown, input processor is set to its respective screen for button clicks
- * 
+ *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public abstract class MenuScreen extends ScreenAdapter {
@@ -39,7 +39,7 @@ public abstract class MenuScreen extends ScreenAdapter {
 
     /**
      * Main constructor for the base menu screens. it sets up the global stage and tables that get reused with every menu screen.
-     * 
+     *
      * @param skin the ui skin owned by main
      * @param title the title of the screen
      * @param color background colour of the screen
@@ -71,7 +71,7 @@ public abstract class MenuScreen extends ScreenAdapter {
 
     /**
      * helper for adding buttons to the screen
-     * 
+     *
      * @param buttonText name displayed on the button
      * @param onClick runnable that listens for clicks on the button
      */
@@ -89,7 +89,7 @@ public abstract class MenuScreen extends ScreenAdapter {
 
     /**
      * helper for adding a button that cycles through the fixed set of options passed into it on each click
-     * 
+     *
      * @param currentCycleOption text shown before the current option
      * @param options the options that the button can cycle through
      * @param initial the option selected when the screen opens
@@ -100,7 +100,7 @@ public abstract class MenuScreen extends ScreenAdapter {
 
         TextButton button = new TextButton(currentCycleOption + ": " + options[index[0]], skin);
         button.addListener(new ChangeListener() {
-            @Override 
+            @Override
             public void changed(ChangeEvent event, Actor actor) {
                 index[0] = (index[0] + 1) % options.length;
                 Options selected = options[index[0]];
@@ -114,7 +114,7 @@ public abstract class MenuScreen extends ScreenAdapter {
 
     /**
      * helper for adding text to the body of the screen
-     * 
+     *
      * @param text any text to be displayed in the body for that specific row
      */
     protected void addBodyLabel(String text) {
@@ -122,13 +122,23 @@ public abstract class MenuScreen extends ScreenAdapter {
         body.add(label).row();
     }
 
+    /**
+     * Helper for adding slider to the screen.
+     *
+     * @param min
+     * @param max
+     * @param stepSize
+     * @param vertical
+     * @param sliderName
+     * @return
+     */
     protected Slider addSlider(float min, float max, float stepSize, boolean vertical, String sliderName) {
         Slider slider = new Slider(min, max, stepSize, vertical, skin);
         Label name = new Label(sliderName, skin);
         Label value = new Label(String.valueOf((int) min), skin);
         slider.setValue(min);
         slider.addListener(new ChangeListener() {
-            @Override 
+            @Override
             public void changed(ChangeEvent event, Actor actor) {
                 value.setText(String.valueOf((int) slider.getValue()));
             }
@@ -140,12 +150,12 @@ public abstract class MenuScreen extends ScreenAdapter {
         return slider;
     }
 
-    @Override 
+    @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
     }
 
-    @Override 
+    @Override
     public void render(float delta) {
         ScreenUtils.clear(bgColor);
         stage.getViewport().apply();
@@ -158,12 +168,12 @@ public abstract class MenuScreen extends ScreenAdapter {
         stage.getViewport().update(width, height, true);
     }
 
-    @Override 
+    @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
     }
 
-    @Override 
+    @Override
     public void dispose() {
         stage.dispose();
     }

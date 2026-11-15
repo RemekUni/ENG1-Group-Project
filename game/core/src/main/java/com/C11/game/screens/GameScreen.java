@@ -43,6 +43,9 @@ import java.util.List;
  *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  * @author james (hjp562@york.ac.uk)
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+ * @author ethandavis128 (xxb522@york.ac.uk)
+ * @author Paul Turner (sfn544@york.ac.uk)
  */
 public class GameScreen extends ScreenAdapter {
     private final Main game;
