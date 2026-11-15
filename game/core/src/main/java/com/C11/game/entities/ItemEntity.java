@@ -6,6 +6,7 @@ import com.C11.game.world.GameMap;
 import com.C11.game.inventory.Item;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.C11.game.Config;
 
 /**
  * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link AEntity}.
@@ -14,10 +15,6 @@ import com.badlogic.gdx.math.Vector2;
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public class ItemEntity extends AEntity {
-
-    // -- Item entity rewritable attributes --
-    public float PICKUP_DISTANCE = 1f;
-    public static float IDLE_ANIMATION_SPEED = 0.1f;
 
     private final Item ITEM;
 
@@ -37,7 +34,7 @@ public class ItemEntity extends AEntity {
      *
      */
     public ItemEntity(Item itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler) {
-        super(itemType.getTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
+        super(itemType.getTexture(), gameMap, x, y, Config.ITEM_IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
 
         this.ITEM = itemType;
     }
@@ -57,7 +54,7 @@ public class ItemEntity extends AEntity {
                 double cY = (double) entity.getCenterY();
 
                 // Check if distance between centers is less than or equal to the pickup distance
-                boolean isInBounds = Math.sqrt(Math.pow(iX - cX, 2) + Math.pow(iY - cY, 2)) <= this.PICKUP_DISTANCE;
+                boolean isInBounds = Math.sqrt(Math.pow(iX - cX, 2) + Math.pow(iY - cY, 2)) <= Config.ITEM_PICKUP_DISTANCE;
 
                 // Run through all collectors until catching the first entity that is inbounds
                 if (isInBounds) {
@@ -71,9 +68,9 @@ public class ItemEntity extends AEntity {
     // Simple sin item animation
     private void idleAnimate(Vector2 pos, float delta) {
         lifetime += delta;
-        final float periodFrequency = 1.5f;
+
         
-        direction.y = MathUtils.sin((lifetime + ANIMATION_RANDOM_SHIFT) * periodFrequency);
+        direction.y = MathUtils.sin((lifetime + ANIMATION_RANDOM_SHIFT) * Config.ITEM_IDLE_ANIMATION_FREQUENCY);
     }
 
     @Override
