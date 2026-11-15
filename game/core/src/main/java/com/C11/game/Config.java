@@ -32,7 +32,6 @@ public final class Config {
     // ---- Entities ----
     public static final float PLAYER_SPEED = 4f;
     public static final float PLAYER_BOOSTED_SPEED = 7f;
-    public static final float PLAYER_THROW_DISTANCE = 1f;
     public static final int MAX_INVENTORY_SIZE = 2;
 
     public static final float GOOSE_SPEED = 3f;
@@ -60,6 +59,7 @@ public final class Config {
     public static final String CAN_LAYER = "cans";
     public static final String SPAWN_LAYER = "spawns";
     public static final String BAGUETTE_LAYER = "baguettes";
+    
 
     // ---- UI (viewport units, not world units) ----
     public static final float UI_WIDTH = 1280f;

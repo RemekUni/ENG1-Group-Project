@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
+import com.C11.game.Config;
 
 /**
  * Provides a specific implementation of the Timer class which provides a text display.
@@ -24,8 +25,8 @@ public class TimerDisplay implements Disposable {
      * @param initialTime
      */
     public TimerDisplay(String fontFile, int initialTime) {
-        timer = new Timer(1f);
-        font = FontGenerator.generateBitmapFont(fontFile, 48, Color.WHITE);
+        timer = new Timer(Config.TIMER_TICK_SECONDS);
+        font = FontGenerator.generateBitmapFont(fontFile, Config.TIMER_FONT_SIZE, Color.WHITE);
         this.initialTime = initialTime;
     }
 
