@@ -16,7 +16,6 @@ public class Goose extends AEntity {
     private boolean leavingMap = false;
 
     // Can be any target, not just the player, so later on the geese can chase a distraction too
-    // TODO: the goose moving towards something was just a test i made to see how a goose could behave, this can later be made optional or removed entirely
     private AEntity target;
 
     /**

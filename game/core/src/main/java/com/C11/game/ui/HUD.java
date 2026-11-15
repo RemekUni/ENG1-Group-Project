@@ -9,7 +9,7 @@ public class HUD extends Stage {
     public HUD(Hotbar hotbar) {
         super(new FitViewport(16, 9));
 
-        hotbar.setFillParent(true); // TODO: fills whole stage, but would be more intuitive to have it the size to fit its actors
+        hotbar.setFillParent(true);
 
         addActor(hotbar);
     }

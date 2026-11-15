@@ -7,8 +7,8 @@ public class Inventory {
     private final Array<Item> inventory = new Array<>();
 
     public Inventory() {
-        inventory.add(new Item("baguette", Assets.ITEM_TEXTURE));
-        inventory.add(new Item("baguette", Assets.ITEM_TEXTURE));
+        inventory.add(new Item("baguette", Assets.BAGUETTE_TEXTURE));
+        inventory.add(new Item("baguette", Assets.BAGUETTE_TEXTURE));
     }
     public Array<Item> getContainer() {
         return inventory;

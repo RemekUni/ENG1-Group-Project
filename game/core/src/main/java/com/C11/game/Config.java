@@ -58,6 +58,8 @@ public final class Config {
     public static final String COLLISION_LAYER = "collision";
     public static final String SANDWICH_LAYER = "sandwiches";
     public static final String CAN_LAYER = "cans";
+    public static final String SPAWN_LAYER = "spawns";
+    public static final String BAGUETTE_LAYER = "baguettes";
 
     // ---- UI (viewport units, not world units) ----
     public static final float UI_WIDTH = 1280f;
