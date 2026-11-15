@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="92">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="96">
  <tileset firstgid="1" source="tilemap.tsx"/>
  <layer id="1" name="Grass" width="60" height="40">
   <data encoding="csv">
@@ -220,6 +220,32 @@
  </objectgroup>
  <objectgroup id="6" name="sandwiches">
   <object id="91" x="150" y="384">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="spawns">
+  <object id="92" name="player" x="48" y="320">
+   <point/>
+  </object>
+  <object id="93" name="goose" x="336" y="320">
+   <properties>
+    <property name="itemCollection" type="bool" value="false"/>
+    <property name="leaveMap" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="94" name="goose" x="272" y="48">
+   <properties>
+    <property name="itemCollection" type="bool" value="true"/>
+    <property name="leaveMap" type="bool" value="false"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="95" name="goose" x="224" y="592">
+   <properties>
+    <property name="itemCollection" type="bool" value="false"/>
+    <property name="leaveMap" type="bool" value="false"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>

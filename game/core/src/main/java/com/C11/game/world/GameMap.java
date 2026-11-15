@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.PointMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -42,6 +43,7 @@ public class GameMap implements Disposable {
     private static final String COLLISION_LAYER = "collision";
     private static final String SANDWICH_LAYER = "sandwiches";
     private static final String CAN_LAYER = "cans";
+    private static final String SPAWN_LAYER = "spawns";
 
     private final Array<Rectangle> collisionRects;
 
@@ -181,6 +183,29 @@ public class GameMap implements Disposable {
 
         return positions;
     }
+
+    /**
+     * private getter for collecting map objects from a layer and returning them in a specialised record
+     * 
+     * @param layerName the name of the layer
+     * @return Array<SimplifiedMapObject> returns the specialised record of all the map objects in the layer
+     */
+    private Array<SimplifiedMapObject> getMapObjects(String layerName) {
+        Array<SimplifiedMapObject> mapObjects = new Array<>();
+        MapLayer layer = map.getLayers().get(layerName);
+        if (layer == null){
+            throw new IllegalArgumentException("Map layer " + layerName +" was not found.");
+        }
+
+        for (PointMapObject object : layer.getObjects().getByType(PointMapObject.class)){
+            Vector2 position = object.getPoint();
+            String name = object.getName();
+            MapProperties properties = object.getProperties();
+            mapObjects.add(new SimplifiedMapObject(new Vector2(position.x * unitScale, position.y * unitScale), name, properties));
+        }
+
+        return mapObjects;
+    }
     
     /**
      * Returns the positions of sandwiches, as specified in the tmx
@@ -196,5 +221,14 @@ public class GameMap implements Disposable {
      */
     public Array<Vector2> getCanPositions(){
         return getObjectPositions(CAN_LAYER);
+    }
+
+    /**
+     * Returns all the objects from the spawn layer
+     * 
+     * @return Array<SimplifiedMapObject> objects
+     */
+    public Array<SimplifiedMapObject> getSpawnObjects() {
+        return getMapObjects(SPAWN_LAYER);
     }
 }
