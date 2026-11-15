@@ -1,5 +1,11 @@
 package com.C11.game;
 
+import com.C11.game.entities.EntitiesHandler;
+import com.C11.game.entities.Goose;
+import com.C11.game.entities.Player;
+import com.C11.game.world.Assets;
+import com.C11.game.world.GameMap;
+
 /**
  * Global constants shared across the game. Everything is static and final,
  * so nothing here can change while the game is running.
@@ -54,6 +60,22 @@ public final class Config {
     public static final int SANDWICH_GEESE_COUNT = 8;
     public static final float SANDWICH_SPAWN_RADIUS = 10f;
 
+    // EVENT ACTION CONSTANTS
+    public static void runSpoiledSandwichAction(Player player, GameMap gameMap, EntitiesHandler entitiesHandler) {
+        // Spawn geese ring
+        for (int i = 0; i < Config.SANDWICH_GEESE_COUNT; i++) {
+            double angle = (2 * Math.PI / Config.SANDWICH_GEESE_COUNT) * i;
+            float spawnX = player.getPosition().x + (float) Math.cos(angle) * Config.SANDWICH_SPAWN_RADIUS;
+            float spawnY = player.getPosition().y + (float) Math.sin(angle) * Config.SANDWICH_SPAWN_RADIUS;
+
+            new Goose(Assets.GOOSE_TEXTURE, spawnX, spawnY, gameMap, player, entitiesHandler);
+        }
+    }
+
+    public static void runCanAction(Player player) {
+        player.activateSpeedBoost(Config.CAN_BOOST_DURATION);
+    }
+
     // ---- Map (Tiled layer names, must match campus.tmx) ----
     public static final String COLLISION_LAYER = "collision";
     public static final String SANDWICH_LAYER = "sandwiches";
@@ -77,4 +99,5 @@ public final class Config {
     public static final int REGULAR_FONT_SIZE = 48;
     public static final int TIMER_FONT_SIZE = 48;
     public static final float FONT_OVERSAMPLE = 3f;
+    
 }

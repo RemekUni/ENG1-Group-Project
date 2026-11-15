@@ -1,6 +1,7 @@
 package com.C11.game.events;
 
 import com.C11.game.entities.Player;
+import com.C11.game.entities.AEntity;
 import com.C11.game.entities.Goose;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

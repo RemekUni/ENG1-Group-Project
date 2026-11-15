@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.C11.game.Main;
 import com.C11.game.HUDController;
+import com.C11.game.entities.AEntity;
 import com.C11.game.entities.EntitiesHandler;
 import com.C11.game.entities.Goose;
 import com.C11.game.entities.ItemEntity;
@@ -22,7 +23,6 @@ import com.C11.game.world.GameMap;
 import com.C11.game.stats.GameResult;
 import com.C11.game.stats.GameStats;
 import com.C11.game.inventory.Item;
-import com.C11.game.world.Item;
 import com.C11.game.world.SimplifiedMapObject;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -107,11 +107,12 @@ public class GameScreen extends ScreenAdapter {
         this.skin = game.getSkin();
         GameStats.reset();
         gameMap = new GameMap("maps/campus.tmx");
+
         timerDisplay = new TimerDisplay(Assets.TIMER_FONT, gameLengthSeconds);
         timerDisplay.getTimer().start();
 
-        // Load assets. Loaded once and then shared by entities. Disposed in #dispose().
-        // TODO: Use one secitoned texture sprite for multiple item types
+        // Load assets. Loaded once and then shared by entities. Disposed in #dispose(). 
+        // TODO: See #Assets javadoc
         new Assets();
 
         // World dimenstions
@@ -166,32 +167,29 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        //Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
-        int sandwichWidth = Assets.SANDWICH_TEXTURE.getWidth() /2;
-        int sandwichHeight = Assets.SANDWICH_TEXTURE.getHeight();
-        TextureRegion singleSandwichTexture = new TextureRegion(Assets.SANDWICH_TEXTURE, 0 ,0 , sandwichWidth, sandwichHeight);
+        // Split the sandwich.png so only 1 sandwich shows on screen, not both like in the image
+        
 
-        //Spawn in the sandwiches
+        // Spawn in the sandwiches
         for (Vector2 position : gameMap.getSandwichPositions()){
-            AbandonedSandwich sandwich = new AbandonedSandwich(singleSandwichTexture, position.x, position.y, gameMap, 1.5f, player, Assets.GOOSE_TEXTURE, entitiesHandler);
-            events.add(sandwich);
+            ItemEntity spoiledSandwich = new ItemEntity(Assets.SPOILED_SANDWICH_ITEM, gameMap, position.x, position.y, entitiesHandler);
+            spoiledSandwich.setTriggerAction(() -> Config.runSpoiledSandwichAction(player, gameMap, entitiesHandler));
         }
 
-        //Release the CANS
-        TextureRegion singleCanTexture = new TextureRegion(Assets.CAN_TEXTURE);
+        // Release the CANS
         for (Vector2 position : gameMap.getCanPositions()){
-            Can can = new Can(singleCanTexture, position.x, position.y, gameMap, 1, player);
-            events.add(can);
+            ItemEntity can = new ItemEntity(Assets.CAN_ITEM, gameMap, position.x, position.y, entitiesHandler);
+            can.setTriggerAction(() -> Config.runCanAction(player));
+            // Can can = new Can(singleCanTexture, position.x, position.y, gameMap, 1, player);
         }
 
-        // temp/dev (TODO: remove/refactor)
-        int baguetteCount = 50;
+        // temp/dev (TODO: remove)
+        int baguetteCount = 10;
         for (int i = 0; i < baguetteCount; i++) {
             int randomX = ThreadLocalRandom.current().nextInt((int) 0, (int) worldWidth);
             int randomY = ThreadLocalRandom.current().nextInt((int) 0, (int) worldHeight);
-            //TODO rename all referances to "item" to bagguette
 
-            ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, randomX, randomY, entitiesHandler);
+            new ItemEntity(new Item("baguette", Assets.BAGUETTE_TEXTURE), gameMap, randomX, randomY, entitiesHandler);
         }
         // ItemEntity itemType1 = new ItemEntity(new Item("baguette", Assets.ITEM_TEXTURE), gameMap, player.getPosition().x, player.getPosition().y + 4, entitiesHandler);
 
@@ -246,7 +244,13 @@ public class GameScreen extends ScreenAdapter {
 
         // iterates through all events then records a gameState counter for them if they fired
         for (EventTrigger event : events) {
-            if (event.overlaps(player.getHitbox()) && event.trigger()) {
+            if (event.isTriggerEnabled() && event.getHitbox().overlaps(player.getHitbox()) && event.trigger()) {
+                GameStats.recordEventTriggered();
+            }
+        }
+
+        for (AEntity entity : entitiesHandler.getEntitiesSet().iterator().toArray()) {
+            if (entity != player && entity.isTriggerEnabled() && entity.getHitbox().overlaps(player.getHitbox()) && entity.trigger()) {
                 GameStats.recordEventTriggered();
             }
         }

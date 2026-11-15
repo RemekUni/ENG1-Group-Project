@@ -1,7 +1,7 @@
 package com.C11.game.entities;
 
 import com.C11.game.Config;
-import com.C11.game.hitboxes.Hitbox;
+import com.C11.game.events.EventTrigger;
 import com.C11.game.world.GameMap;
 import com.C11.game.stats.GameStats;
 import com.C11.game.inventory.Inventory;
@@ -23,17 +23,14 @@ import com.badlogic.gdx.math.MathUtils;
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
-public abstract class AEntity {
+public abstract class AEntity extends EventTrigger {
     private static final long PICKUP_COOLDOWN_MS = 1000;
 
     // Texture
     private Texture entityTexture;
 
     // -- Attributes --
-    private final Vector2 position;
-    private float size;
     private float speed;
-    private final Hitbox hitbox;
     private boolean isCollectionEnabled;
     private long pickupBlockedUntil = 0;
 
@@ -44,6 +41,7 @@ public abstract class AEntity {
     // -- Handlers--
     private final GameMap gameMap;
     protected EntitiesHandler entitiesHandler;
+    private Runnable triggerAction;
 
     /**
      * Creates an entity at the given position.
@@ -58,6 +56,8 @@ public abstract class AEntity {
      * @param entitiesHandler handler that tracks all entities
      */
     public AEntity(Texture entityTexture, GameMap gameMap, float startX, float startY, float speed, float hitboxWidthScale, float hitboxHeightScale, EntitiesHandler entitiesHandler) {
+        // This is assuming all entities are square. will need to be changed if we add non-square entities
+        super(startX, startY, entityTexture.getWidth() * gameMap.getUnitScale(), hitboxWidthScale, hitboxHeightScale, false);
         this.entityTexture = entityTexture;
         // -- Attributes --
         this.speed = speed;
@@ -65,13 +65,6 @@ public abstract class AEntity {
 
         this.gameMap = gameMap;
         this.entitiesHandler = entitiesHandler;
-
-        position = new Vector2(startX, startY);
-
-        // This is assuming all entities are square. will need to be changed if we add non-square entities
-        size = entityTexture.getWidth() * gameMap.getUnitScale();
-
-        hitbox = Hitbox.forSprite(size, hitboxWidthScale, hitboxHeightScale, position);
 
         // Check if the spawn location is clear, if not, move the entity by a small random float between -1 and 1
         while (!isSpawnClear()) {
@@ -82,6 +75,7 @@ public abstract class AEntity {
         // Add to Entities set
         entitiesHandler.addEntity(this);
     }
+
 
     /**
      * Moves entity in the given direction at its current speed, stopping at map collisions.
@@ -240,11 +234,6 @@ public abstract class AEntity {
         return size;
     }
 
-    /** @return the entity's collision hitbox in world units, updated by move(). Treat as read-only */
-    public Hitbox getHitbox() {
-        return hitbox;
-    }
-
     /** @return the entity's current rate of speed in world unites  */
     public float getSpeed(){
         return speed;
@@ -252,5 +241,14 @@ public abstract class AEntity {
     /** @param speed set the speed to the desired speed */
     public void setSpeed(float speed){
         this.speed = speed;
+    }
+
+    public void setTriggerAction(Runnable runnable) {
+        this.triggerAction = runnable;
+    }
+
+    @Override 
+    public void action() {
+        this.triggerAction.run();
     }
 }
