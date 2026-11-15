@@ -3,7 +3,7 @@ package com.C11.game.entities;
 import java.util.Random;
 
 import com.C11.game.world.GameMap;
-import com.C11.game.world.Item;
+import com.C11.game.inventory.Item;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -37,7 +37,7 @@ public class ItemEntity extends AEntity {
      *
      */
     public ItemEntity(Item itemType, GameMap gameMap, float x, float y, EntitiesHandler entitiesHandler) {
-        super(itemType.getEntityTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
+        super(itemType.getTexture(), gameMap, x, y, IDLE_ANIMATION_SPEED, 0, 0, entitiesHandler);
 
         this.ITEM = itemType;
     }
@@ -47,12 +47,12 @@ public class ItemEntity extends AEntity {
         System.out.println("Collected " + ITEM.getName() + "!");
     }
 
-    public ACollectorEntity collectionCollisionDetection() {
+    public AEntity collectionCollisionDetection() {
         for (AEntity entity : entitiesHandler.getCharactersSet()) {
             double iX = (double) this.getCenterX();
             double iY = (double) this.getCenterY();
 
-            if (entity instanceof ACollectorEntity collector) {
+            if (entity.isCollectionEnabled()) {
                 double cX = (double) entity.getCenterX();
                 double cY = (double) entity.getCenterY();
 
@@ -61,9 +61,7 @@ public class ItemEntity extends AEntity {
 
                 // Run through all collectors until catching the first entity that is inbounds
                 if (isInBounds) {
-                    if (collector.isCollectionEnabled()) {
-                        return collector;
-                    }
+                    return entity;
                 }
             }
         }
@@ -74,14 +72,14 @@ public class ItemEntity extends AEntity {
     private void idleAnimate(Vector2 pos, float delta) {
         lifetime += delta;
         final float periodFrequency = 1.5f;
-
+        
         direction.y = MathUtils.sin((lifetime + ANIMATION_RANDOM_SHIFT) * periodFrequency);
     }
 
     @Override
     public void update(float delta) {
         // Check if any collectors are in range to collect the item
-        ACollectorEntity foundCollector = collectionCollisionDetection();
+        AEntity foundCollector = collectionCollisionDetection();
         if (foundCollector != null) {
             foundCollector.collectItem(this);
         }

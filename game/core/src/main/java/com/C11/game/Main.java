@@ -8,8 +8,8 @@ import com.C11.game.screens.GameScreen;
 import com.C11.game.screens.StartScreen;
 import com.C11.game.settings.Settings;
 import com.C11.game.utils.FontGenerator;
-import com.C11.game.utils.GameResult;
 import com.C11.game.world.Assets;
+import com.C11.game.stats.GameResult;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,9 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class Main extends Game {
     private SpriteBatch spriteBatch;
     private Skin skin;
-    private static final int TITLE_FONT_SIZE = 96;
-    // this is for all the font that goes underneath the title
-    private static final int REGULAR_FONT_SIZE = 48;
 
     private Settings settings;
 
@@ -50,8 +47,8 @@ public class Main extends Game {
     @Override
     public void create() {
         spriteBatch = new SpriteBatch();
-        BitmapFont font = FontGenerator.generateBitmapFont(Assets.TIMER_FONT, REGULAR_FONT_SIZE, Color.WHITE);
-        BitmapFont titleFont = FontGenerator.generateBitmapFont(Assets.TIMER_FONT, TITLE_FONT_SIZE, Color.WHITE);
+        BitmapFont font = FontGenerator.generateBitmapFont(Assets.TIMER_FONT, Config.REGULAR_FONT_SIZE, Color.WHITE);
+        BitmapFont titleFont = FontGenerator.generateBitmapFont(Assets.TIMER_FONT, Config.TITLE_FONT_SIZE, Color.WHITE);
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas"));
         skin = new Skin(textureAtlas);
         skin.add("default-font", font, BitmapFont.class);
@@ -62,7 +59,6 @@ public class Main extends Game {
         settings.applySaved();
 
         showStartScreen();
-        
     }
 
     // helpers for cycling through the different screens. should grow larger once more screens added
@@ -93,6 +89,5 @@ public class Main extends Game {
         if (getScreen() != null) getScreen().dispose();
         spriteBatch.dispose();
         skin.dispose();
-        Assets.dispose();
     }
 }

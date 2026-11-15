@@ -1,5 +1,6 @@
-package com.C11.game.hitboxes;
+package com.C11.game.events;
 
+import com.C11.game.hitboxes.Hitbox;
 import com.C11.game.world.GameMap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

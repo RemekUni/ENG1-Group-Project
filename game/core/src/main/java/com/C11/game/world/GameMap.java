@@ -1,5 +1,6 @@
 package com.C11.game.world;
 
+import com.C11.game.Config;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -90,7 +91,7 @@ public class GameMap implements Disposable {
     /** @req FR_MAP_COLLISION */
     private void loadCollisionRects() {
         // TODO: add in a null check for layers
-        MapLayer layer = map.getLayers().get(COLLISION_LAYER);
+        MapLayer layer = map.getLayers().get(Config.COLLISION_LAYER);
         for (RectangleMapObject object : layer.getObjects().getByType(RectangleMapObject.class)) {
             Rectangle r = object.getRectangle();
             collisionRects.add(new Rectangle(
@@ -212,7 +213,7 @@ public class GameMap implements Disposable {
      * @return Array<Vector2> positions
      */
     public Array<Vector2> getSandwichPositions(){
-        return getObjectPositions(SANDWICH_LAYER);
+        return getObjectPositions(Config.SANDWICH_LAYER);
     }
     
     /**
@@ -220,7 +221,7 @@ public class GameMap implements Disposable {
      * @return Array<Vector2> positions
      */
     public Array<Vector2> getCanPositions(){
-        return getObjectPositions(CAN_LAYER);
+        return getObjectPositions(Config.CAN_LAYER);
     }
 
     /**

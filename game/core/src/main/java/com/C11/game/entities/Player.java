@@ -5,8 +5,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.C11.game.ui.Hotbar;
 import com.C11.game.world.GameMap;
-import com.C11.game.world.Item;
 
 /**
  * The player-controlled sprite. Moves with WASD.
@@ -14,8 +14,10 @@ import com.C11.game.world.Item;
  *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
-public class Player extends ACollectorEntity{
+public class Player extends AEntity{
     private final Vector2 direction = new Vector2();
+
+    // public static final int MAX_INVENTORY_SIZE = 2;
 
     // tiles per second
     private static final float PLAYER_SPEED = 4f;
@@ -71,39 +73,11 @@ public class Player extends ACollectorEntity{
             direction.y += 1;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.T)) {
-           throwItem(0);
-        }
-
         move(direction, delta, true);
     }
 
     public void activateSpeedBoost(float boostTime){
         setSpeed(BOOSTED_SPEED);
         boostTimer += boostTime; // += allows for stacking
-    }
-
-    public void throwItem(int inventoryIndex) {
-        if (inventory.size == 0) return;
-
-        //doThrowLogic(inventory.get(inventoryIndex));
-    }
-
-    public void throwItem(Item itemType) {
-        if (inventory.size == 0) return;
-
-        doThrowLogic(itemType);
-    }
-
-    private void doThrowLogic(Item itemType) {
-        Vector2 throwVector = direction.scl(THROW_DISTANCE);
-
-        // this.inventory.removeValue(itemType, true);
-        // new ItemEntity(itemType, gameMap, this.getPosition().x + throwVector.x, this.getPosition().y + throwVector.y, entitiesHandler);
-        // System.out.println("spawned item at " + (this.getPosition().x + throwVector.x) + ", " + (this.getPosition().y + throwVector.y) + ", player pos is: " + this.getPosition());
-    }
-
-    private void startAim() {
-
     }
 }

@@ -1,4 +1,4 @@
-package com.C11.game.world;
+package com.C11.game.inventory;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -9,19 +9,19 @@ import com.badlogic.gdx.graphics.Texture;
 public class Item {
 
     private String name;
-    private Texture entityTexture;
+    private Texture texture;
 
-    public Item(String name, Texture entityTexture) {
+    public Item(String name, Texture texture) {
         this.name = name;
-        this.entityTexture = entityTexture;
+        this.texture = texture;
     }
 
     public String getName() {
         return name;
     }
 
-    public Texture getEntityTexture() {
-        return entityTexture;
+    public Texture getTexture() {
+        return texture;
     }
 
     public String toString() {

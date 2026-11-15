@@ -1,6 +1,6 @@
 package com.C11.game.screens;
 
-import com.C11.game.utils.GameResult;
+import com.C11.game.stats.GameResult;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
