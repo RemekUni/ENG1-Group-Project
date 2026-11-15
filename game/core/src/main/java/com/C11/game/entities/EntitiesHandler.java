@@ -3,7 +3,18 @@ package com.C11.game.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ObjectSet;
 
+
+
 /**
+ *
+ * Maintains entities on the map, including updating, drawing, and
+ * interatacting entities of specific types.
+ *
+ * @req FR_GEESE_BOUNDARY
+ * @req FR_PLAYER_BOUNDARY
+ * @req FR_ITEMS
+ * @req FR_INVENTORY
+ *
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public class EntitiesHandler {
@@ -21,17 +32,13 @@ public class EntitiesHandler {
     private int itemCount = 0;
     private int gooseCount = 0;
 
-    /**
-     * Maintain entities on the map, including updating, drawing, and
-     * interatacting entities of specific types.
-     */
-    public EntitiesHandler() {
 
+    public EntitiesHandler() {
     }
 
-    /** 
+    /**
      * Update all entities on the map.
-     * @param delta seconds since last frame 
+     * @param delta seconds since last frame
      */
     public void updateEntities(float delta) {
         player.update(delta);
@@ -49,9 +56,9 @@ public class EntitiesHandler {
     }
 
 
-    /** 
+    /**
      * Draw the entityTexture of each entity on the map using the shared spriteBatch.
-     * 
+     *
      * @param batch the shared spriteBatch
      */
     public void draw(SpriteBatch batch) {
@@ -64,7 +71,8 @@ public class EntitiesHandler {
      * Add entity instance to a set of all entities on the map.
      * It is required for it be implemented and called only from the entity's constructor,
      * to ensure it will be added to the live entity's set during its instantiation.
-     * @param entity
+     *
+     * @param entity the entity to add
      */
     public void addEntity(AEntity entity) {
         entities.add(entity);
@@ -90,6 +98,11 @@ public class EntitiesHandler {
         }
     }
 
+    /**
+     * Remove a given entity from the set of all entities on the map.
+     *
+     * @param entity the entity to remove
+     */
     public void removeEntity(AEntity entity) {
         entities.remove(entity);
 

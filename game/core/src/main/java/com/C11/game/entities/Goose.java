@@ -8,6 +8,8 @@ import com.C11.game.world.GameMap;
 /**
  * A goose that chases a given target and stops when close.
  *
+ * @req FR_GEESE
+ *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  */
 public class Goose extends AEntity {
@@ -35,7 +37,7 @@ public class Goose extends AEntity {
 
     /**
      * Alternate constructor for a goose that chases itself (i.e. doesn't move)
-     * 
+     *
      * @param gooseTexture texture of the goose
      * @param startX starting 'x' position of entity's bottom-left corner, in world units
      * @param startY starting 'y' position of entity's bottom-left corner, in world units
@@ -58,11 +60,11 @@ public class Goose extends AEntity {
                 // remove the goose from the game when it reaches the edge of the map
                 entitiesHandler.removeEntity(this);
             }
-        } 
+        }
         else {
             direction.set(this.target.getCenterX(), this.target.getCenterY()).sub(getCenterX(), getCenterY());
         }
-        
+
         if (direction.len() >= Config.GOOSE_STOP_DISTANCE) {
             move(direction, delta, collide);
         }
@@ -72,7 +74,7 @@ public class Goose extends AEntity {
         this.target = newTarget;
     }
 
-    public void setStaionary() {
+    public void setStationary() {
         setTarget(this);
     }
 

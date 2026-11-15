@@ -17,9 +17,12 @@ import com.badlogic.gdx.math.MathUtils;
  * Abstract base class for anything that moves on the map (like player or geese). Handles position, drawing, and collision-aware movement.
  * Subclasses decide which way to move in update() and then call move().
  * Entity does not own its texture, so it does not dispose it, the creator does
- * 
- * @req UR_BOUNDARIES
- * 
+ *
+ * @req FR_GEESE_BOUNDARY
+ * @req FR_PLAYER_BOUNDARY
+ * @req FR_ITEMS
+ * @req FR_INVENTORY
+ *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
@@ -47,7 +50,7 @@ public abstract class AEntity {
 
     /**
      * Creates an entity at the given position.
-     * 
+     *
      * @param entityTexture sprite texture (shared), not disposed by Entity
      * @param gameMap map used for collision checks
      * @param startX starting 'x' position of entity's bottom-left corner, in world units
@@ -86,18 +89,18 @@ public abstract class AEntity {
     /**
      * Moves entity in the given direction at its current speed, stopping at map collisions.
      * X and Y are resolved separately so entities slide against walls instead of sticking (just makes movement smoother in general)
-     * 
+     *
      * Note: normalises direction in-place, which means the callers vector will get changed
-     * 
+     *
      * @req FR_PLAYER_BOUNDARY FR_GEESE_BOUNDARY
-     * 
+     *
      * @param direction vector direction for entity to move
      * @param delta time in seconds from last frame
      * @param checkCollisions whether to check for collisions
      */
     protected void move(Vector2 direction, float delta, boolean checkCollisions) {
         direction.nor();
-        
+
         float dx = direction.x * speed * delta;
         float dy = direction.y * speed * delta;
 
@@ -114,28 +117,41 @@ public abstract class AEntity {
         hitbox.follow(position);
     }
 
-    /** 
+    /**
      * Called once per frame, subclasses decide movement and behaviour here.
-     * @param delta seconds since last frame 
+     * @param delta seconds since last frame
      */
     public abstract void update(float delta);
 
-    // Check for hitbox collisions on the map after first snapping the hitbox to its entity
+
+    /**
+     * Check for hitbox collisions on the map after first snapping the hitbox to its entity
+     * @return true if hitbox collides with hitbox of another entity. If this is not the case,
+     * returns true or false depending on whether hitbox collides with a collision rectangle or map boundary.
+     */
     private boolean isColliding() {
         hitbox.follow(position);
         for (AEntity entity : entitiesHandler.getCharactersSet()) {
             if (entity != this && hitbox.overlaps(entity.getHitbox())) {
                 return true;
             }
-        }   
+        }
         return gameMap.isBlocked(hitbox);
     }
 
+    /**
+     * @return whether hitbox is colliding with a collision rectangle or map boundary, or not.
+     */
     private boolean isSpawnClear() {
         hitbox.follow(position);
         return !gameMap.isBlocked(getHitbox());
     }
 
+    /**
+     * Adds a given itemEntity to the inventory.
+     *
+     * @param itemEntity the item to collect.
+     */
     public void collectItem(ItemEntity itemEntity) {
         if (!isCollectionEnabled || TimeUtils.millis() < pickupBlockedUntil) return; // safe check
 
@@ -160,6 +176,9 @@ public abstract class AEntity {
         // }
     }
 
+    /**
+     * @return true if isCollectionEnabled flag is true, false if otherwise!
+     */
     public boolean isCollectionEnabled() {
         return isCollectionEnabled;
     }
@@ -206,9 +225,9 @@ public abstract class AEntity {
         return inventory;
     }
 
-    /** 
+    /**
      * Draw the entityTexture using the shared spriteBatch
-     * 
+     *
      * @param batch the shared spriteBatch
      */
     public void draw(SpriteBatch batch) {

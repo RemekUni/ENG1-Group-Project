@@ -13,7 +13,10 @@ import com.C11.game.world.GameMap;
  * The player-controlled sprite. Moves with WASD.
  * Collision is handled by Entity
  *
+ *
  * @author Dorian Kerzan (rvl546@york.ac.uk)
+ * @author James Berry (hjp562@york.ac.uk)
+ * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
  */
 public class Player extends AEntity{
     private final Vector2 direction = new Vector2();
@@ -54,13 +57,13 @@ public class Player extends AEntity{
 
         if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
             direction.x += 1;
-        } 
+        }
         if (Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) {
             direction.x -= 1;
-        } 
+        }
         if (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN)) {
             direction.y -= 1;
-        } 
+        }
         if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
             direction.y += 1;
         }

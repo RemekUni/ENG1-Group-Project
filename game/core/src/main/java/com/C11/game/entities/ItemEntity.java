@@ -11,9 +11,11 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Class for spawning in an item entity on the map with the specified attributes. Inherits from {@link AEntity}.
- * This is for the baguette item ONLY for now.
+ *
+ * @req FR_ITEMS
  *
  * @author Nicholas Glushchak (qgt520@york.ac.uk) | revolutionercik
+ * @author Ethan Davis (xxb522@york.ac.uk)
  */
 public class ItemEntity extends AEntity {
 
@@ -40,11 +42,19 @@ public class ItemEntity extends AEntity {
         this.ITEM = itemType;
     }
 
+    /**
+     * Remove this entity from the set of entities on map.
+     */
     public void collect() {
         entitiesHandler.removeEntity(this);
         System.out.println("Collected " + ITEM.getName() + "!");
     }
 
+    /**
+     * Checks if item is within the collection range of an entity eligible to collect items
+     *
+     * @return null if no entity in range, otherwise the first entity found to be in range
+     */
     public AEntity collectionCollisionDetection() {
         for (AEntity entity : entitiesHandler.getCharactersSet()) {
             double iX = (double) this.getCenterX();
@@ -70,7 +80,7 @@ public class ItemEntity extends AEntity {
     private void idleAnimate(Vector2 pos, float delta) {
         lifetime += delta;
 
-        
+
         direction.y = MathUtils.sin((lifetime + ANIMATION_RANDOM_SHIFT) * Config.ITEM_IDLE_ANIMATION_FREQUENCY);
     }
 
