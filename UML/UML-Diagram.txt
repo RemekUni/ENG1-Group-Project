@@ -87,17 +87,9 @@ class Player {
 	+void update(float delta)
 	
 	+void activateSpeedBoost(float boostTime)
-	
-	+void throwItem(int inventoryIndex)
-	+void throwItem(Item itemType)
-	~void doThrowLogic(Item itemType)
-	~void startAim()
 }
 note right of Player::gameMap
 	unused in class methods?
-end note
-note right of Player::startAim
-	unimplemented
 end note
 
 class Goose {
@@ -199,11 +191,14 @@ class GameScreen {
 	
 	-SpriteBatch spriteBatch
 
-	{static} float VIEW_WIDTH
-	{static} float VIEW_HEIGHT
+	+{static} float VIEW_WIDTH
+	+{static} float VIEW_HEIGHT
 
 	-List<EventTrigger> events
-	-int eventsTriggered
+	
+	-boolean wave1
+	-boolean wave2
+	-boolean wave3
 	
 	+void show()
 
@@ -220,9 +215,6 @@ class GameScreen {
 	+void pause()
 	+void dispose()
 }
-note left of GameScreen::eventsTriggered
-	unused?
-end note
 
 abstract class MenuScreen {
 	-Stage stage
@@ -347,6 +339,35 @@ abstract class FontGenerator {
 	+{static} generateBitmapFont(String path, int size, Color colour)
 }
 
+class HUD {
+	-ImageButton pauseButton
+	
+	-ImageButton createPauseButton(Runnable onPause)
+}
+
+class HUDController {
+	-Player player
+	-Hotbar hotbar
+	
+	+boolean keyDown(int keycode)
+}
+
+class Hotbar {
+	-{static} int NONE
+	-{static} float SLOT_SIZE
+	-Inventory inventory
+	-Array<Slot> slots
+}
+
+class Settings {
+	+{static} String PREFS_NAME
+	-{static} String KEY_WINDOW_MODE
+	-{static} WindowMode DEFAULT_WINDOW_MODE
+	-Preferences prefs
+	
+	+void applySaved()
+}
+
 class GameResult {
 	-int eventsTriggered
 	-int itemsUsed
@@ -385,6 +406,9 @@ GameScreen --> Goose : creates, loads texture
 EntitiesHandler <-- Player : handles entity interactions
 EntitiesHandler <-- Goose : handles entity interactions
 GameScreen --> TimerDisplay : initalizes
+GameScreen --> Hotbar
+GameScreen --> HUD
+Hotbar - HUD
 
 AEntity <|-- Player
 AEntity <|-- Goose
@@ -407,6 +431,11 @@ Disposable <|.. PauseMenu
 
 
 hide empty members
+
+remove Settings
+remove Hotbar
+remove HUD
+remove HUDController
 
 remove Rectangle
 remove Game
