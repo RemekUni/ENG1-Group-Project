@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -51,11 +52,25 @@ public class PauseMenu implements Disposable {
         root.setBackground(skin.newDrawable("white", 0f, 0f, 0f, DIM_ALPHA));
         stage.addActor(root);
 
+        Table controlsPanel = new Table();
+        controlsPanel.setFillParent(true);
+        controlsPanel.setBackground(skin.newDrawable("white", 0f, 0f, 0f, 1));
+        controlsPanel.setVisible(false);
+        stage.addActor(controlsPanel);
+
         TextButton resumeButton = new TextButton("Resume", skin);
         resumeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 onResume.run();
+            }
+        });
+
+        TextButton controlsButton = new TextButton("Controls", skin);
+        controlsButton.addListener(new ChangeListener() {
+            @Override 
+            public void changed(ChangeEvent event, Actor actor) {
+                controlsPanel.setVisible(true);
             }
         });
 
@@ -67,7 +82,29 @@ public class PauseMenu implements Disposable {
             }
         });
         root.add(resumeButton).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
+        root.add(controlsButton).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
         root.add(exitButton).width(Value.percentWidth(BUTTON_WIDTH_FRACTION, root)).pad(BUTTON_PADDING).row();
+
+        TextButton closeControlsButton = new TextButton("Close", skin);
+        closeControlsButton.addListener(new ChangeListener() {
+            @Override 
+            public void changed(ChangeEvent event, Actor actor) {
+                controlsPanel.setVisible(false);
+            }
+        });
+
+        controlsPanel.add(closeControlsButton).expandX().right().row();
+        addTableBodyLabel("Player Movement: WASD / Arrow Keys", skin, controlsPanel);
+        addTableBodyLabel("Select Inventory Slot: 1-2", skin, controlsPanel);
+        addTableBodyLabel("Cycle Inventory Slot: Q", skin, controlsPanel);
+        addTableBodyLabel("Use Item: F", skin, controlsPanel);
+        addTableBodyLabel("Throw Item: G", skin, controlsPanel);
+        addTableBodyLabel("Pause Game: ESCAPE", skin, controlsPanel);
+    }
+
+    private void addTableBodyLabel(String text, Skin skin, Table table) {
+        Label label = new Label(text, skin);
+        table.add(label).row();
     }
 
     /**

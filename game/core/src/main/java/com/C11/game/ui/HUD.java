@@ -30,6 +30,8 @@ public class HUD extends Stage {
     /**
      * private helper to create the pause button
      * 
+     * @req FR_PAUSE
+     * 
      * @param onPause runnable on click
      * @return ImageButton pause button
      */
