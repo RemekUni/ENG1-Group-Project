@@ -43,6 +43,11 @@ public class EntitiesHandler {
     public void updateEntities(float delta) {
         player.update(delta);
         for (AEntity goose : geese) {
+            // For an unknown reason, the goose entity is sometimes null, so this check is required to prevent a crash
+            if (goose == null) {
+                System.out.println("NULL");
+                continue;
+            }
             goose.update(delta);
         }
         for (ItemEntity item : itemEntities) {
