@@ -5,6 +5,7 @@ import com.C11.game.events.*;
 import com.C11.game.ui.TimerDisplay;
 import com.C11.game.Config;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 
 import com.C11.game.Main;
@@ -65,6 +66,7 @@ public class GameScreen extends ScreenAdapter {
 
     private final Player player;
     private final HUDController playerController;
+    private final InputMultiplexer gameplayInput;
 
     private final SpriteBatch spriteBatch;
 
@@ -186,8 +188,9 @@ public class GameScreen extends ScreenAdapter {
         }
 
         Hotbar hotbar = new Hotbar(player.getInventory());
-        hud = new HUD(hotbar);
+        hud = new HUD(hotbar, () -> pauseGame());
         playerController = new HUDController(player, hotbar);
+        gameplayInput = new InputMultiplexer(hud, playerController);
         pauseMenu = new PauseMenu(skin, () -> resumeGame(), () -> Gdx.app.exit());
     }
 
@@ -282,14 +285,16 @@ public class GameScreen extends ScreenAdapter {
     private void pauseGame() {
         isPaused = true;
         timerDisplay.getTimer().pause();
+        hud.setPauseButtonVisible(false);
         pauseMenu.show();
     }
 
     private void resumeGame() {
         isPaused = false;
         timerDisplay.getTimer().unpause();
+        hud.setPauseButtonVisible(true);
         pauseMenu.hide();
-        Gdx.input.setInputProcessor(playerController);
+        Gdx.input.setInputProcessor(gameplayInput);
     }
 
     private void followPlayer() {
